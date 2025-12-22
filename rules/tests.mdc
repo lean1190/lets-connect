@@ -1,0 +1,20 @@
+---
+description: Mandatory rules for writing automated unit and integration tests
+alwaysApply: false
+---
+# Unit and integration tests
+
+Before starting to write the tests, explain what tests will you write.
+Explain how are these tests meaningful, and what decisions you made.
+
+- Tests configuration MUST be simple, easy to read and maintain.
+- Tests configuration MUST use the SIFERS pattern, instead of `beforeEach` and `afterEach` hooks.
+- Tests MUST follow the AAA pattern: Arrange, Act, Assert
+- Tests MUST be deterministic and flat. Do not use conditional statements in a test.
+- Tests MUST verify and clearly document behavior, focusing on output, NOT implementation details.
+- Tests MUST verify one thing at a time, and avoid multiple assertions in one test case.
+- Tests MUST consider edge cases and error conditions.
+- Tests MUST NOT rely on execution order.
+- Tests MUST NOT verify trivial things like the element under test being truthy or created.
+- Tests MUST NOT include comments.
+- Tests MUST NOT include unused variables and imports.
