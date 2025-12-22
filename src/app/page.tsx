@@ -1,7 +1,195 @@
-export default async function Home() {
+import { IconArrowRight, IconCloud, IconQrcode, IconUsers } from '@tabler/icons-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+
+export default async function LandingPage() {
   return (
-    <div className="min-h-screen text-white bg-[#0e0f13] relative overflow-hidden font-[family-name:var(--font-geist-sans)]">
-      Hello there :)
+    <div className="min-h-screen text-white bg-[#0e0f13] relative overflow-hidden">
+      {/* Background gradient effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#0A66C2]/20 rounded-full blur-3xl opacity-50"></div>
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#007AFF]/20 rounded-full blur-3xl opacity-50"></div>
+      </div>
+
+      <div className="relative z-10">
+        {/* Navigation */}
+        <nav className="container mx-auto px-6 py-8 flex justify-between items-center">
+          <div className="flex items-center">
+            <Image
+              src="/logo/transparent.png"
+              alt="Let's Connect Logo"
+              width={64}
+              height={64}
+              className="w-16 h-16"
+            />
+            <div className="text-2xl font-bold">Let&apos;s Connect</div>
+          </div>
+          <Link href="/sign-in">
+            <Button
+              variant="outline"
+              className="border-white/30 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 hover:border-white/40"
+            >
+              Sign In
+            </Button>
+          </Link>
+        </nav>
+
+        {/* Hero Section */}
+        <section className="container mx-auto px-6 py-20 md:py-32">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              Stay in touch with your
+              <span className="bg-gradient-to-r from-[#0A66C2] to-[#007AFF] bg-clip-text text-transparent">
+                {' '}
+                entrepreneurial circle
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-400 mb-12 leading-relaxed max-w-2xl mx-auto">
+              A simple way to keep track of the connections that matter.
+            </p>
+            <div className="flex justify-center">
+              <Link href="/sign-in">
+                <Button
+                  size="lg"
+                  className="relative bg-gradient-to-r from-[#0A66C2] to-[#007AFF] text-white px-10 py-7 text-xl font-semibold shadow-2xl shadow-[#0A66C2]/50 hover:shadow-[#0A66C2]/70 hover:scale-105 transition-all duration-300 border border-white/20 backdrop-blur-sm"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    Let&apos;s connect
+                    <IconArrowRight className="ml-1" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Problem Statement */}
+        <section className="container mx-auto px-6 py-12">
+          <div className="max-w-4xl mx-auto">
+            <div className="relative bg-white/8 backdrop-blur-2xl rounded-3xl p-10 md:p-16 border border-white/20 shadow-2xl shadow-black/20 overflow-hidden">
+              {/* Liquid glass shine effect */}
+              <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent pointer-events-none"></div>
+              <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent"></div>
+
+              <div className="relative z-10">
+                <h2 className="text-4xl md:text-5xl font-bold mb-8 bg-linear-to-r from-white to-white/80 bg-clip-text text-transparent">
+                  Shaping circles is hard
+                </h2>
+                <div className="space-y-5 text-gray-300 text-lg md:text-xl leading-relaxed">
+                  <p className="flex items-start gap-3">
+                    <span className="text-[#0A66C2] mt-1">•</span>
+                    <span>
+                      Sometimes, we are forced to remember &quot;what did we connect for?&quot;
+                    </span>
+                  </p>
+                  <p className="flex items-start gap-3">
+                    <span className="text-[#0A66C2] mt-1">•</span>
+                    <span>After connecting with someone, it can be hard to find them again.</span>
+                  </p>
+                  <p className="flex items-start gap-3">
+                    <span className="text-[#0A66C2] mt-1">•</span>
+                    <span>
+                      LinkedIn and WhatsApp are great for connecting once, not so much to keep in
+                      touch.
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Solution */}
+        <section className="container mx-auto px-6 pt-8 pb-20">
+          <div className="max-w-4xl mx-auto text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">This app solves the struggle</h2>
+            <p className="text-xl text-gray-400">
+              Everything you need to maintain meaningful connections
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Feature 1 */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-[#0A66C2]/50 transition-all">
+              <div className="w-14 h-14 bg-[#0A66C2]/20 rounded-lg flex items-center justify-center mb-6">
+                <IconQrcode className="w-7 h-7 text-[#0A66C2]" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Scan & Connect</h3>
+              <p className="text-gray-400 leading-relaxed">
+                Instantly scan LinkedIn and WhatsApp QR codes to save contacts with context about
+                why you connected.
+              </p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-[#0A66C2]/50 transition-all">
+              <div className="w-14 h-14 bg-[#0A66C2]/20 rounded-lg flex items-center justify-center mb-6">
+                <IconUsers className="w-7 h-7 text-[#0A66C2]" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Organize Your Network</h3>
+              <p className="text-gray-400 leading-relaxed">
+                Group your contacts and add notes so you never forget the context of your
+                connections.
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-[#0A66C2]/50 transition-all">
+              <div className="w-14 h-14 bg-[#0A66C2]/20 rounded-lg flex items-center justify-center mb-6">
+                <IconCloud className="w-7 h-7 text-[#0A66C2]" />
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Sync Everywhere</h3>
+              <p className="text-gray-400 leading-relaxed">
+                Access your network from any device. Sign in to sync, or use offline mode for
+                privacy.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="container mx-auto px-6 py-20">
+          <div className="max-w-4xl mx-auto">
+            <div className="bg-white/[0.08] backdrop-blur-2xl rounded-3xl p-12 md:p-16 border border-white/20 shadow-2xl shadow-black/20 text-center">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Build your entrepreneurial circle
+              </h2>
+              <p className="text-xl text-gray-300 mb-8">One person at a time</p>
+              <Link href="/sign-in">
+                <Button
+                  size="lg"
+                  className="relative bg-gradient-to-r from-[#0A66C2] to-[#007AFF] text-white px-10 py-7 text-xl font-semibold shadow-2xl shadow-[#0A66C2]/50 hover:shadow-[#0A66C2]/70 hover:scale-105 transition-all duration-300 border border-white/20 backdrop-blur-sm"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    Let&apos;s connect
+                    <IconArrowRight className="ml-1" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="container mx-auto px-6 py-12 border-t border-white/10">
+          <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-gray-400">
+              © {new Date().getFullYear()} Let&apos;s Connect. All rights reserved.
+            </div>
+            <div className="flex gap-6">
+              <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
+                Privacy
+              </Link>
+              <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
+                Terms
+              </Link>
+            </div>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }

@@ -1,66 +1,64 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
-import type { Viewport } from "next";
-import { getVercelUrl } from "@/lib/environments/is-dev";
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import './globals.css';
+import { Analytics } from '@vercel/analytics/next';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import type { Viewport } from 'next';
+import { getVercelUrl } from '@/lib/environments/is-dev';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin']
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin']
 });
 
 export const viewport: Viewport = {
-  width: "device-width",
+  width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0e0f13" },
-  ],
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0e0f13' }
+  ]
 };
 
 export const metadata: Metadata = {
-  title: "Fill this",
-  description: "Fill this",
+  title: "Let's connect",
+  description: 'Keep in touch with your entrepreneurial circle',
   metadataBase: new URL(getVercelUrl()),
-  manifest: "/manifest.webmanifest",
+  manifest: '/manifest.webmanifest',
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png'
   },
-  keywords: "one, two, three",
+  keywords: 'connect, entrepreneur, circle, networking, network, founder',
   appleWebApp: {
     capable: true,
-    statusBarStyle: "default",
-    title: "Fill this",
+    statusBarStyle: 'default',
+    title: "Let's connect"
   },
   openGraph: {
-    images: ["/logo-in-public-folder.png"],
-    url: "http://localhost:3000 - Fill this",
-    locale: "en_US",
-    type: "website",
+    images: ['/logo-in-public-folder.png'],
+    url: 'http://localhost:3000',
+    locale: 'en_US',
+    type: 'website'
   },
-  authors: [{ name: "Lean Vilas" }],
+  authors: [{ name: 'Lean Vilas' }]
 };
 
 export default function RootLayout({
-  children,
+  children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
         <Analytics />
         <SpeedInsights />
