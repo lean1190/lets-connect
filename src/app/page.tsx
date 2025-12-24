@@ -1,7 +1,9 @@
-import { IconArrowRight, IconCloud, IconQrcode, IconUsers } from '@tabler/icons-react';
+import { IconCloud, IconQrcode, IconUsers } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { CtaButton } from '@/components/ui/cta-button';
+import { NavigationPath } from '@/lib/constants/navigation';
 
 export default async function LandingPage() {
   return (
@@ -25,13 +27,8 @@ export default async function LandingPage() {
             />
             <div className="text-2xl font-bold">Let&apos;s Connect</div>
           </div>
-          <Link href="/sign-in">
-            <Button
-              variant="outline"
-              className="border-white/30 bg-white/5 backdrop-blur-md text-white hover:bg-white/10 hover:border-white/40"
-            >
-              Sign In
-            </Button>
+          <Link href={NavigationPath.Signin}>
+            <Button variant="glass">Sign In</Button>
           </Link>
         </nav>
 
@@ -49,18 +46,7 @@ export default async function LandingPage() {
               A simple way to keep track of the connections that matter.
             </p>
             <div className="flex justify-center">
-              <Link href="/sign-in">
-                <Button
-                  size="lg"
-                  className="relative bg-gradient-to-r from-[#0A66C2] to-[#007AFF] text-white px-10 py-7 text-xl font-semibold shadow-2xl shadow-[#0A66C2]/50 hover:shadow-[#0A66C2]/70 hover:scale-105 transition-all duration-300 border border-white/20 backdrop-blur-sm"
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    Let&apos;s connect
-                    <IconArrowRight className="ml-1" />
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
-                </Button>
-              </Link>
+              <CtaButton href={NavigationPath.Signin} />
             </div>
           </div>
         </section>
@@ -142,8 +128,8 @@ export default async function LandingPage() {
               </div>
               <h3 className="text-2xl font-bold mb-4">Sync Everywhere</h3>
               <p className="text-gray-400 leading-relaxed">
-                Access your network from any device. Sign in to sync, or use offline mode for
-                privacy.
+                Access your network from any device. Your data is securely synced across all your
+                devices.
               </p>
             </div>
           </div>
@@ -152,23 +138,12 @@ export default async function LandingPage() {
         {/* CTA Section */}
         <section className="container mx-auto px-6 py-20">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white/[0.08] backdrop-blur-2xl rounded-3xl p-12 md:p-16 border border-white/20 shadow-2xl shadow-black/20 text-center">
+            <div className="bg-white/8 backdrop-blur-2xl rounded-3xl p-12 md:p-16 border border-white/20 shadow-2xl shadow-black/20 text-center">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Build your entrepreneurial circle
               </h2>
               <p className="text-xl text-gray-300 mb-8">One person at a time</p>
-              <Link href="/sign-in">
-                <Button
-                  size="lg"
-                  className="relative bg-gradient-to-r from-[#0A66C2] to-[#007AFF] text-white px-10 py-7 text-xl font-semibold shadow-2xl shadow-[#0A66C2]/50 hover:shadow-[#0A66C2]/70 hover:scale-105 transition-all duration-300 border border-white/20 backdrop-blur-sm"
-                >
-                  <span className="relative z-10 flex items-center gap-2">
-                    Let&apos;s connect
-                    <IconArrowRight className="ml-1" />
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
-                </Button>
-              </Link>
+              <CtaButton href={NavigationPath.Signin} />
             </div>
           </div>
         </section>

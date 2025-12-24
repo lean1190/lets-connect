@@ -1,21 +1,20 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { useAuth } from "@/lib/auth/context";
+  DialogTitle
+} from '@/components/ui/dialog';
+import { useAuth } from '@/lib/auth/context';
 
 export default function SettingsPage() {
-  const { user, isSignedIn, signInWithLinkedIn, signOut, isOfflineMode } =
-    useAuth();
+  const { user, isSignedIn, signInWithLinkedIn, signOut } = useAuth();
   const [syncing, setSyncing] = useState(false);
   const [signingIn, setSigningIn] = useState(false);
   const [signOutDialogOpen, setSignOutDialogOpen] = useState(false);
@@ -26,7 +25,7 @@ export default function SettingsPage() {
       await signInWithLinkedIn();
     } catch (error) {
       console.error(error);
-      alert("Failed to sign in. Please try again.");
+      alert('Failed to sign in. Please try again.');
     } finally {
       setSigningIn(false);
     }
@@ -38,13 +37,13 @@ export default function SettingsPage() {
       setSignOutDialogOpen(false);
     } catch (error) {
       console.error(error);
-      alert("Failed to sign out");
+      alert('Failed to sign out');
     }
   };
 
   const handleSync = async () => {
     if (!isSignedIn) {
-      alert("Please sign in to sync your data.");
+      alert('Please sign in to sync your data.');
       return;
     }
 
@@ -53,10 +52,10 @@ export default function SettingsPage() {
       // Sync functionality would go here
       // For now, just show a success message
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      alert("Your data has been synced!");
+      alert('Your data has been synced!');
     } catch (error) {
       console.error(error);
-      alert("Failed to sync data. Please try again.");
+      alert('Failed to sync data. Please try again.');
     } finally {
       setSyncing(false);
     }
@@ -68,9 +67,7 @@ export default function SettingsPage() {
 
       <div className="space-y-6">
         <div>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase mb-2">
-            Account
-          </h2>
+          <h2 className="text-sm font-semibold text-gray-500 uppercase mb-2">Account</h2>
           <Card>
             <CardContent className="pt-6">
               {isSignedIn ? (
@@ -78,12 +75,12 @@ export default function SettingsPage() {
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-[#0A66C2] flex items-center justify-center">
                       <span className="text-white text-xl font-bold">
-                        {user?.email?.[0]?.toUpperCase() || "U"}
+                        {user?.email?.[0]?.toUpperCase() || 'U'}
                       </span>
                     </div>
                     <div className="flex-1">
                       <p className="font-semibold text-gray-900">
-                        {user?.user_metadata?.full_name || "User"}
+                        {user?.user_metadata?.full_name || 'User'}
                       </p>
                       <p className="text-sm text-gray-600">{user?.email}</p>
                     </div>
@@ -100,9 +97,7 @@ export default function SettingsPage() {
                 <div className="space-y-4">
                   <div className="text-center">
                     <span className="text-5xl mb-3 block">☁️</span>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                      {isOfflineMode ? "Offline Mode" : "Not Signed In"}
-                    </h3>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1">Not Signed In</h3>
                     <p className="text-sm text-gray-600">
                       Sign in to sync your contacts across devices
                     </p>
@@ -130,9 +125,7 @@ export default function SettingsPage() {
         </div>
 
         <div>
-          <h2 className="text-sm font-semibold text-gray-500 uppercase mb-2">
-            Data
-          </h2>
+          <h2 className="text-sm font-semibold text-gray-500 uppercase mb-2">Data</h2>
           <Card>
             <CardContent className="pt-6">
               <button
@@ -140,9 +133,7 @@ export default function SettingsPage() {
                 onClick={handleSync}
                 disabled={syncing || !isSignedIn}
                 className={`w-full flex items-center gap-4 p-4 rounded-lg transition-colors ${
-                  !isSignedIn
-                    ? "opacity-50 cursor-not-allowed"
-                    : "hover:bg-gray-50"
+                  !isSignedIn ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-50'
                 }`}
               >
                 {syncing ? (
@@ -152,14 +143,14 @@ export default function SettingsPage() {
                 )}
                 <div className="flex-1 text-left">
                   <p
-                    className={`font-semibold ${!isSignedIn ? "text-gray-500" : "text-[#0A66C2]"}`}
+                    className={`font-semibold ${!isSignedIn ? 'text-gray-500' : 'text-[#0A66C2]'}`}
                   >
                     Sync Now
                   </p>
                   <p className="text-sm text-gray-500">
                     {isSignedIn
-                      ? "Upload local data & download from cloud"
-                      : "Sign in to enable sync"}
+                      ? 'Upload local data & download from cloud'
+                      : 'Sign in to enable sync'}
                   </p>
                 </div>
               </button>
@@ -170,8 +161,8 @@ export default function SettingsPage() {
         <p className="text-sm text-gray-500 text-center">
           Your contacts are always stored locally on your device.
           {isSignedIn
-            ? " They are also backed up to the cloud."
-            : " Sign in to back them up to the cloud."}
+            ? ' They are also backed up to the cloud.'
+            : ' Sign in to back them up to the cloud.'}
         </p>
       </div>
 
@@ -179,15 +170,10 @@ export default function SettingsPage() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Sign Out</DialogTitle>
-            <DialogDescription>
-              Your local data will be kept. Are you sure?
-            </DialogDescription>
+            <DialogDescription>Your local data will be kept. Are you sure?</DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setSignOutDialogOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setSignOutDialogOpen(false)}>
               Cancel
             </Button>
             <Button onClick={handleSignOut} className="bg-[#0A66C2]">

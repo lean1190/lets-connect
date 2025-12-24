@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { AuthProvider, useAuth } from "@/lib/auth/context";
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { AuthProvider, useAuth } from '@/lib/auth/context';
 
 function AppContent({ children }: { children: React.ReactNode }) {
-  const { isLoading, isSignedIn, isOfflineMode } = useAuth();
+  const { isLoading, isSignedIn } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !isSignedIn && !isOfflineMode) {
-      router.push("/sign-in");
+    if (!isLoading && !isSignedIn) {
+      router.push('/sign-in');
     }
-  }, [isLoading, isSignedIn, isOfflineMode, router]);
+  }, [isLoading, isSignedIn, router]);
 
   if (isLoading) {
     return (
@@ -25,7 +25,7 @@ function AppContent({ children }: { children: React.ReactNode }) {
     );
   }
 
-  if (!isSignedIn && !isOfflineMode) {
+  if (!isSignedIn) {
     return null;
   }
 

@@ -1,1 +1,1 @@
-export const pushPalLink = "https://www.pushpal.eu/";
+export const productionUrl = '';

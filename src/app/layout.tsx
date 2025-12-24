@@ -4,7 +4,7 @@ import './globals.css';
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Viewport } from 'next';
-import { getVercelUrl } from '@/lib/environments/is-dev';
+import { getAppBaseUrl } from '@/lib/environments/url';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -29,7 +29,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Let's connect",
   description: 'Keep in touch with your entrepreneurial circle',
-  metadataBase: new URL(getVercelUrl()),
+  metadataBase: new URL(getAppBaseUrl()),
   manifest: '/manifest.webmanifest',
   icons: {
     icon: '/favicon.ico',
