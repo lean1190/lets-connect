@@ -4,11 +4,11 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { CtaButton } from '@/components/ui/cta-button';
 import { isSignedIn } from '@/lib/auth/session/isomorphic';
-import { Route } from '@/lib/constants/navigation';
+import { AppRoute } from '@/lib/constants/navigation';
 
 export default async function LandingPage() {
   const isIn = await isSignedIn();
-  const redirectTo = isIn ? Route.Contacts : Route.Signin;
+  const redirectTo = isIn ? AppRoute.Contacts : AppRoute.Signin;
 
   return (
     <div className="min-h-screen text-white bg-[#0e0f13] relative overflow-hidden">

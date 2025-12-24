@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { Route } from '@/lib/constants/navigation';
+import { AppRoute } from '@/lib/constants/navigation';
 // The client you created from the Server-Side Auth instructions
 import { createClient } from '@/lib/supabase/server';
 
@@ -7,10 +7,10 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
   // if "next" is in param, use it as the redirect URL
-  let next = searchParams.get('next') ?? Route.Contacts;
-  if (!next.startsWith(Route.Root)) {
+  let next = searchParams.get('next') ?? AppRoute.Contacts;
+  if (!next.startsWith(AppRoute.Root)) {
     // if "next" is not a relative URL, use the default
-    next = Route.Root;
+    next = AppRoute.Root;
   }
 
   if (code) {

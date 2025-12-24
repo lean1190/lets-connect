@@ -2,11 +2,11 @@ import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { isSignedIn } from '@/lib/auth/session/isomorphic';
 import { signInWithLinkedIn } from '@/lib/auth/signin';
-import { Route } from '@/lib/constants/navigation';
+import { AppRoute } from '@/lib/constants/navigation';
 
 export default async function SigninPage() {
   if (await isSignedIn()) {
-    redirect(Route.Contacts);
+    redirect(AppRoute.Contacts);
   }
 
   return (
