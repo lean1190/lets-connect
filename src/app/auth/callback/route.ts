@@ -1,23 +1,17 @@
 import { NextResponse } from 'next/server';
-
+import { Route } from '@/lib/constants/navigation';
 // The client you created from the Server-Side Auth instructions
 import { createClient } from '@/lib/supabase/server';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
-  console.log('----> GET CALLBACK AUTH', request);
   const code = searchParams.get('code');
   // if "next" is in param, use it as the redirect URL
-  let next = searchParams.get('next') ?? '/';
-  if (!next.startsWith('/')) {
+  let next = searchParams.get('next') ?? Route.Contacts;
+  if (!next.startsWith(Route.Root)) {
     // if "next" is not a relative URL, use the default
-    next = '/';
+    next = Route.Root;
   }
-  console.log('---> auth callback', {
-    searchParams,
-    origin,
-    next
-  });
 
   if (code) {
     const supabase = await createClient();
@@ -25,12 +19,6 @@ export async function GET(request: Request) {
     if (!error) {
       const forwardedHost = request.headers.get('x-forwarded-host'); // original origin before load balancer
       const isLocalEnv = process.env.NODE_ENV === 'development';
-      console.log('---> auth callback in if', {
-        origin,
-        next,
-        forwardedHost,
-        isLocalEnv
-      });
       if (isLocalEnv) {
         // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
         return NextResponse.redirect(`${origin}${next}`);

@@ -1,7 +1,14 @@
+import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { isSignedIn } from '@/lib/auth/session/isomorphic';
 import { signInWithLinkedIn } from '@/lib/auth/signin';
+import { Route } from '@/lib/constants/navigation';
 
-export default function SigninPage() {
+export default async function SigninPage() {
+  if (await isSignedIn()) {
+    redirect(Route.Contacts);
+  }
+
   return (
     <div className="min-h-screen bg-[#0A66C2] flex items-center justify-center p-8">
       <div className="max-w-md w-full flex flex-col justify-between min-h-[80vh] py-20">

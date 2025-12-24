@@ -1,4 +1,7 @@
-export enum NavigationPath {
-  Home = '/',
-  Signin = '/signin'
+export enum Route {
+  Root = '/',
+  Landing = '/',
+  Signin = '/signin',
+  Contacts = '/contacts',
+  Groups = '/groups'
 }

@@ -11,9 +11,14 @@ export async function getClientUser() {
   return (await supabaseClient.auth.getUser()).data?.user ?? null;
 }
 
+export async function getClaims() {
+  return (await supabaseClient.auth.getClaims()).data?.claims ?? null;
+}
+
 export async function getClientCurrentUserSession() {
   return {
     session: await getClientSession(),
-    user: await getClientUser()
+    user: await getClientUser(),
+    claims: await getClaims()
   } as CurrentUserSession;
 }

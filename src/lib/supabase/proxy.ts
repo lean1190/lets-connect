@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
-import { NavigationPath } from '../constants/navigation';
+import { Route } from '../constants/navigation';
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -41,7 +41,7 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
 
   const user = data?.claims;
-  const signinPath = NavigationPath.Signin;
+  const signinPath = Route.Signin;
 
   if (!user && !request.nextUrl.pathname.startsWith(signinPath)) {
     // no user, potentially respond by redirecting the user to the login page

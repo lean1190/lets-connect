@@ -3,9 +3,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { CtaButton } from '@/components/ui/cta-button';
-import { NavigationPath } from '@/lib/constants/navigation';
+import { isSignedIn } from '@/lib/auth/session/isomorphic';
+import { Route } from '@/lib/constants/navigation';
 
 export default async function LandingPage() {
+  const isIn = await isSignedIn();
+  const redirectTo = isIn ? Route.Contacts : Route.Signin;
+
   return (
     <div className="min-h-screen text-white bg-[#0e0f13] relative overflow-hidden">
       {/* Background gradient effects */}
@@ -27,8 +31,8 @@ export default async function LandingPage() {
             />
             <div className="text-2xl font-bold">Let&apos;s Connect</div>
           </div>
-          <Link href={NavigationPath.Signin}>
-            <Button variant="glass">Sign In</Button>
+          <Link href={redirectTo}>
+            <Button variant="glass">{isIn ? 'Go to app' : 'Sign in'}</Button>
           </Link>
         </nav>
 
@@ -46,7 +50,7 @@ export default async function LandingPage() {
               A simple way to keep track of the connections that matter.
             </p>
             <div className="flex justify-center">
-              <CtaButton href={NavigationPath.Signin} />
+              <CtaButton href={redirectTo} />
             </div>
           </div>
         </section>
@@ -143,7 +147,7 @@ export default async function LandingPage() {
                 Build your entrepreneurial circle
               </h2>
               <p className="text-xl text-gray-300 mb-8">One person at a time</p>
-              <CtaButton href={NavigationPath.Signin} />
+              <CtaButton href={redirectTo} />
             </div>
           </div>
         </section>

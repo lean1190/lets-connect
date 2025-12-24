@@ -12,10 +12,7 @@ export async function signInWithLinkedIn() {
     provider: 'linkedin_oidc',
     options: {
       scopes: 'openid profile email',
-      redirectTo: authCallbackUrl,
-      queryParams: {
-        next: `/contacts`
-      }
+      redirectTo: authCallbackUrl
     }
   });
 
