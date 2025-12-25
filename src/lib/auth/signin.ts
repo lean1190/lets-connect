@@ -3,12 +3,12 @@
 import type { OAuthResponse } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
 import { getAppBaseUrl } from '../environments/url';
-import { createClient } from '../supabase/server';
+import { getSupabaseClient } from '../supabase/isomorphic';
 
 export async function signInWithLinkedIn() {
   const url = getAppBaseUrl();
   const authCallbackUrl = `${url}/auth/callback`;
-  const oAuthResponse = await (await createClient()).auth.signInWithOAuth({
+  const oAuthResponse = await (await getSupabaseClient()).auth.signInWithOAuth({
     provider: 'linkedin_oidc',
     options: {
       scopes: 'openid profile email',

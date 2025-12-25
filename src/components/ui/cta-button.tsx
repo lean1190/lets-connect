@@ -3,7 +3,7 @@ import Link from 'next/link';
 import type * as React from 'react';
 import { cn } from '@/lib/utils';
 
-const ctaButtonVariants = cva(
+const variants = cva(
   'relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-semibold shadow-2xl shadow-[#0A66C2]/50 hover:shadow-[#0A66C2]/70 hover:scale-105 transition-all duration-300 border border-white/20 backdrop-blur-sm bg-gradient-to-r from-[#0A66C2] to-[#007AFF] text-white cursor-pointer outline-none disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
@@ -20,20 +20,53 @@ const ctaButtonVariants = cva(
   }
 );
 
-type CtaButtonProps = {
-  href: string;
+type BaseCtaButtonProps = {
   children?: React.ReactNode;
   className?: string;
-  size?: VariantProps<typeof ctaButtonVariants>['size'];
+} & VariantProps<typeof variants>;
+
+type CtaButtonAsLink = BaseCtaButtonProps & {
+  href: string;
+  type?: never;
+  onClick?: never;
 };
 
-export function CtaButton({ href, children = "Let's connect", className, size }: CtaButtonProps) {
+type CtaButtonAsButton = BaseCtaButtonProps & {
+  href?: never;
+  type?: 'button' | 'submit';
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+};
+
+type CtaButtonProps = CtaButtonAsLink | CtaButtonAsButton;
+
+const ButtonContent = ({ children }: { children: React.ReactNode }) => (
+  <>
+    <span className="relative z-10 flex items-center gap-2">{children}</span>
+    <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
+  </>
+);
+
+export function CtaButton({
+  children = "Let's connect",
+  className,
+  size,
+  ...props
+}: CtaButtonProps) {
+  const buttonClassName = cn(variants({ size }), className);
+
+  if ('href' in props && props.href) {
+    return (
+      <Link href={props.href}>
+        <button type="button" className={buttonClassName}>
+          <ButtonContent>{children}</ButtonContent>
+        </button>
+      </Link>
+    );
+  }
+
   return (
-    <Link href={href}>
-      <button type="button" className={cn(ctaButtonVariants({ size }), className)}>
-        <span className="relative z-10 flex items-center gap-2">{children}</span>
-        <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
-      </button>
-    </Link>
+    <button type={props.type || 'button'} onClick={props.onClick} className={buttonClassName}>
+      <ButtonContent>{children}</ButtonContent>
+    </button>
   );
 }
