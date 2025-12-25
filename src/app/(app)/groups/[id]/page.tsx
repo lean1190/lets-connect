@@ -64,7 +64,7 @@ export default async function GroupDetailPage({ params }: { params: { id: string
                     View Profile →
                   </Link>
                 )}
-                <Link href={`/contact/${contact.id}`}>
+                <Link href={`/contacts/${contact.id}`}>
                   <Button variant="outline" size="sm" className="w-full">
                     Edit
                   </Button>

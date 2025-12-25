@@ -8,7 +8,7 @@ export default function ContactsLayout({ children }: { children: React.ReactNode
   const title =
     pathname === '/contacts'
       ? 'Contacts'
-      : pathname.includes('/contact/')
+      : pathname.includes('/contacts/')
         ? 'Edit Contact'
         : 'Add Contact';
 

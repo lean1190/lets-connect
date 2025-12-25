@@ -1,28 +1,22 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useAction } from "next-safe-action/hooks";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useRouter } from 'next/navigation';
+import { useAction } from 'next-safe-action/hooks';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { deleteGroup, updateGroup } from "@/lib/server-actions/groups";
+  DialogTitle
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { deleteGroup, updateGroup } from '@/lib/server-actions/groups';
 
-export function EditGroupButton({
-  groupId,
-  groupName,
-}: {
-  groupId: string;
-  groupName: string;
-}) {
+export function EditGroupButton({ groupId, groupName }: { groupId: string; groupName: string }) {
   const [editOpen, setEditOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [name, setName] = useState(groupName);
@@ -30,19 +24,19 @@ export function EditGroupButton({
   const {
     execute: updateGroupAction,
     status: updateStatus,
-    result: updateResult,
+    result: updateResult
   } = useAction(updateGroup);
   const {
     execute: deleteGroupAction,
     status: deleteStatus,
-    result: deleteResult,
+    result: deleteResult
   } = useAction(deleteGroup);
 
   const handleUpdate = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!name.trim()) {
-      alert("Please enter a group name");
+      alert('Please enter a group name');
       return;
     }
 
@@ -66,7 +60,7 @@ export function EditGroupButton({
     if (deleteResult?.serverError) {
       alert(`Error: ${deleteResult.serverError}`);
     } else if (deleteResult?.data) {
-      router.push("/groups");
+      router.push('/groups');
     }
   }, [deleteResult, router]);
 
@@ -95,19 +89,15 @@ export function EditGroupButton({
               </div>
             </div>
             <DialogFooter className="mt-6">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setEditOpen(false)}
-              >
+              <Button type="button" variant="outline" onClick={() => setEditOpen(false)}>
                 Cancel
               </Button>
               <Button
                 type="submit"
-                disabled={updateStatus === "executing"}
+                disabled={updateStatus === 'executing'}
                 className="bg-[#0A66C2]"
               >
-                {updateStatus === "executing" ? "Saving..." : "Save Changes"}
+                {updateStatus === 'executing' ? 'Saving...' : 'Save Changes'}
               </Button>
             </DialogFooter>
           </form>
@@ -132,8 +122,8 @@ export function EditGroupButton({
           <DialogHeader>
             <DialogTitle>Delete Group</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete &quot;{groupName}&quot;? Contacts
-              in this group will not be deleted.
+              Are you sure you want to delete &quot;{groupName}&quot;? Contacts in this group will
+              not be deleted.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -143,9 +133,9 @@ export function EditGroupButton({
             <Button
               variant="destructive"
               onClick={handleDelete}
-              disabled={deleteStatus === "executing"}
+              disabled={deleteStatus === 'executing'}
             >
-              {deleteStatus === "executing" ? "Deleting..." : "Delete"}
+              {deleteStatus === 'executing' ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>
         </DialogContent>

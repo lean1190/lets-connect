@@ -1,38 +1,32 @@
-"use client";
+'use client';
 
-import { useParams, useRouter } from "next/navigation";
-import { useAction } from "next-safe-action/hooks";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useParams, useRouter } from 'next/navigation';
+import { useAction } from 'next-safe-action/hooks';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  deleteContact,
-  getContactById,
-  updateContact,
-} from "@/lib/server-actions/contacts";
-import { getGroups } from "@/lib/server-actions/groups";
+  DialogTitle
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { deleteContact, getContactById, updateContact } from '@/lib/server-actions/contacts';
+import { getGroups } from '@/lib/server-actions/groups';
 
 export default function EditContactPage() {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
 
-  const [name, setName] = useState("");
-  const [profileLink, setProfileLink] = useState("");
-  const [reason, setReason] = useState("");
-  const [allGroups, setAllGroups] = useState<
-    Array<{ id: string; name: string }>
-  >([]);
+  const [name, setName] = useState('');
+  const [profileLink, setProfileLink] = useState('');
+  const [reason, setReason] = useState('');
+  const [allGroups, setAllGroups] = useState<Array<{ id: string; name: string }>>([]);
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -40,32 +34,29 @@ export default function EditContactPage() {
   const {
     execute: updateContactAction,
     status: updateStatus,
-    result: updateResult,
+    result: updateResult
   } = useAction(updateContact);
   const {
     execute: deleteContactAction,
     status: deleteStatus,
-    result: deleteResult,
+    result: deleteResult
   } = useAction(deleteContact);
 
   useEffect(() => {
     async function loadData() {
       try {
-        const [contact, groups] = await Promise.all([
-          getContactById(id),
-          getGroups(),
-        ]);
+        const [contact, groups] = await Promise.all([getContactById(id), getGroups()]);
 
         if (contact) {
           setName(contact.name);
-          setProfileLink(contact.url || "");
-          setReason(contact.reason || "");
+          setProfileLink(contact.url || '');
+          setReason(contact.reason || '');
           setSelectedGroups(contact.groups?.map((g) => g.id) || []);
         }
         setAllGroups(groups);
       } catch (error) {
-        console.error("Error loading contact:", error);
-        alert("Failed to load contact");
+        console.error('Error loading contact:', error);
+        alert('Failed to load contact');
       } finally {
         setLoading(false);
       }
@@ -75,9 +66,7 @@ export default function EditContactPage() {
 
   const toggleGroup = (groupId: string) => {
     setSelectedGroups((prev) =>
-      prev.includes(groupId)
-        ? prev.filter((gid) => gid !== groupId)
-        : [...prev, groupId],
+      prev.includes(groupId) ? prev.filter((gid) => gid !== groupId) : [...prev, groupId]
     );
   };
 
@@ -85,7 +74,7 @@ export default function EditContactPage() {
     e.preventDefault();
 
     if (!name.trim()) {
-      alert("Please enter a name");
+      alert('Please enter a name');
       return;
     }
 
@@ -94,7 +83,7 @@ export default function EditContactPage() {
       name: name.trim(),
       profileLink: profileLink.trim(),
       reason: reason.trim(),
-      groupIds: selectedGroups,
+      groupIds: selectedGroups
     });
   };
 
@@ -114,7 +103,7 @@ export default function EditContactPage() {
     if (deleteResult?.serverError) {
       alert(`Error: ${deleteResult.serverError}`);
     } else if (deleteResult?.data) {
-      router.push("/contacts");
+      router.push('/contacts');
     }
   }, [deleteResult, router]);
 
@@ -186,8 +175,8 @@ export default function EditContactPage() {
                         onClick={() => toggleGroup(group.id)}
                         className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                           selectedGroups.includes(group.id)
-                            ? "bg-[#0A66C2] text-white"
-                            : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                            ? 'bg-[#0A66C2] text-white'
+                            : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
                         }`}
                       >
                         {group.name}
@@ -200,16 +189,12 @@ export default function EditContactPage() {
               <div className="flex gap-4">
                 <Button
                   type="submit"
-                  disabled={updateStatus === "executing"}
+                  disabled={updateStatus === 'executing'}
                   className="flex-1 bg-[#0A66C2]"
                 >
-                  {updateStatus === "executing" ? "Saving..." : "Save Changes"}
+                  {updateStatus === 'executing' ? 'Saving...' : 'Save Changes'}
                 </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => router.back()}
-                >
+                <Button type="button" variant="outline" onClick={() => router.back()}>
                   Cancel
                 </Button>
               </div>
@@ -232,23 +217,19 @@ export default function EditContactPage() {
           <DialogHeader>
             <DialogTitle>Delete Contact</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete {name}? This action cannot be
-              undone.
+              Are you sure you want to delete {name}? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setDeleteDialogOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
               Cancel
             </Button>
             <Button
               variant="destructive"
               onClick={handleDelete}
-              disabled={deleteStatus === "executing"}
+              disabled={deleteStatus === 'executing'}
             >
-              {deleteStatus === "executing" ? "Deleting..." : "Delete"}
+              {deleteStatus === 'executing' ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>
         </DialogContent>

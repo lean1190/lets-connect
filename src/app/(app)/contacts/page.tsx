@@ -71,7 +71,7 @@ export default async function ContactsPage() {
                 </Link>
               )}
               <div className="mt-4 flex gap-2">
-                <Link href={`/contact/${contact.id}`} className="flex-1">
+                <Link href={`/contacts/${contact.id}`} className="flex-1">
                   <Button variant="outline" size="sm" className="w-full">
                     Edit
                   </Button>
