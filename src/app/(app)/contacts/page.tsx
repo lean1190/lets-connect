@@ -1,18 +1,17 @@
-import { format } from "date-fns";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getContacts } from "@/lib/server-actions/contacts";
-import { DeleteContactButton } from "./delete-contact-button";
+import { format } from 'date-fns';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { getContacts } from '@/lib/server-actions/contacts';
+import { DeleteContactButton } from './delete-contact-button';
 
 export default async function ContactsPage() {
   const contacts = await getContacts();
 
   const formatDate = (dateString: string) => {
     try {
-      return format(new Date(dateString), "MMM d, yyyy");
+      return format(new Date(dateString), 'MMM d, yyyy');
     } catch {
-      return "Unknown date";
+      return 'Unknown date';
     }
   };
 
@@ -21,12 +20,8 @@ export default async function ContactsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
           <span className="text-6xl mb-4">👋</span>
-          <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-            No contacts yet
-          </h2>
-          <p className="text-gray-600 mb-8">
-            Scan a LinkedIn QR code to get started
-          </p>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-2">No contacts yet</h2>
+          <p className="text-gray-600 mb-8">Scan a LinkedIn QR code to get started</p>
           <Link href="/scan">
             <Button className="bg-[#0A66C2]">Start Scanning</Button>
           </Link>
@@ -39,25 +34,26 @@ export default async function ContactsPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
       <div className="space-y-4">
         {contacts.map((contact) => (
-          <Card key={contact.id} className="hover:shadow-md transition-shadow">
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-lg">{contact.name}</CardTitle>
-                <span className="text-xs text-gray-500">
-                  {formatDate(contact.dateAdded)}
-                </span>
+          <div
+            key={contact.id}
+            className="relative bg-white/8 backdrop-blur-2xl rounded-2xl border border-white/20 shadow-2xl shadow-black/20 overflow-hidden hover:border-white/30 transition-all"
+          >
+            {/* Liquid glass shine effect */}
+            <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent pointer-events-none"></div>
+            <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent"></div>
+
+            <div className="relative z-10 p-6">
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">{contact.name}</h3>
+                <span className="text-xs text-gray-500">{formatDate(contact.dateAdded)}</span>
               </div>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-700 mb-4 line-clamp-2">
-                {contact.reason}
-              </p>
+              <p className="text-gray-700 mb-4 line-clamp-2">{contact.reason}</p>
               {contact.groups && contact.groups.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
                   {contact.groups.map((group) => (
                     <span
                       key={group.id}
-                      className="px-3 py-1 bg-[#E8F4FD] text-[#0A66C2] rounded-full text-xs font-medium"
+                      className="px-3 py-1 bg-[#0A66C2]/20 backdrop-blur-sm border border-[#0A66C2]/30 text-[#0A66C2] rounded-full text-xs font-medium"
                     >
                       {group.name}
                     </span>
@@ -69,7 +65,7 @@ export default async function ContactsPage() {
                   href={contact.profileLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[#0A66C2] font-semibold text-sm hover:underline"
+                  className="text-[#0A66C2] font-semibold text-sm hover:underline mb-4 inline-block"
                 >
                   View Profile →
                 </Link>
@@ -77,16 +73,13 @@ export default async function ContactsPage() {
               <div className="mt-4 flex gap-2">
                 <Link href={`/contact/${contact.id}`} className="flex-1">
                   <Button variant="outline" size="sm" className="w-full">
-                    Edit Contact
+                    Edit
                   </Button>
                 </Link>
-                <DeleteContactButton
-                  contactId={contact.id}
-                  contactName={contact.name}
-                />
+                <DeleteContactButton contactId={contact.id} contactName={contact.name} />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
     </div>

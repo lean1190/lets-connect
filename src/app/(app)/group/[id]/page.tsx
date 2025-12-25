@@ -1,20 +1,12 @@
-import { format } from "date-fns";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getContactsInGroup, getGroupById } from "@/lib/server-actions/groups";
-import { EditGroupButton } from "./edit-group-button";
+import { format } from 'date-fns';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { getContactsInGroup, getGroupById } from '@/lib/server-actions/groups';
+import { EditGroupButton } from './edit-group-button';
 
-export default async function GroupDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function GroupDetailPage({ params }: { params: { id: string } }) {
   const { id } = await params;
-  const [group, contacts] = await Promise.all([
-    getGroupById(id),
-    getContactsInGroup(id),
-  ]);
+  const [group, contacts] = await Promise.all([getGroupById(id), getContactsInGroup(id)]);
 
   if (!group) {
     return (
@@ -26,9 +18,9 @@ export default async function GroupDetailPage({
 
   const formatDate = (dateString: string) => {
     try {
-      return format(new Date(dateString), "MMM d");
+      return format(new Date(dateString), 'MMM d');
     } catch {
-      return "";
+      return '';
     }
   };
 
@@ -42,32 +34,26 @@ export default async function GroupDetailPage({
       {contacts.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
           <span className="text-6xl mb-4">📭</span>
-          <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-            No contacts in this group
-          </h2>
-          <p className="text-gray-600">
-            Edit a contact to add them to this group
-          </p>
+          <h2 className="text-2xl font-semibold text-gray-900 mb-2">No contacts in this group</h2>
+          <p className="text-gray-600">Edit a contact to add them to this group</p>
         </div>
       ) : (
         <div className="space-y-4">
           {contacts.map((contact) => (
-            <Card
+            <div
               key={contact.id}
-              className="hover:shadow-md transition-shadow"
+              className="relative bg-white/8 backdrop-blur-2xl rounded-2xl border border-white/20 shadow-2xl shadow-black/20 overflow-hidden hover:border-white/30 transition-all"
             >
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg">{contact.name}</CardTitle>
-                  <span className="text-xs text-gray-500">
-                    {formatDate(contact.dateAdded)}
-                  </span>
+              {/* Liquid glass shine effect */}
+              <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent pointer-events-none"></div>
+              <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent"></div>
+
+              <div className="relative z-10 p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">{contact.name}</h3>
+                  <span className="text-xs text-gray-500">{formatDate(contact.dateAdded)}</span>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 mb-4 line-clamp-2">
-                  {contact.reason}
-                </p>
+                <p className="text-gray-700 mb-4 line-clamp-2">{contact.reason}</p>
                 {contact.profileLink && (
                   <Link
                     href={contact.profileLink}
@@ -80,11 +66,11 @@ export default async function GroupDetailPage({
                 )}
                 <Link href={`/contact/${contact.id}`}>
                   <Button variant="outline" size="sm" className="w-full">
-                    Edit Contact
+                    Edit
                   </Button>
                 </Link>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
       )}

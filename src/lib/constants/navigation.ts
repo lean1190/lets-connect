@@ -3,5 +3,7 @@ export enum AppRoute {
   Landing = '/',
   Signin = '/signin',
   Contacts = '/contacts',
-  Groups = '/groups'
+  Scan = '/scan',
+  Groups = '/groups',
+  Settings = '/settings'
 }
