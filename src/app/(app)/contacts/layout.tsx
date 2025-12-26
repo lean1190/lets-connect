@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { AppRoute } from '@/lib/constants/navigation';
+import { getTitle } from '@/lib/title/get';
 import { PageWithNavigationLayout } from '../components/page-with-navigation-layout';
 
 const titles: Record<string, string> = {
@@ -10,17 +11,19 @@ const titles: Record<string, string> = {
   [AppRoute.EditContact]: 'Edit contact'
 };
 
-const getTitle = (pathname: string) => {
-  const title = titles[pathname];
-  return title
-    ? title
-    : pathname?.startsWith(AppRoute.EditContact)
-      ? AppRoute.EditContact
-      : 'Contacts';
-};
-
 export default function ContactsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
-  return <PageWithNavigationLayout title={getTitle(pathname)}>{children}</PageWithNavigationLayout>;
+  return (
+    <PageWithNavigationLayout
+      title={getTitle({
+        pathname,
+        titles,
+        partialRoute: AppRoute.EditContact,
+        defaultTitle: titles[AppRoute.Contacts]
+      })}
+    >
+      {children}
+    </PageWithNavigationLayout>
+  );
 }

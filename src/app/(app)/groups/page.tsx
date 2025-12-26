@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { CtaButton } from '@/components/ui/cta-button';
 import { AppRoute } from '@/lib/constants/navigation';
 import { getGroups } from '@/lib/server-actions/groups';
-import { DeleteGroupButton } from './delete-group-button';
 
 export default async function GroupsPage() {
   const groups = await getGroups();
@@ -28,7 +27,7 @@ export default async function GroupsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {groups.map((group) => (
           <div key={group.id} className="relative">
-            <Link href={`/groups/${group.id}`}>
+            <Link href={`${AppRoute.EditGroup}${group.id}`}>
               <div className="relative bg-white/8 backdrop-blur-2xl rounded-2xl border border-white/20 shadow-2xl shadow-black/20 overflow-hidden hover:border-white/30 transition-all cursor-pointer">
                 {/* Liquid glass shine effect */}
                 <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent pointer-events-none"></div>
@@ -43,7 +42,6 @@ export default async function GroupsPage() {
                 </div>
               </div>
             </Link>
-            <DeleteGroupButton groupId={group.id} groupName={group.name} />
           </div>
         ))}
       </div>

@@ -1,3 +1,4 @@
+import { IconUserPlus } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -33,7 +34,7 @@ export default async function GroupDetailPage({ params }: { params: { id: string
 
       {contacts.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-          <span className="text-6xl mb-4">📭</span>
+          <IconUserPlus className="w-16 h-16 text-gray-400 mb-4" stroke={1.5} />
           <h2 className="text-2xl font-semibold text-gray-900 mb-2">No contacts in this group</h2>
           <p className="text-gray-600">Edit a contact to add them to this group</p>
         </div>
