@@ -4,6 +4,7 @@ export enum AppRoute {
   Signin = '/signin',
   Contacts = '/contacts',
   Scan = '/scan',
+  MyQr = '/my-qr',
   Groups = '/groups',
   Settings = '/settings'
 }

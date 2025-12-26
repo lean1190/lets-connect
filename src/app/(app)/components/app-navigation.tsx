@@ -1,6 +1,6 @@
 'use client';
 
-import { IconQrcode, IconSettings, IconUser, IconUsers } from '@tabler/icons-react';
+import { IconSettings, IconUser, IconUsers } from '@tabler/icons-react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -21,7 +21,6 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { route: AppRoute.Contacts, icon: IconUser, label: 'Contacts' },
-  { route: AppRoute.Scan, icon: IconQrcode, label: 'Scan' },
   { route: AppRoute.Groups, icon: IconUsers, label: 'Groups' },
   { route: AppRoute.Settings, icon: IconSettings, label: 'Settings' }
 ];
