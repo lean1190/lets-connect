@@ -1,6 +1,8 @@
+import { IconUser } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { CtaButton } from '@/components/ui/cta-button';
 import { getContacts } from '@/lib/server-actions/contacts';
 import { DeleteContactButton } from './delete-contact-button';
 
@@ -19,11 +21,11 @@ export default async function ContactsPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-          <span className="text-6xl mb-4">👋</span>
+          <IconUser className="w-16 h-16 text-gray-400 mb-4" stroke={1.5} />
           <h2 className="text-2xl font-semibold text-gray-900 mb-2">No contacts yet</h2>
-          <p className="text-gray-600 mb-8">Scan a LinkedIn QR code to get started</p>
+          <p className="text-gray-600 mb-8">Scan a QR code to get started</p>
           <Link href="/scan">
-            <Button className="bg-[#0A66C2]">Start Scanning</Button>
+            <CtaButton size="sm">Scan</CtaButton>
           </Link>
         </div>
       </div>

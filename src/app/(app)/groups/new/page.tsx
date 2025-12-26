@@ -8,6 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { createGroup } from '@/lib/server-actions/groups';
+import { isExecuting } from '@/lib/server-actions/status';
 
 export default function NewGroupPage() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function NewGroupPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
       <Card>
-        <CardContent>
+        <CardContent className="pt-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <Label htmlFor="name">
@@ -55,15 +56,11 @@ export default function NewGroupPage() {
             </div>
 
             <div className="flex gap-4">
-              <Button
-                type="submit"
-                disabled={status === 'executing'}
-                className="flex-1 bg-[#0A66C2]"
-              >
-                {status === 'executing' ? 'Creating...' : 'Create Group'}
-              </Button>
               <Button type="button" variant="outline" onClick={() => router.back()}>
                 Cancel
+              </Button>
+              <Button type="submit" disabled={isExecuting(status)} className="flex-1">
+                {isExecuting(status) ? 'Saving...' : 'Create Group'}
               </Button>
             </div>
           </form>

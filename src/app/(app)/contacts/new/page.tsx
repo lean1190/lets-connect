@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { createContact } from '@/lib/server-actions/contacts';
 import { getGroups } from '@/lib/server-actions/groups';
+import { isExecuting } from '@/lib/server-actions/status';
 
 export default function NewContactPage() {
   const router = useRouter();
@@ -68,16 +69,16 @@ export default function NewContactPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
       <Card>
-        <CardContent>
+        <CardContent className="pt-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <Label htmlFor="profileLink">LinkedIn Profile</Label>
+              <Label htmlFor="profileLink">Profile link</Label>
               <Input
                 id="profileLink"
                 type="text"
-                value={profileLink || 'No profile link'}
+                value={profileLink || 'https://www.linkedin.com/in/leanvilas/'}
                 disabled
-                className="mt-1 bg-gray-50"
+                className="mt-1 text-sm"
               />
             </div>
 
@@ -88,17 +89,17 @@ export default function NewContactPage() {
               <Input
                 id="name"
                 type="text"
-                placeholder="Enter name"
+                placeholder="Lean Vilas"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-1"
+                className="mt-1 text-sm"
                 required
               />
             </div>
 
             <div>
               <Label htmlFor="reason">
-                Reason to Contact <span className="text-red-500">*</span>
+                Reason to contact <span className="text-red-500">*</span>
               </Label>
               <textarea
                 id="reason"
@@ -133,15 +134,11 @@ export default function NewContactPage() {
             )}
 
             <div className="flex gap-4">
-              <Button
-                type="submit"
-                disabled={status === 'executing'}
-                className="flex-1 bg-[#0A66C2]"
-              >
-                {status === 'executing' ? 'Saving...' : 'Save Contact'}
-              </Button>
               <Button type="button" variant="outline" onClick={() => router.back()}>
                 Cancel
+              </Button>
+              <Button type="submit" disabled={isExecuting(status)} className="flex-1">
+                {isExecuting(status) ? 'Saving...' : 'Save Contact'}
               </Button>
             </div>
           </form>
