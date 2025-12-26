@@ -64,22 +64,22 @@ export default async function LandingPage() {
               <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent"></div>
 
               <div className="relative z-10">
-                <h2 className="text-4xl md:text-5xl font-bold mb-8 bg-linear-to-r from-white to-white/80 bg-clip-text text-transparent">
+                <h2 className="text-4xl leading-relaxed md:text-5xl font-bold mb-8 bg-linear-to-r from-white to-white/80 bg-clip-text text-transparent">
                   Shaping circles is hard
                 </h2>
                 <div className="space-y-5 text-gray-300 text-lg md:text-xl leading-relaxed">
-                  <p className="flex items-start gap-3">
-                    <span className="text-[#0A66C2] mt-1">•</span>
+                  <p className="flex items-center gap-3">
+                    <span className="text-blue-500">•</span>
                     <span>
                       Sometimes, we are forced to remember &quot;what did we connect for?&quot;
                     </span>
                   </p>
-                  <p className="flex items-start gap-3">
-                    <span className="text-[#0A66C2] mt-1">•</span>
+                  <p className="flex items-center gap-3">
+                    <span className="text-blue-500">•</span>
                     <span>After connecting with someone, it can be hard to find them again.</span>
                   </p>
-                  <p className="flex items-start gap-3">
-                    <span className="text-[#0A66C2] mt-1">•</span>
+                  <p className="flex items-center gap-3">
+                    <span className="text-blue-500">•</span>
                     <span>
                       LinkedIn and WhatsApp are great for connecting once, not so much to keep in
                       touch.
