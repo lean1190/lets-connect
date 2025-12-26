@@ -8,6 +8,7 @@ export enum AppRoute {
   Scan = '/scan',
   MyQr = '/my-qr',
   Groups = '/groups',
+  NewGroup = '/groups/new',
   Settings = '/settings'
 }
 

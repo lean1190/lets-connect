@@ -4,7 +4,7 @@ import { IconPlus, IconSettings, IconUser, IconUsers } from '@tabler/icons-react
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { AppRoute } from '@/lib/constants/navigation';
 
 const getNavItemClassName = (isActive: boolean): string =>
@@ -22,14 +22,21 @@ type NavItem = {
 const navItems: NavItem[] = [
   { route: AppRoute.Contacts, icon: IconUser, label: 'Contacts' },
   { route: AppRoute.Groups, icon: IconUsers, label: 'Groups' },
-  { route: AppRoute.Settings, icon: IconSettings, label: 'Settings' },
-  { route: AppRoute.NewContact, icon: IconPlus, label: 'New' }
+  { route: AppRoute.Settings, icon: IconSettings, label: 'Settings' }
 ];
+
+const newRoutes: AppRoute[] = [AppRoute.NewGroup, AppRoute.NewContact];
 
 export function AppNavigation() {
   const pathname = usePathname();
 
   const isActivePathname = useCallback((expected: AppRoute) => pathname === expected, [pathname]);
+  const newRoute = useMemo(
+    () => (pathname?.startsWith(AppRoute.Groups) ? AppRoute.NewGroup : AppRoute.NewContact),
+    [pathname]
+  );
+
+  const isNewActive = useMemo(() => newRoutes.includes(pathname as AppRoute), [pathname]);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 pb-safe">
@@ -51,6 +58,10 @@ export function AppNavigation() {
                 </Link>
               );
             })}
+            <Link href={newRoute} className={getNavItemClassName(isNewActive)}>
+              <IconPlus className="w-5 h-5" />
+              {isNewActive && <span className="text-sm font-medium">New</span>}
+            </Link>
           </div>
         </div>
       </div>
