@@ -1,4 +1,4 @@
-import { getSupabaseClient } from '@/lib/supabase/isomorphic';
+import { getSupabaseClient } from '@/lib/database/client/isomorphic';
 import type { CurrentUserSession } from './types';
 
 export async function getSession() {

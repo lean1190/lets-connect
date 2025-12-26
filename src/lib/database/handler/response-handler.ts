@@ -1,14 +1,14 @@
-import type { PostgrestError } from "@supabase/supabase-js";
+import type { PostgrestError } from '@supabase/supabase-js';
 
 export const handleDatabaseResponse = <T>({
   data,
-  error,
+  error
 }: {
   data: T;
   error: PostgrestError | null;
 }) => {
   if (error) {
-    console.error("---> ERROR:Database", error);
+    console.error('---> ERROR:Database', error);
     throw error;
   }
 

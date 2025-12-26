@@ -2,8 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import type { GroupOutput } from '@/lib/database/types';
-import { createClient } from '@/lib/supabase/server';
+import type { GroupOutput } from '@/lib/database/app-types';
+import { getSupabaseClient } from '@/lib/database/client/isomorphic';
 import { actionClient } from './client';
 
 const createGroupSchema = z.object({
@@ -22,7 +22,7 @@ const deleteGroupSchema = z.object({
 export const createGroup = actionClient
   .schema(createGroupSchema)
   .action(async ({ parsedInput }) => {
-    const supabase = await createClient();
+    const supabase = await getSupabaseClient();
     const {
       data: { user }
     } = await supabase.auth.getUser();
@@ -53,7 +53,7 @@ export const createGroup = actionClient
 export const updateGroup = actionClient
   .schema(updateGroupSchema)
   .action(async ({ parsedInput }) => {
-    const supabase = await createClient();
+    const supabase = await getSupabaseClient();
     const {
       data: { user }
     } = await supabase.auth.getUser();
@@ -83,7 +83,7 @@ export const updateGroup = actionClient
 export const deleteGroup = actionClient
   .schema(deleteGroupSchema)
   .action(async ({ parsedInput }) => {
-    const supabase = await createClient();
+    const supabase = await getSupabaseClient();
     const {
       data: { user }
     } = await supabase.auth.getUser();
@@ -107,7 +107,7 @@ export const deleteGroup = actionClient
   });
 
 export async function getGroups(): Promise<GroupOutput[]> {
-  const supabase = await createClient();
+  const supabase = await getSupabaseClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();
@@ -147,7 +147,7 @@ export async function getGroups(): Promise<GroupOutput[]> {
 }
 
 export async function getGroupById(id: string): Promise<GroupOutput | null> {
-  const supabase = await createClient();
+  const supabase = await getSupabaseClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();
@@ -182,7 +182,7 @@ export async function getGroupById(id: string): Promise<GroupOutput | null> {
 }
 
 export async function getContactsInGroup(groupId: string) {
-  const supabase = await createClient();
+  const supabase = await getSupabaseClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();

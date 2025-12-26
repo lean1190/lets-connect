@@ -1,13 +1,13 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
-import type { Database } from "./types";
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import type { Database } from '../types';
 
 export async function createClient() {
   const cookieStore = await cookies();
 
   return createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "",
+    process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? '',
     {
       cookies: {
         getAll() {
@@ -23,8 +23,8 @@ export async function createClient() {
             // This can be ignored if you have middleware refreshing
             // user sessions.
           }
-        },
-      },
-    },
+        }
+      }
+    }
   );
 }

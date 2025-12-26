@@ -2,8 +2,8 @@
 
 import type { OAuthResponse } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
-import { getAppBaseUrl } from '../environments/url';
-import { getSupabaseClient } from '../supabase/isomorphic';
+import { getSupabaseClient } from '@/lib/database/client/isomorphic';
+import { getAppBaseUrl } from '@/lib/environments/url';
 
 export async function signInWithLinkedIn() {
   const url = getAppBaseUrl();

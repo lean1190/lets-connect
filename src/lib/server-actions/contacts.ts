@@ -2,33 +2,33 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import type { ContactOutput, GroupOutput } from '@/lib/database/types';
-import { createClient } from '@/lib/supabase/server';
+import type { ContactOutput, GroupOutput } from '@/lib/database/app-types';
+import { getSupabaseClient } from '@/lib/database/client/isomorphic';
 import { actionClient } from './client';
 
 const createContactSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   profileLink: z.string().url('Invalid URL'),
   reason: z.string().min(1, 'Reason is required'),
-  groupIds: z.array(z.string().uuid()).optional()
+  groupIds: z.array(z.uuid()).optional()
 });
 
 const updateContactSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
   name: z.string().min(1).optional(),
   profileLink: z.string().url().optional(),
   reason: z.string().min(1).optional(),
-  groupIds: z.array(z.string().uuid()).optional()
+  groupIds: z.array(z.uuid()).optional()
 });
 
 const deleteContactSchema = z.object({
-  id: z.string().uuid()
+  id: z.uuid()
 });
 
 export const createContact = actionClient
   .schema(createContactSchema)
   .action(async ({ parsedInput }) => {
-    const supabase = await createClient();
+    const supabase = await getSupabaseClient();
     const {
       data: { user }
     } = await supabase.auth.getUser();
@@ -76,7 +76,7 @@ export const createContact = actionClient
 export const updateContact = actionClient
   .schema(updateContactSchema)
   .action(async ({ parsedInput }) => {
-    const supabase = await createClient();
+    const supabase = await getSupabaseClient();
     const {
       data: { user }
     } = await supabase.auth.getUser();
@@ -134,7 +134,7 @@ export const updateContact = actionClient
 export const deleteContact = actionClient
   .schema(deleteContactSchema)
   .action(async ({ parsedInput }) => {
-    const supabase = await createClient();
+    const supabase = await getSupabaseClient();
     const {
       data: { user }
     } = await supabase.auth.getUser();
@@ -158,7 +158,7 @@ export const deleteContact = actionClient
   });
 
 export async function getContacts(): Promise<ContactOutput[]> {
-  const supabase = await createClient();
+  const supabase = await getSupabaseClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();
@@ -218,7 +218,7 @@ export async function getContacts(): Promise<ContactOutput[]> {
 }
 
 export async function getContactById(id: string) {
-  const supabase = await createClient();
+  const supabase = await getSupabaseClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();

@@ -15,7 +15,7 @@
     "format": "biome format --write",
     "test": "vitest run --coverage --passWithNoTests",
     "types:check": "tsc --skipLibCheck --noEmit",
-    "supabase:types": "source .env.local && npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public > src/lib/supabase/types.ts",
+    "supabase:types": "source .env.local && npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public > src/lib/database/types.ts",
     "supabase:login": "npx supabase login",
     "dependencies:check": "ncu",
     "dependencies:update": "ncu --interactive && npm install && npm run lint:all",
