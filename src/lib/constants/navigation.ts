@@ -3,6 +3,8 @@ export enum AppRoute {
   Landing = '/',
   Signin = '/signin',
   Contacts = '/contacts',
+  NewContact = '/contacts/new',
+  EditContact = '/contacts/',
   Scan = '/scan',
   MyQr = '/my-qr',
   Groups = '/groups',

@@ -1,8 +1,9 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { AppRoute } from '@/lib/constants/navigation';
 
 export default function ScanPage() {
   const router = useRouter();
@@ -17,10 +18,8 @@ export default function ScanPage() {
 
     async function initScanner() {
       try {
-        const QrScanner = (await import("qr-scanner")).default;
-        const videoElement = document.getElementById(
-          "qr-reader",
-        ) as HTMLVideoElement;
+        const QrScanner = (await import('qr-scanner')).default;
+        const videoElement = document.getElementById('qr-reader') as HTMLVideoElement;
 
         if (!videoElement || !mounted) return;
 
@@ -32,32 +31,30 @@ export default function ScanPage() {
             scanner.stop();
 
             const isLinkedIn =
-              result.data.includes("linkedin.com/in/") ||
-              result.data.includes("linkedin.com/profile/view");
+              result.data.includes('linkedin.com/in/') ||
+              result.data.includes('linkedin.com/profile/view');
             const isWhatsApp =
-              result.data.includes("wa.me/") ||
-              result.data.includes("api.whatsapp.com") ||
-              result.data.includes("whatsapp://");
+              result.data.includes('wa.me/') ||
+              result.data.includes('api.whatsapp.com') ||
+              result.data.includes('whatsapp://');
 
             if (isLinkedIn || isWhatsApp) {
-              router.push(
-                `/form?profileLink=${encodeURIComponent(result.data)}`,
-              );
+              router.push(`${AppRoute.NewContact}?profileLink=${encodeURIComponent(result.data)}`);
             } else {
               setError(
-                "This doesn't appear to be a LinkedIn or WhatsApp QR code. Please try again.",
+                "This doesn't appear to be a LinkedIn or WhatsApp QR code. Please try again."
               );
               setScanned(false);
             }
           },
           {
-            preferredCamera: "environment",
+            preferredCamera: 'environment',
             highlightScanRegion: true,
             highlightCodeOutline: true,
             onDecodeError: () => {
               // Ignore scanning errors
-            },
-          },
+            }
+          }
         );
 
         if (!mounted) return;
@@ -66,7 +63,7 @@ export default function ScanPage() {
         scannerRef.current = scanner;
         setHasPermission(true);
       } catch (err) {
-        console.error("Error starting scanner:", err);
+        console.error('Error starting scanner:', err);
         if (mounted) {
           setHasPermission(false);
         }
@@ -79,7 +76,7 @@ export default function ScanPage() {
       mounted = false;
       if (scannerRef.current) {
         Promise.resolve(scannerRef.current.stop()).catch((err: Error) => {
-          console.error("Error stopping scanner:", err);
+          console.error('Error stopping scanner:', err);
         });
       }
     };
@@ -89,12 +86,9 @@ export default function ScanPage() {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-8">
         <div className="text-center text-white">
-          <p className="text-lg mb-4">
-            Camera permission is required to scan QR codes.
-          </p>
+          <p className="text-lg mb-4">Camera permission is required to scan QR codes.</p>
           <p className="text-sm text-gray-400 mb-8">
-            Please enable camera access in your browser settings and refresh the
-            page.
+            Please enable camera access in your browser settings and refresh the page.
           </p>
         </div>
       </div>
@@ -117,7 +111,7 @@ export default function ScanPage() {
                 try {
                   await scannerRef.current.start();
                 } catch (err) {
-                  console.error("Error resuming scanner:", err);
+                  console.error('Error resuming scanner:', err);
                 }
               }
             }}
@@ -136,7 +130,7 @@ export default function ScanPage() {
                 try {
                   await scannerRef.current.start();
                 } catch (err) {
-                  console.error("Error resuming scanner:", err);
+                  console.error('Error resuming scanner:', err);
                 }
               }
             }}

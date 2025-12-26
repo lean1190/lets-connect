@@ -1,6 +1,6 @@
 'use client';
 
-import { IconSettings, IconUser, IconUsers } from '@tabler/icons-react';
+import { IconPlus, IconSettings, IconUser, IconUsers } from '@tabler/icons-react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -22,16 +22,14 @@ type NavItem = {
 const navItems: NavItem[] = [
   { route: AppRoute.Contacts, icon: IconUser, label: 'Contacts' },
   { route: AppRoute.Groups, icon: IconUsers, label: 'Groups' },
-  { route: AppRoute.Settings, icon: IconSettings, label: 'Settings' }
+  { route: AppRoute.Settings, icon: IconSettings, label: 'Settings' },
+  { route: AppRoute.NewContact, icon: IconPlus, label: 'New' }
 ];
 
 export function AppNavigation() {
   const pathname = usePathname();
 
-  const isActivePathname = useCallback(
-    (expected: AppRoute) => pathname === expected || pathname?.includes(`${expected}/`),
-    [pathname]
-  );
+  const isActivePathname = useCallback((expected: AppRoute) => pathname === expected, [pathname]);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 pb-safe">
