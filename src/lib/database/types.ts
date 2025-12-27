@@ -76,23 +76,59 @@ export type Database = {
       };
       groups: {
         Row: {
+          color: string | null;
           created_at: string;
+          description: string | null;
+          icon: string | null;
           id: string;
           name: string;
           updated_at: string;
           user_id: string | null;
         };
         Insert: {
+          color?: string | null;
           created_at?: string;
+          description?: string | null;
+          icon?: string | null;
           id?: string;
           name: string;
           updated_at?: string;
           user_id?: string | null;
         };
         Update: {
+          color?: string | null;
           created_at?: string;
+          description?: string | null;
+          icon?: string | null;
           id?: string;
           name?: string;
+          updated_at?: string;
+          user_id?: string | null;
+        };
+        Relationships: [];
+      };
+      settings: {
+        Row: {
+          created_at: string;
+          id: string;
+          qr_link: string | null;
+          theme: string | null;
+          updated_at: string;
+          user_id: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          qr_link?: string | null;
+          theme?: string | null;
+          updated_at: string;
+          user_id?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          qr_link?: string | null;
+          theme?: string | null;
           updated_at?: string;
           user_id?: string | null;
         };
