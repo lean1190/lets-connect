@@ -26,7 +26,7 @@ export default async function GroupDetailPage({ params }: { params: { id: string
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
+    <>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">{group.name}</h1>
         <EditGroupButton groupId={id} groupName={group.name} />
@@ -75,6 +75,6 @@ export default async function GroupDetailPage({ params }: { params: { id: string
           ))}
         </div>
       )}
-    </div>
+    </>
   );
 }

@@ -40,7 +40,7 @@ export function AppNavigation() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 pb-safe">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
         <div className="relative bg-black/40 backdrop-blur-2xl rounded-2xl border border-white/20 shadow-2xl">
           {/* Liquid glass shine effect */}
           <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent pointer-events-none rounded-2xl"></div>

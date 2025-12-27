@@ -81,7 +81,7 @@ export default function MyQRPage() {
             <CardContent className="pt-6">
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="linkedinUrl">LinkedIn Profile URL</Label>
+                  <Label htmlFor="linkedinUrl">URL (e.g. LinkedIn or Wsp)</Label>
                   <Input
                     id="linkedinUrl"
                     type="url"
@@ -117,7 +117,7 @@ export default function MyQRPage() {
               Change URL
             </Button>
             <p className="text-gray-500 text-sm text-center mt-8 max-w-md">
-              Let others scan this QR code to connect with you on LinkedIn
+              Let others scan this QR code to connect with you
             </p>
           </div>
         )}

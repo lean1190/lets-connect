@@ -52,10 +52,11 @@ export function DeleteContactButton({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Contact</DialogTitle>
+            <DialogTitle>Delete {contactName}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete {contactName}? This action cannot be undone.
+              Are you sure you want to delete <strong>{contactName}</strong>?
             </DialogDescription>
+            <DialogDescription>This action cannot be undone</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>

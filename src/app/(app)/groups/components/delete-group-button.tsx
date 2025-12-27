@@ -41,16 +41,16 @@ export function DeleteGroupButton({ groupId, groupName }: { groupId: string; gro
         className="absolute top-2 right-2 text-red-600 hover:text-red-700 hover:bg-red-50"
         aria-label="Delete group"
       >
-        ×
+        Delete
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Group</DialogTitle>
+            <DialogTitle>Delete {groupName}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete &quot;{groupName}&quot;? Contacts in this group will
-              not be deleted.
+              Are you sure you want to delete &quot;{groupName}&quot;?
             </DialogDescription>
+            <DialogDescription>Contacts in this group will not be deleted</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>

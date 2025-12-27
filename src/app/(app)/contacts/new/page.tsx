@@ -92,106 +92,106 @@ export default function NewContactPage() {
   }, [result, router]);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
-      <Card>
-        <CardContent className="pt-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <FormField
-                control={form.control}
-                name="profileLink"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Profile link</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder="https://www.linkedin.com/in/leanvilas/"
-                        disabled={!!profileLinkFromQr}
-                        className="mt-1 text-sm"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Name <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder="Lean Vilas"
-                        className="mt-1 text-sm"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="reason"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Reason to contact <span className="text-red-500">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <textarea
-                        {...field}
-                        placeholder="Why do you want to contact this person?"
-                        className="mt-1 flex min-h-[100px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:border-ring disabled:cursor-not-allowed disabled:opacity-50"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {allGroups.length > 0 && (
-                <div>
-                  <FormLabel>Groups</FormLabel>
-                  <div className="mt-2 flex flex-wrap gap-2">
-                    {allGroups.map((group) => (
-                      <button
-                        key={group.id}
-                        type="button"
-                        onClick={() => toggleGroup(group.id)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                          selectedGroups.includes(group.id)
-                            ? 'bg-[#0A66C2] border border-transparent text-white'
-                            : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                        }`}
-                      >
-                        {group.name}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+    <Card>
+      <CardContent className="pt-6">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="profileLink"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Profile link <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="text"
+                      placeholder="https://www.linkedin.com/in/leanvilas/"
+                      disabled={!!profileLinkFromQr}
+                      className="mt-1 text-sm"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
+            />
 
-              <div className="flex gap-4">
-                <Button type="button" variant="outline" onClick={() => router.back()}>
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isExecuting(status)} className="flex-1">
-                  {isExecuting(status) ? 'Saving...' : 'Save Contact'}
-                </Button>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Name <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="text"
+                      placeholder="Lean Vilas"
+                      className="mt-1 text-sm"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="reason"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Reason to contact <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <textarea
+                      {...field}
+                      placeholder="Why do you want to contact this person?"
+                      className="mt-1 flex min-h-[100px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:border-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {allGroups.length > 0 && (
+              <div>
+                <FormLabel>Groups</FormLabel>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {allGroups.map((group) => (
+                    <button
+                      key={group.id}
+                      type="button"
+                      onClick={() => toggleGroup(group.id)}
+                      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                        selectedGroups.includes(group.id)
+                          ? 'bg-[#0A66C2] border border-transparent text-white'
+                          : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      {group.name}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </div>
+            )}
+
+            <div className="flex gap-6 items-center justify-end">
+              <Button type="button" variant="outline" onClick={() => router.back()}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isExecuting(status)}>
+                {isExecuting(status) ? 'Saving...' : 'Save Contact'}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }
