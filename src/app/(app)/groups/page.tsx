@@ -1,4 +1,4 @@
-import { IconUsers } from '@tabler/icons-react';
+import { IconCircles } from '@tabler/icons-react';
 import Link from 'next/link';
 import { CtaButton } from '@/components/ui/cta-button';
 import { AppRoute } from '@/lib/constants/navigation';
@@ -11,7 +11,7 @@ export default async function GroupsPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-          <IconUsers className="w-16 h-16 text-gray-400 mb-4" stroke={1.5} />
+          <IconCircles className="w-16 h-16 text-gray-400 mb-4" stroke={1.5} />
           <h2 className="text-2xl font-semibold text-gray-900 mb-2">No groups yet</h2>
           <p className="text-gray-600 mb-8">Create groups to organize your contacts</p>
           <Link href={AppRoute.NewGroup}>
@@ -34,7 +34,7 @@ export default async function GroupsPage() {
                 <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent"></div>
 
                 <div className="relative z-10 p-6 text-center">
-                  <IconUsers className="w-12 h-12 text-gray-400 mx-auto mb-3" stroke={1.5} />
+                  <IconCircles className="w-12 h-12 text-gray-400 mx-auto mb-3" stroke={1.5} />
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">{group.name}</h3>
                   <p className="text-sm text-gray-600">
                     {group.contactCount || 0} {group.contactCount === 1 ? 'contact' : 'contacts'}

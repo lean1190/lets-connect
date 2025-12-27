@@ -1,4 +1,4 @@
-import { IconCloud, IconQrcode, IconUsers } from '@tabler/icons-react';
+import { IconCircles, IconCloud, IconQrcode } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -55,46 +55,10 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* Problem Statement */}
-        <section className="container mx-auto px-6 py-12">
-          <div className="max-w-4xl mx-auto">
-            <div className="relative bg-white/8 backdrop-blur-2xl rounded-3xl p-10 md:p-16 border border-white/20 shadow-2xl shadow-black/20 overflow-hidden">
-              {/* Liquid glass shine effect */}
-              <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent pointer-events-none"></div>
-              <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent"></div>
-
-              <div className="relative z-10">
-                <h2 className="text-4xl leading-relaxed md:text-5xl font-bold mb-8 bg-linear-to-r from-white to-white/80 bg-clip-text text-transparent">
-                  Shaping circles is hard
-                </h2>
-                <div className="space-y-5 text-gray-300 text-lg md:text-xl leading-relaxed">
-                  <p className="flex items-center gap-3">
-                    <span className="text-blue-500">•</span>
-                    <span>
-                      Sometimes, we are forced to remember &quot;what did we connect for?&quot;
-                    </span>
-                  </p>
-                  <p className="flex items-center gap-3">
-                    <span className="text-blue-500">•</span>
-                    <span>After connecting with someone, it can be hard to find them again.</span>
-                  </p>
-                  <p className="flex items-center gap-3">
-                    <span className="text-blue-500">•</span>
-                    <span>
-                      LinkedIn and WhatsApp are great for connecting once, not so much to keep in
-                      touch.
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Solution */}
         <section className="container mx-auto px-6 pt-8 pb-20">
           <div className="max-w-4xl mx-auto text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">This app solves the struggle</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Stay in touch</h2>
             <p className="text-xl text-gray-400">
               Everything you need to maintain meaningful connections
             </p>
@@ -116,7 +80,7 @@ export default async function LandingPage() {
             {/* Feature 2 */}
             <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-[#0A66C2]/50 transition-all">
               <div className="w-14 h-14 bg-[#0A66C2]/20 rounded-lg flex items-center justify-center mb-6">
-                <IconUsers className="w-7 h-7 text-[#0A66C2]" />
+                <IconCircles className="w-7 h-7 text-[#0A66C2]" />
               </div>
               <h3 className="text-2xl font-bold mb-4">Organize Your Network</h3>
               <p className="text-gray-400 leading-relaxed">
