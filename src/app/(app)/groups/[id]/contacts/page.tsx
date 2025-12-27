@@ -28,14 +28,21 @@ export default async function GroupContactsPage({ params }: { params: { id: stri
   return (
     <>
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold">{group.name}</h1>
+        <h1 className="text-2xl font-semibold text-foreground">{group.name}</h1>
       </div>
 
       {contacts.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-          <IconUserPlus className="w-16 h-16 text-gray-400 mb-4" stroke={1.5} />
-          <h2 className="text-2xl font-semibold text-gray-900 mb-2">No contacts in this group</h2>
-          <p className="text-gray-600">Edit a contact to add them to this group</p>
+          <IconUserPlus
+            className="w-16 h-16 text-gray-400 dark:text-muted-foreground mb-4"
+            stroke={1.5}
+          />
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-foreground mb-2">
+            No contacts in this group
+          </h2>
+          <p className="text-gray-600 dark:text-muted-foreground">
+            Edit a contact to add them to this group
+          </p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -43,10 +50,16 @@ export default async function GroupContactsPage({ params }: { params: { id: stri
             <Card key={contact.id} className="hover:border-white/30 transition-all">
               <CardContent className="p-6">
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">{contact.name}</h3>
-                  <span className="text-xs text-gray-500">{formatDate(contact.dateAdded)}</span>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">
+                    {contact.name}
+                  </h3>
+                  <span className="text-xs text-gray-500 dark:text-muted-foreground">
+                    {formatDate(contact.dateAdded)}
+                  </span>
                 </div>
-                <p className="text-gray-700 mb-4 line-clamp-2">{contact.reason}</p>
+                <p className="text-gray-700 dark:text-muted-foreground mb-4 line-clamp-2">
+                  {contact.reason}
+                </p>
                 {contact.profileLink && (
                   <Link
                     href={contact.profileLink}

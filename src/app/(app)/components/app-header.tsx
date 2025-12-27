@@ -9,10 +9,10 @@ type Props = {
 
 export function AppHeader({ title }: Props) {
   return (
-    <header className="bg-white border-b sticky top-0 z-10">
+    <header className="bg-white dark:bg-card border-b dark:border-border sticky top-0 z-10">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <h1 className="text-lg font-medium">{title}</h1>
+          <h1 className="text-lg font-medium text-foreground">{title}</h1>
           <div className="flex items-center gap-2">
             <Link href={AppRoute.MyQr}>
               <Button variant="outline" className="px-4 py-2 text-sm font-semibold">

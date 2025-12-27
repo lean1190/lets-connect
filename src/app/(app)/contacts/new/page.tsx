@@ -205,7 +205,7 @@ export default function NewContactPage() {
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                       selectedGroups.includes(group.id)
                         ? 'bg-[#0A66C2] border border-transparent text-white'
-                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                        : 'bg-white dark:bg-card border border-gray-300 dark:border-border text-gray-700 dark:text-foreground hover:bg-gray-50 dark:hover:bg-accent'
                     }`}
                   >
                     {group.name}

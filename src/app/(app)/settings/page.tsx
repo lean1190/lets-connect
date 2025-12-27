@@ -1,3 +1,4 @@
+import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { getUser } from '@/lib/auth/session/isomorphic';
@@ -19,15 +20,20 @@ export default async function SettingsPage() {
                   </span>
                 </div>
                 <div className="flex-1">
-                  <p className="font-semibold text-gray-900">
+                  <p className="font-semibold text-gray-900 dark:text-gray-100">
                     {user?.user_metadata?.full_name || 'User'}
                   </p>
-                  <p className="text-sm text-gray-600">{user?.email}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{user?.email}</p>
                 </div>
               </div>
+
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                <ThemeSwitcher />
+              </div>
+
               <form action={signOut}>
                 <Button variant="outline" className="w-full">
-                  Sign Out
+                  Sign out
                 </Button>
               </form>
             </div>
