@@ -1,4 +1,4 @@
-import { spamEmailDomains } from "../constants/spam-domains";
+import { spamEmailDomains } from '../constants/spam-domains';
 
 /**
  * Validates that an email domain is not in the spam domains list
@@ -6,11 +6,11 @@ import { spamEmailDomains } from "../constants/spam-domains";
  * @returns true if the email domain is valid (not spam), false otherwise
  */
 export function isValidEmailDomain(email: string): boolean {
-  if (!email || typeof email !== "string") {
+  if (!email || typeof email !== 'string') {
     return false;
   }
 
-  const parts = email.split("@");
+  const parts = email.split('@');
   if (parts.length !== 2) {
     return false;
   }
@@ -22,7 +22,5 @@ export function isValidEmailDomain(email: string): boolean {
     return false;
   }
 
-  return !spamEmailDomains.includes(
-    domain.toLowerCase() as (typeof spamEmailDomains)[number],
-  );
+  return !spamEmailDomains.includes(domain.toLowerCase() as (typeof spamEmailDomains)[number]);
 }

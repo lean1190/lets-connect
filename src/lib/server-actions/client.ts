@@ -1,14 +1,14 @@
-import { createSafeActionClient } from "next-safe-action";
-import { defaultServerError, type ServerActionError } from "./errors";
+import { createSafeActionClient } from 'next-safe-action';
+import { defaultServerError, type ServerActionError } from './errors';
 
 export const actionClient = createSafeActionClient({
   handleServerError(error: Error | ServerActionError) {
-    console.error("Server action error", {
+    console.error('Server action error', {
       serverError: error.message ?? defaultServerError.message,
       type: (error as ServerActionError).type ?? defaultServerError.type,
-      error,
+      error
     });
 
     return error.message ?? defaultServerError.message;
-  },
+  }
 });

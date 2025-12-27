@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useId, useState } from "react";
-import { checkHoustonAuth, loginHouston } from "@/lib/houston/actions/auth";
+import { useEffect, useId, useState } from 'react';
+import { checkHoustonAuth, loginHouston } from '@/lib/houston/actions/auth';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -11,8 +11,8 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [credentials, setCredentials] = useState({
-    username: "",
-    password: "",
+    username: '',
+    password: ''
   });
   const usernameId = useId();
   const passwordId = useId();
@@ -25,7 +25,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
           setIsAuthenticated(true);
         }
       } catch (error) {
-        console.error("Auth check failed:", error);
+        console.error('Auth check failed:', error);
       } finally {
         setIsLoading(false);
       }
@@ -43,8 +43,8 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         setIsAuthenticated(true);
       }
     } catch (error) {
-      console.error("Login failed:", error);
-      alert("Invalid credentials");
+      console.error('Login failed:', error);
+      alert('Invalid credentials');
     }
   };
 
@@ -88,7 +88,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
                   onChange={(e) =>
                     setCredentials((prev) => ({
                       ...prev,
-                      username: e.target.value,
+                      username: e.target.value
                     }))
                   }
                 />
@@ -108,7 +108,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
                   onChange={(e) =>
                     setCredentials((prev) => ({
                       ...prev,
-                      password: e.target.value,
+                      password: e.target.value
                     }))
                   }
                 />

@@ -1,12 +1,12 @@
-import type { User } from "@supabase/supabase-js";
-import { vi } from "vitest";
+import type { User } from '@supabase/supabase-js';
+import { vi } from 'vitest';
 
 export const getFakeSupabaseUser = (user?: Partial<User>) => ({
-  id: "123",
-  email: "linkedin-user@example.com",
-  identities: [{ id: "fake-linkedin-id" }],
-  user_metadata: { picture: "fake-picture" },
-  ...user,
+  id: '123',
+  email: 'linkedin-user@example.com',
+  identities: [{ id: 'fake-linkedin-id' }],
+  user_metadata: { picture: 'fake-picture' },
+  ...user
 });
 
 export const createFakeSupabaseClient = () => {
@@ -16,8 +16,8 @@ export const createFakeSupabaseClient = () => {
   return {
     auth: {
       signInWithOAuth: vi.fn(async ({ provider }) => {
-        if (provider !== "linkedin") {
-          return { data: null, error: { message: "Unsupported provider" } };
+        if (provider !== 'linkedin') {
+          return { data: null, error: { message: 'Unsupported provider' } };
         }
 
         const user = getFakeSupabaseUser();
@@ -26,8 +26,8 @@ export const createFakeSupabaseClient = () => {
         }
 
         return {
-          data: { url: "https://linkedin.com/oauth", user },
-          error: null,
+          data: { url: 'https://linkedin.com/oauth', user },
+          error: null
         };
       }),
 
@@ -39,33 +39,33 @@ export const createFakeSupabaseClient = () => {
         return {
           data: {
             session: {
-              access_token: "fake-token",
-              provider_token: "fake-linkedin-token",
-              user: fakeUsers[0] || null,
-            },
+              access_token: 'fake-token',
+              provider_token: 'fake-linkedin-token',
+              user: fakeUsers[0] || null
+            }
           },
-          error: null,
+          error: null
         };
       }),
 
       getUser: vi.fn(async () => {
         return {
           data: {
-            user: fakeUsers[0] || null,
+            user: fakeUsers[0] || null
           },
-          error: null,
+          error: null
         };
       }),
 
       onAuthStateChange: vi.fn((callback) => {
         if (fakeUsers.length > 0) {
-          callback("SIGNED_IN", {
-            access_token: "fake-token",
-            user: fakeUsers[0],
+          callback('SIGNED_IN', {
+            access_token: 'fake-token',
+            user: fakeUsers[0]
           });
         }
         return () => {}; // Unsubscribe function
-      }),
+      })
     },
 
     from: (table: string) => ({
@@ -76,7 +76,7 @@ export const createFakeSupabaseClient = () => {
 
       insert: vi.fn(async (data) => {
         if (!data) {
-          return { data: null, error: { message: "No data provided" } };
+          return { data: null, error: { message: 'No data provided' } };
         }
 
         const newData = { id: Date.now(), ...data };
@@ -89,7 +89,7 @@ export const createFakeSupabaseClient = () => {
 
       update: vi.fn(async (updates) => {
         if (!updates) {
-          return { data: null, error: { message: "No update data provided" } };
+          return { data: null, error: { message: 'No update data provided' } };
         }
 
         let updatedData = null;
@@ -105,12 +105,12 @@ export const createFakeSupabaseClient = () => {
 
         return updatedData
           ? { data: updatedData, error: null }
-          : { data: null, error: { message: "Item not found" } };
+          : { data: null, error: { message: 'Item not found' } };
       }),
 
       delete: vi.fn(async (id) => {
         if (!id) {
-          return { data: null, error: { message: "No ID provided" } };
+          return { data: null, error: { message: 'No ID provided' } };
         }
 
         const beforeDeleteCount = fakeDB[table]?.length || 0;
@@ -119,19 +119,19 @@ export const createFakeSupabaseClient = () => {
 
         return beforeDeleteCount > afterDeleteCount
           ? { data: { id }, error: null }
-          : { data: null, error: { message: "Item not found" } };
-      }),
-    }),
+          : { data: null, error: { message: 'Item not found' } };
+      })
+    })
   };
 };
 
 const fakeClient = createFakeSupabaseClient();
 
-vi.mock("@/lib/supabase/server", async () => ({
-  createClient: async () => fakeClient,
+vi.mock('@/lib/supabase/server', async () => ({
+  createClient: async () => fakeClient
 }));
 
-vi.mock("@/lib/supabase/client", async () => ({
+vi.mock('@/lib/supabase/client', async () => ({
   supabaseClient: fakeClient,
-  createClient: () => fakeClient,
+  createClient: () => fakeClient
 }));

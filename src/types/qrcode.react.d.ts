@@ -1,5 +1,5 @@
-declare module "qrcode.react" {
-  import type { FC } from "react";
+declare module 'qrcode.react' {
+  import type { FC } from 'react';
 
   export type QRCodeSVGProps = {
     /**
@@ -17,7 +17,7 @@ declare module "qrcode.react" {
      * @see https://www.qrcode.com/en/about/error_correction.html
      * @defaultValue L
      */
-    level?: "L" | "M" | "Q" | "H";
+    level?: 'L' | 'M' | 'Q' | 'H';
     /**
      * The background color used to render the QR Code.
      * @see https://developer.mozilla.org/en-US/docs/Web/CSS/color_value
@@ -108,7 +108,7 @@ declare module "qrcode.react" {
        * empty string. This is intended to align with HTML behavior where omitting
        * the attribute behaves differently than the empty string.
        */
-      crossOrigin?: "anonymous" | "use-credentials" | "" | undefined;
+      crossOrigin?: 'anonymous' | 'use-credentials' | '' | undefined;
     };
   };
 

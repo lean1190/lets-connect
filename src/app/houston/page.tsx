@@ -1,4 +1,4 @@
-import AuthGuard from "./components/auth-guard";
+import AuthGuard from './components/auth-guard';
 
 export default async function HoustonPage() {
   return (

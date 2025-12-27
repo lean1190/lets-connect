@@ -8,13 +8,13 @@ export class ServerActionError extends Error {
 }
 
 export const defaultServerError = new ServerActionError(
-  "Something unexpected happen. Please try again.",
-  "UnknownServerError",
+  'Something unexpected happen. Please try again.',
+  'UnknownServerError'
 );
 
 export function createServerActionError({
   type,
-  message,
+  message
 }: {
   type: string;
   message: string;
@@ -29,15 +29,15 @@ export function handleServerActionResult<T, K>(result?: {
 }) {
   if (result?.validationErrors) {
     throw createServerActionError({
-      type: "ValidationError",
-      message: JSON.stringify(result?.validationErrors),
+      type: 'ValidationError',
+      message: JSON.stringify(result?.validationErrors)
     });
   }
 
   if (result?.serverError) {
     throw createServerActionError({
-      type: "ServerError",
-      message: result?.serverError,
+      type: 'ServerError',
+      message: result?.serverError
     });
   }
 
