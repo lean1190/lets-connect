@@ -48,7 +48,7 @@ export function DeleteGroupButton({ groupId, groupName }: { groupId: string; gro
           <DialogHeader>
             <DialogTitle>Delete {groupName}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete &quot;{groupName}&quot;?
+              Are you sure you want to delete the group <strong>&quot;{groupName}&quot;</strong>?
             </DialogDescription>
             <DialogDescription>Contacts in this group will not be deleted</DialogDescription>
           </DialogHeader>

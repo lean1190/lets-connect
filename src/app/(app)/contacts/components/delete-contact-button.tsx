@@ -54,7 +54,8 @@ export function DeleteContactButton({
           <DialogHeader>
             <DialogTitle>Delete {contactName}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete <strong>{contactName}</strong>?
+              Are you sure you want to delete the contact <strong>&quot;{contactName}&quot;</strong>
+              ?
             </DialogDescription>
             <DialogDescription>This action cannot be undone</DialogDescription>
           </DialogHeader>

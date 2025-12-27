@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { getContactById, updateContact } from '@/lib/server-actions/contacts';
-import { getGroups } from '@/lib/server-actions/groups';
+import { createGroup, getGroups } from '@/lib/server-actions/groups';
 import { isExecuting } from '@/lib/server-actions/status';
 
 const formSchema = z.object({
@@ -36,12 +36,19 @@ export default function EditContactPage() {
   const id = params.id as string;
 
   const [allGroups, setAllGroups] = useState<Array<{ id: string; name: string }>>([]);
+  const [showAddGroup, setShowAddGroup] = useState(false);
+  const [newGroupName, setNewGroupName] = useState('');
 
   const {
     execute: updateContactAction,
     status: updateStatus,
     result: updateResult
   } = useAction(updateContact);
+  const {
+    execute: createGroupAction,
+    status: createGroupStatus,
+    result: createGroupResult
+  } = useAction(createGroup);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -84,6 +91,34 @@ export default function EditContactPage() {
       : [...currentGroups, groupId];
     form.setValue('groupIds', newGroups);
   };
+
+  const handleCreateGroup = async () => {
+    if (!newGroupName.trim()) {
+      return;
+    }
+
+    createGroupAction({ name: newGroupName.trim() });
+  };
+
+  useEffect(() => {
+    if (createGroupResult?.serverError) {
+      alert(`Error: ${createGroupResult.serverError}`);
+    } else if (createGroupResult?.data?.id) {
+      // Reload groups and select the newly created one
+      async function reloadGroups() {
+        const groups = await getGroups();
+        setAllGroups(groups);
+        const newGroup = groups.find((g) => g.id === createGroupResult.data?.id);
+        if (newGroup) {
+          const currentGroups = form.getValues('groupIds') || [];
+          form.setValue('groupIds', [...currentGroups, newGroup.id]);
+        }
+      }
+      reloadGroups();
+      setNewGroupName('');
+      setShowAddGroup(false);
+    }
+  }, [createGroupResult, form]);
 
   const onSubmit = (values: FormValues) => {
     updateContactAction({
@@ -166,27 +201,75 @@ export default function EditContactPage() {
               )}
             />
 
-            {allGroups.length > 0 && (
-              <div>
-                <FormLabel>Groups</FormLabel>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {allGroups.map((group) => (
-                    <button
-                      key={group.id}
+            <div>
+              <FormLabel>Groups</FormLabel>
+              <div className="mt-2 flex flex-wrap gap-2 items-center">
+                {allGroups.map((group) => (
+                  <button
+                    key={group.id}
+                    type="button"
+                    onClick={() => toggleGroup(group.id)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      selectedGroups.includes(group.id)
+                        ? 'bg-[#0A66C2] border border-transparent text-white'
+                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {group.name}
+                  </button>
+                ))}
+                {showAddGroup ? (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="text"
+                      placeholder="Group name"
+                      value={newGroupName}
+                      onChange={(e) => setNewGroupName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleCreateGroup();
+                        } else if (e.key === 'Escape') {
+                          setShowAddGroup(false);
+                          setNewGroupName('');
+                        }
+                      }}
+                      className="h-9 w-32 text-sm"
+                      autoFocus
+                    />
+                    <Button
                       type="button"
-                      onClick={() => toggleGroup(group.id)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                        selectedGroups.includes(group.id)
-                          ? 'bg-[#0A66C2] border border-transparent text-white'
-                          : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                      }`}
+                      size="sm"
+                      onClick={handleCreateGroup}
+                      disabled={isExecuting(createGroupStatus) || !newGroupName.trim()}
                     >
-                      {group.name}
-                    </button>
-                  ))}
-                </div>
+                      {isExecuting(createGroupStatus) ? '...' : 'Add'}
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setShowAddGroup(false);
+                        setNewGroupName('');
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowAddGroup(true)}
+                    className="px-4 py-2 rounded-full text-sm font-medium"
+                  >
+                    + Add
+                  </Button>
+                )}
               </div>
-            )}
+            </div>
 
             <div className="flex gap-6 items-center justify-end">
               <Button type="button" variant="outline" onClick={() => router.back()}>
