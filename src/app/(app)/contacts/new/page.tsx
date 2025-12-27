@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -30,7 +30,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function NewContactPage() {
+function NewContactForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const profileLinkFromQr = searchParams.get('profileLink') || '';
@@ -276,5 +276,25 @@ export default function NewContactPage() {
         </Form>
       </CardContent>
     </Card>
+  );
+}
+
+export default function NewContactPage() {
+  return (
+    <Suspense
+      fallback={
+        <Card>
+          <CardContent className="pt-6">
+            <div className="space-y-6">
+              <div className="h-10 w-full bg-gray-200 dark:bg-muted rounded animate-pulse" />
+              <div className="h-10 w-full bg-gray-200 dark:bg-muted rounded animate-pulse" />
+              <div className="h-24 w-full bg-gray-200 dark:bg-muted rounded animate-pulse" />
+            </div>
+          </CardContent>
+        </Card>
+      }
+    >
+      <NewContactForm />
+    </Suspense>
   );
 }
