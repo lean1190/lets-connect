@@ -38,7 +38,7 @@ export default async function ContactsPage() {
           <CardContent className="p-6">
             <div className="mb-4">
               <h3 className="text-2xl font-normal text-gray-900 mb-1">{contact.name}</h3>
-              <p className="text-gray-600 text-sm">{contact.reason}</p>
+              <p className="text-gray-600 text-sm mb-4">{contact.reason}</p>
             </div>
 
             <div className="flex gap-4 mb-6 text-center">
@@ -58,9 +58,9 @@ export default async function ContactsPage() {
             </div>
 
             <div className="flex gap-3">
-              <Link href={`${AppRoute.ViewContact}${contact.id}`} className="flex-1">
+              <Link href={`${AppRoute.EditContact}${contact.id}`} className="flex-1">
                 <Button variant="outline" className="w-full">
-                  View
+                  Edit
                 </Button>
               </Link>
               <Link

@@ -13,6 +13,6 @@ export const getTitle = ({
 }): string => {
   const title = titles[pathname];
   const partial =
-    partialRoute && pathname?.startsWith(partialRoute) ? titles[partialRoute] : defaultTitle;
-  return (title ? title : partial) ?? defaultTitle;
+    partialRoute && pathname.startsWith(partialRoute) ? titles[partialRoute] : defaultTitle;
+  return (partial ? partial : title) ?? defaultTitle;
 };

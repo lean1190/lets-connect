@@ -97,7 +97,7 @@ export function EditGroupButton({ groupId, groupName }: { groupId: string; group
                 disabled={updateStatus === 'executing'}
                 className="bg-[#0A66C2]"
               >
-                {updateStatus === 'executing' ? 'Saving...' : 'Save Changes'}
+                {updateStatus === 'executing' ? 'Saving...' : 'Save'}
               </Button>
             </DialogFooter>
           </form>

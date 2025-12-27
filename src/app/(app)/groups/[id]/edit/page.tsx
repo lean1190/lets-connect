@@ -108,7 +108,7 @@ export default function EditGroupPage() {
                 Cancel
               </Button>
               <Button type="submit" disabled={isExecuting(updateStatus)}>
-                {isExecuting(updateStatus) ? 'Saving...' : 'Save Changes'}
+                {isExecuting(updateStatus) ? 'Saving...' : 'Save'}
               </Button>
             </div>
           </form>

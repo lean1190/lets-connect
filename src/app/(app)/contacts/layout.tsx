@@ -9,7 +9,8 @@ import { PageWithNavigationLayout } from '../components/page-with-navigation-lay
 
 const titles: Record<string, string> = {
   [AppRoute.Contacts]: 'Contacts',
-  [AppRoute.NewContact]: 'New contact'
+  [AppRoute.NewContact]: 'New contact',
+  [AppRoute.EditContact]: 'Edit contact'
 };
 
 export default function ContactsLayout({ children }: { children: React.ReactNode }) {
@@ -19,7 +20,8 @@ export default function ContactsLayout({ children }: { children: React.ReactNode
     () =>
       getTitle({
         pathname,
-        titles
+        titles,
+        partialRoute: AppRoute.EditContact
       }),
     [pathname]
   );
