@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "npm": ">=10.9.3",
-    "node": "22.x"
+    "npm": ">=11.6.1",
+    "node": "24.x"
   },
   "type": "module",
   "scripts": {
