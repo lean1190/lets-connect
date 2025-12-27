@@ -33,7 +33,7 @@ export function DeleteContactButton({
     if (result?.serverError) {
       alert(`Error: ${result.serverError}`);
     } else if (result?.data) {
-      router.refresh();
+      router.push('/contacts');
     }
   }, [result, router]);
 

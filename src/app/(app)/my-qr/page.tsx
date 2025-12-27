@@ -1,7 +1,6 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -15,18 +14,15 @@ const QRCodeSVG = dynamic(() => import('qrcode.react').then((mod) => mod.QRCodeS
 const LINKEDIN_URL_KEY = 'my_linkedin_url';
 
 export default function MyQRPage() {
-  const router = useRouter();
   const [linkedInUrl, setLinkedInUrl] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [tempUrl, setTempUrl] = useState('');
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const saved = localStorage.getItem(LINKEDIN_URL_KEY);
     if (saved) {
       setLinkedInUrl(saved);
     }
-    setLoading(false);
   }, []);
 
   const saveLinkedInUrl = () => {
@@ -40,30 +36,8 @@ export default function MyQRPage() {
     setIsEditing(true);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 relative">
-        <div className="absolute top-4 left-4 z-20">
-          <Button variant="outline" onClick={() => router.back()}>
-            ← Back
-          </Button>
-        </div>
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0A66C2]"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 relative">
-      <div className="absolute top-4 left-4 z-20">
-        <Button variant="outline" onClick={() => router.back()}>
-          ← Back
-        </Button>
-      </div>
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
         {!linkedInUrl && !isEditing ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">

@@ -4,12 +4,14 @@ export enum AppRoute {
   Signin = '/signin',
   Contacts = '/contacts',
   NewContact = '/contacts/new',
-  EditContact = '/contacts/',
+  ViewContact = '/contacts/',
+  EditContact = '/edit',
   Scan = '/scan',
   MyQr = '/my-qr',
   Groups = '/groups',
   NewGroup = '/groups/new',
-  EditGroup = '/groups/',
+  ViewGroup = '/groups/',
+  EditGroup = '/edit',
   Settings = '/settings'
 }
 

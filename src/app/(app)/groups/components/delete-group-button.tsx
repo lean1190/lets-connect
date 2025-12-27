@@ -27,7 +27,7 @@ export function DeleteGroupButton({ groupId, groupName }: { groupId: string; gro
     if (result?.serverError) {
       alert(`Error: ${result.serverError}`);
     } else if (result?.data) {
-      router.refresh();
+      router.push('/groups');
     }
   }, [result, router]);
 
@@ -35,10 +35,10 @@ export function DeleteGroupButton({ groupId, groupName }: { groupId: string; gro
     <>
       <Button
         type="button"
-        variant="ghost"
-        size="icon"
+        variant="outline"
+        size="sm"
         onClick={() => setOpen(true)}
-        className="absolute top-2 right-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+        className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
         aria-label="Delete group"
       >
         Delete

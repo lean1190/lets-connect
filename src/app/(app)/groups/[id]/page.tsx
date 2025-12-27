@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { getContactsInGroup, getGroupById } from '@/lib/server-actions/groups';
-import { EditGroupButton } from './edit-group-button';
+import { DeleteGroupButton } from '../components/delete-group-button';
 
 export default async function GroupDetailPage({ params }: { params: { id: string } }) {
   const { id } = await params;
@@ -29,7 +29,14 @@ export default async function GroupDetailPage({ params }: { params: { id: string
     <>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">{group.name}</h1>
-        <EditGroupButton groupId={id} groupName={group.name} />
+        <div className="flex gap-2">
+          <Link href={`/groups/${id}/edit`}>
+            <Button variant="outline" size="sm">
+              Edit
+            </Button>
+          </Link>
+          <DeleteGroupButton groupId={id} groupName={group.name} />
+        </div>
       </div>
 
       {contacts.length === 0 ? (
@@ -67,7 +74,7 @@ export default async function GroupDetailPage({ params }: { params: { id: string
                 )}
                 <Link href={`/contacts/${contact.id}`}>
                   <Button variant="outline" size="sm" className="w-full">
-                    Edit
+                    View Contact
                   </Button>
                 </Link>
               </div>
