@@ -1,34 +1,49 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { useAction } from 'next-safe-action/hooks';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { getSettings, updateSettings } from '@/lib/server-actions/settings';
 
 const QRCodeSVG = dynamic(() => import('qrcode.react').then((mod) => mod.QRCodeSVG), {
   ssr: false
 }) as React.ComponentType<{ value: string; size?: number }>;
 
-const LINKEDIN_URL_KEY = 'my_linkedin_url';
-
 export default function MyQRPage() {
   const [linkedInUrl, setLinkedInUrl] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [tempUrl, setTempUrl] = useState('');
+  const { execute: updateSettingsAction, result: updateResult } = useAction(updateSettings);
 
   useEffect(() => {
-    const saved = localStorage.getItem(LINKEDIN_URL_KEY);
-    if (saved) {
-      setLinkedInUrl(saved);
+    async function loadQrLink() {
+      try {
+        const settings = await getSettings();
+        if (settings.qrLink) {
+          setLinkedInUrl(settings.qrLink);
+        }
+      } catch (error) {
+        console.error('Error loading QR link:', error);
+      }
     }
+    loadQrLink();
   }, []);
 
+  useEffect(() => {
+    if (updateResult?.serverError) {
+      alert(`Error: ${updateResult.serverError}`);
+    } else if (updateResult?.data) {
+      setLinkedInUrl(tempUrl);
+      setIsEditing(false);
+    }
+  }, [updateResult, tempUrl]);
+
   const saveLinkedInUrl = () => {
-    localStorage.setItem(LINKEDIN_URL_KEY, tempUrl);
-    setLinkedInUrl(tempUrl);
-    setIsEditing(false);
+    updateSettingsAction({ qrLink: tempUrl });
   };
 
   const startEditing = () => {
@@ -42,12 +57,10 @@ export default function MyQRPage() {
         {!linkedInUrl && !isEditing ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
             <span className="text-6xl mb-5">🔗</span>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-3">Set up your LinkedIn</h2>
-            <p className="text-gray-600 mb-8 max-w-md">
-              Add your LinkedIn profile URL to generate a QR code others can scan
-            </p>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-3">Set up your QR code</h2>
+            <p className="text-gray-600 mb-8 max-w-md">Add your LinkedIn or Wsp URL</p>
             <Button onClick={startEditing} className="bg-[#0A66C2]">
-              Add LinkedIn URL
+              Add URL
             </Button>
           </div>
         ) : isEditing ? (

@@ -7,12 +7,18 @@ import { getSupabaseClient } from '@/lib/database/client/isomorphic';
 import { actionClient } from './client';
 
 const createGroupSchema = z.object({
-  name: z.string().min(1, 'Group name is required')
+  name: z.string().min(1, 'Group name is required'),
+  color: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  icon: z.string().optional().nullable()
 });
 
 const updateGroupSchema = z.object({
   id: z.uuid(),
-  name: z.string().min(1)
+  name: z.string().min(1).optional(),
+  color: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  icon: z.string().optional().nullable()
 });
 
 const deleteGroupSchema = z.object({
@@ -38,6 +44,9 @@ export const createGroup = actionClient
       id,
       created_at: now,
       name: parsedInput.name,
+      color: parsedInput.color || null,
+      description: parsedInput.description || null,
+      icon: parsedInput.icon || null,
       updated_at: now,
       user_id: user.id
     });
@@ -62,12 +71,32 @@ export const updateGroup = actionClient
       throw new Error('Not authenticated');
     }
 
+    const updateData: {
+      name?: string;
+      color?: string | null;
+      description?: string | null;
+      icon?: string | null;
+      updated_at: string;
+    } = {
+      updated_at: new Date().toISOString()
+    };
+
+    if (parsedInput.name !== undefined) {
+      updateData.name = parsedInput.name;
+    }
+    if (parsedInput.color !== undefined) {
+      updateData.color = parsedInput.color;
+    }
+    if (parsedInput.description !== undefined) {
+      updateData.description = parsedInput.description;
+    }
+    if (parsedInput.icon !== undefined) {
+      updateData.icon = parsedInput.icon;
+    }
+
     const { error } = await supabase
       .from('groups')
-      .update({
-        name: parsedInput.name,
-        updated_at: new Date().toISOString()
-      })
+      .update(updateData)
       .eq('id', parsedInput.id)
       .eq('user_id', user.id);
 
@@ -138,7 +167,10 @@ export async function getGroups(): Promise<GroupOutput[]> {
         id: group.id,
         name: group.name,
         createdAt: group.created_at,
-        contactCount: count || 0
+        contactCount: count || 0,
+        color: group.color || null,
+        description: group.description || null,
+        icon: group.icon || null
       };
     })
   );
@@ -177,7 +209,10 @@ export async function getGroupById(id: string): Promise<GroupOutput | null> {
     id: group.id,
     name: group.name,
     createdAt: group.created_at,
-    contactCount: count || 0
+    contactCount: count || 0,
+    color: group.color || null,
+    description: group.description || null,
+    icon: group.icon || null
   };
 }
 

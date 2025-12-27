@@ -1,6 +1,8 @@
 'use client';
 
+import { useAction } from 'next-safe-action/hooks';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { getSettings, updateSettings } from '@/lib/server-actions/settings';
 
 type Theme = 'light' | 'dark';
 
@@ -10,8 +12,6 @@ type ThemeContextType = {
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-const THEME_STORAGE_KEY = 'theme';
 
 function applyTheme(newTheme: Theme) {
   const root = document.documentElement;
@@ -24,23 +24,35 @@ function applyTheme(newTheme: Theme) {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>('light');
+  const { execute: updateSettingsAction } = useAction(updateSettings);
 
   useEffect(() => {
-    // Get theme from localStorage or default to light
-    const storedTheme = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
-    const initialTheme = storedTheme || 'light';
-    setThemeState(initialTheme);
-    applyTheme(initialTheme);
+    // Get theme from database
+    async function loadTheme() {
+      try {
+        const settings = await getSettings();
+        const initialTheme = settings.theme || 'light';
+        setThemeState(initialTheme);
+        applyTheme(initialTheme);
+      } catch (error) {
+        console.error('Error loading theme:', error);
+        // Fallback to light theme
+        setThemeState('light');
+        applyTheme('light');
+      }
+    }
+    loadTheme();
   }, []);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
-    localStorage.setItem(THEME_STORAGE_KEY, newTheme);
     applyTheme(newTheme);
+    // Save to database
+    updateSettingsAction({ theme: newTheme });
   };
 
   // Always provide the context, even before mounting
-  // The theme will be updated once mounted and localStorage is read
+  // The theme will be updated once mounted and database is read
   return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
 }
 

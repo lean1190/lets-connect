@@ -6,6 +6,7 @@ import { useAction } from 'next-safe-action/hooks';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { IconPicker } from '@/components/icon-picker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -21,7 +22,10 @@ import { createGroup } from '@/lib/server-actions/groups';
 import { isExecuting } from '@/lib/server-actions/status';
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Group name is required').trim()
+  name: z.string().min(1, 'Group name is required').trim(),
+  color: z.string().optional().nullable(),
+  description: z.string().optional().nullable(),
+  icon: z.string().optional().nullable()
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -33,12 +37,20 @@ export default function NewGroupPage() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: ''
+      name: '',
+      color: null,
+      description: null,
+      icon: null
     }
   });
 
   const onSubmit = (values: FormValues) => {
-    createGroupAction({ name: values.name });
+    createGroupAction({
+      name: values.name,
+      color: values.color || null,
+      description: values.description || null,
+      icon: values.icon || null
+    });
   };
 
   useEffect(() => {
@@ -75,6 +87,66 @@ export default function NewGroupPage() {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="text"
+                      placeholder="Enter group description"
+                      className="mt-1"
+                      value={field.value || ''}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="color"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Color</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="color"
+                        className="mt-1 h-10 w-full"
+                        value={field.value || '#000000'}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="icon"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Icon</FormLabel>
+                    <FormControl>
+                      <div className="mt-1">
+                        <IconPicker
+                          value={field.value || null}
+                          onChange={(iconName) => field.onChange(iconName)}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <div className="flex gap-6 items-center justify-end">
               <Button type="button" variant="outline" onClick={() => router.back()}>

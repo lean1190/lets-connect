@@ -35,10 +35,9 @@ export function DeleteGroupButton({ groupId, groupName }: { groupId: string; gro
     <>
       <Button
         type="button"
-        variant="outline"
+        variant="destructive"
         size="sm"
         onClick={() => setOpen(true)}
-        className="text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200"
         aria-label="Delete group"
       >
         Delete

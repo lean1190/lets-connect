@@ -25,9 +25,9 @@ export default function EditContactLoading() {
               <div className="h-8 w-18 bg-gray-200 dark:bg-muted rounded-full animate-pulse" />
             </div>
           </div>
-          <div className="flex gap-6 items-center justify-between">
+          <div className="flex items-center justify-between">
             <div className="h-9 w-20 bg-gray-200 dark:bg-muted rounded animate-pulse" />
-            <div className="flex gap-6 items-center">
+            <div className="flex gap-4 items-center">
               <div className="h-9 w-20 bg-gray-200 dark:bg-muted rounded animate-pulse" />
               <div className="h-9 w-32 bg-gray-200 dark:bg-muted rounded animate-pulse" />
             </div>

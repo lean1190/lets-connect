@@ -272,9 +272,9 @@ export default function EditContactPage() {
               </div>
             </div>
 
-            <div className="flex gap-6 items-center justify-between">
+            <div className="flex items-center justify-between">
               <DeleteContactButton contactId={id} contactName={form.watch('name')} />
-              <div className="flex gap-6 items-center">
+              <div className="flex gap-4 items-center">
                 <Button type="button" variant="outline" onClick={() => router.back()}>
                   Cancel
                 </Button>
