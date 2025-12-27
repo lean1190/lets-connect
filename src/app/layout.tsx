@@ -27,10 +27,12 @@ export const viewport: Viewport = {
   ]
 };
 
+const appUrl = new URL(getAppBaseUrl());
+
 export const metadata: Metadata = {
   title: "Let's connect",
-  description: 'Keep in touch with your entrepreneurial circle',
-  metadataBase: new URL(getAppBaseUrl()),
+  description: 'Keep in touch with your entrepreneurial circles',
+  metadataBase: appUrl,
   manifest: '/manifest.webmanifest',
   icons: {
     icon: '/favicon.ico',
@@ -44,8 +46,8 @@ export const metadata: Metadata = {
     title: "Let's connect"
   },
   openGraph: {
-    images: ['/logo-in-public-folder.png'],
-    url: 'http://localhost:3000',
+    images: ['/logo/transparent.png'],
+    url: appUrl,
     locale: 'en_US',
     type: 'website'
   },

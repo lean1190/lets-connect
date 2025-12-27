@@ -1,11 +1,12 @@
+import { productionUrl } from '../constants/links';
 import { isProduction } from './is-dev';
 
 export function getAppBaseUrl() {
-  const vercelUrl = `https://${process.env.VERCEL_URL}`;
+  if (isProduction()) {
+    return productionUrl;
+  }
 
-  return isProduction()
-    ? vercelUrl
-    : process.env.VERCEL_URL
-      ? vercelUrl
-      : `http://localhost:${process.env.PORT || 3000}`;
+  return process.env.NEXT_PUBLIC_VERCEL_URL
+    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+    : `http://localhost:${process.env.PORT || 3000}`;
 }
