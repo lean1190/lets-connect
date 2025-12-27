@@ -1,87 +1,125 @@
-import { IconUserPlus } from '@tabler/icons-react';
-import { format } from 'date-fns';
-import Link from 'next/link';
+'use client';
+
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useParams, useRouter } from 'next/navigation';
+import { useAction } from 'next-safe-action/hooks';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { Button } from '@/components/ui/button';
-import { getContactsInGroup, getGroupById } from '@/lib/server-actions/groups';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { getGroupById, updateGroup } from '@/lib/server-actions/groups';
+import { isExecuting } from '@/lib/server-actions/status';
 import { DeleteGroupButton } from '../components/delete-group-button';
 
-export default async function GroupDetailPage({ params }: { params: { id: string } }) {
-  const { id } = await params;
-  const [group, contacts] = await Promise.all([getGroupById(id), getContactsInGroup(id)]);
+const formSchema = z.object({
+  name: z.string().min(1, 'Group name is required').trim()
+});
 
-  if (!group) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
-        <p>Group not found</p>
-      </div>
-    );
-  }
+type FormValues = z.infer<typeof formSchema>;
 
-  const formatDate = (dateString: string) => {
-    try {
-      return format(new Date(dateString), 'MMM d');
-    } catch {
-      return '';
+export default function EditGroupPage() {
+  const router = useRouter();
+  const params = useParams();
+  const id = params.id as string;
+  const [groupName, setGroupName] = useState('');
+
+  const {
+    execute: updateGroupAction,
+    status: updateStatus,
+    result: updateResult
+  } = useAction(updateGroup);
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: ''
     }
+  });
+
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const group = await getGroupById(id);
+
+        if (group) {
+          setGroupName(group.name);
+          form.reset({
+            name: group.name
+          });
+        }
+      } catch (error) {
+        console.error('Error loading group:', error);
+        alert('Failed to load group');
+      }
+    }
+    loadData();
+  }, [id, form]);
+
+  const onSubmit = (values: FormValues) => {
+    updateGroupAction({
+      id,
+      name: values.name
+    });
   };
 
+  useEffect(() => {
+    if (updateResult?.serverError) {
+      alert(`Error: ${updateResult.serverError}`);
+    } else if (updateResult?.data) {
+      router.push(`/groups/${id}/contacts`);
+    }
+  }, [updateResult, router, id]);
+
   return (
-    <>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold">{group.name}</h1>
-        <div className="flex gap-2">
-          <Link href={`/groups/${id}/edit`}>
-            <Button variant="outline" size="sm">
-              Edit
-            </Button>
-          </Link>
-          <DeleteGroupButton groupId={id} groupName={group.name} />
-        </div>
-      </div>
+    <Card>
+      <CardContent className="pt-6">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    Group Name <span className="text-red-500">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="text"
+                      placeholder="Enter group name"
+                      className="mt-1 text-sm"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-      {contacts.length === 0 ? (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-          <IconUserPlus className="w-16 h-16 text-gray-400 mb-4" stroke={1.5} />
-          <h2 className="text-2xl font-semibold text-gray-900 mb-2">No contacts in this group</h2>
-          <p className="text-gray-600">Edit a contact to add them to this group</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {contacts.map((contact) => (
-            <div
-              key={contact.id}
-              className="relative bg-white/8 backdrop-blur-2xl rounded-2xl border border-white/20 shadow-2xl shadow-black/20 overflow-hidden hover:border-white/30 transition-all"
-            >
-              {/* Liquid glass shine effect */}
-              <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent pointer-events-none"></div>
-              <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent"></div>
-
-              <div className="relative z-10 p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900">{contact.name}</h3>
-                  <span className="text-xs text-gray-500">{formatDate(contact.dateAdded)}</span>
-                </div>
-                <p className="text-gray-700 mb-4 line-clamp-2">{contact.reason}</p>
-                {contact.profileLink && (
-                  <Link
-                    href={contact.profileLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#0A66C2] font-semibold text-sm hover:underline block mb-4"
-                  >
-                    View Profile →
-                  </Link>
-                )}
-                <Link href={`/contacts/${contact.id}`}>
-                  <Button variant="outline" size="sm" className="w-full">
-                    View Contact
-                  </Button>
-                </Link>
+            <div className="flex gap-6 items-center justify-between">
+              <DeleteGroupButton groupId={id} groupName={groupName || form.watch('name')} />
+              <div className="flex gap-6 items-center">
+                <Button type="button" variant="outline" onClick={() => router.back()}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isExecuting(updateStatus)}>
+                  {isExecuting(updateStatus) ? 'Saving...' : 'Save'}
+                </Button>
               </div>
             </div>
-          ))}
-        </div>
-      )}
-    </>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }

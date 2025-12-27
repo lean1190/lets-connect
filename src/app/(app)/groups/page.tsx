@@ -1,5 +1,7 @@
 import { IconCircles } from '@tabler/icons-react';
+import { format } from 'date-fns';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { CtaButton } from '@/components/ui/cta-button';
 import { AppRoute } from '@/lib/constants/navigation';
@@ -7,6 +9,14 @@ import { getGroups } from '@/lib/server-actions/groups';
 
 export default async function GroupsPage() {
   const groups = await getGroups();
+
+  const formatDate = (dateString: string) => {
+    try {
+      return format(new Date(dateString), 'MMM d, yyyy');
+    } catch {
+      return 'Unknown date';
+    }
+  };
 
   if (groups.length === 0) {
     return (
@@ -22,18 +32,47 @@ export default async function GroupsPage() {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="space-y-4">
       {groups.map((group) => (
         <Card key={group.id} className="hover:border-white/30 transition-all">
-          <Link href={`${AppRoute.ViewGroup}${group.id}`}>
-            <CardContent className="p-6 text-center">
-              <IconCircles className="w-12 h-12 text-gray-400 mx-auto mb-3" stroke={1.5} />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">{group.name}</h3>
-              <p className="text-sm text-gray-600">
-                {group.contactCount || 0} {group.contactCount === 1 ? 'contact' : 'contacts'}
-              </p>
-            </CardContent>
-          </Link>
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4 mb-4">
+              <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
+                <IconCircles className="w-8 h-8 text-gray-400" stroke={1.5} />
+              </div>
+              <div className="flex-1">
+                <h3 className="text-2xl font-normal text-gray-900 mb-1">{group.name}</h3>
+                <p className="text-gray-600 text-sm mb-4">Group description</p>
+              </div>
+            </div>
+
+            <div className="flex gap-4 mb-6 text-center">
+              <div className="flex-1 bg-gray-50 rounded-lg p-3">
+                <div className="text-xs text-gray-500 mb-1">Created on</div>
+                <div className="text-lg font-semibold text-gray-900">
+                  {formatDate(group.createdAt)}
+                </div>
+              </div>
+              <div className="flex-1 bg-gray-50 rounded-lg p-3">
+                <div className="text-xs text-gray-500 mb-1">Contacts</div>
+                <div className="text-lg font-semibold text-gray-900">{group.contactCount || 0}</div>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <Link href={`${AppRoute.ViewGroup}${group.id}`} className="flex-1">
+                <Button variant="outline" className="w-full">
+                  Edit
+                </Button>
+              </Link>
+              <Link
+                href={`${AppRoute.ViewGroup}${group.id}${AppRoute.Contacts}`}
+                className="flex-1"
+              >
+                <Button className="w-full">View contacts</Button>
+              </Link>
+            </div>
+          </CardContent>
         </Card>
       ))}
     </div>
