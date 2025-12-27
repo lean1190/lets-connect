@@ -36,7 +36,6 @@ export default function EditContactPage() {
   const id = params.id as string;
 
   const [allGroups, setAllGroups] = useState<Array<{ id: string; name: string }>>([]);
-  const [loading, setLoading] = useState(true);
 
   const {
     execute: updateContactAction,
@@ -73,8 +72,6 @@ export default function EditContactPage() {
       } catch (error) {
         console.error('Error loading contact:', error);
         alert('Failed to load contact');
-      } finally {
-        setLoading(false);
       }
     }
     loadData();
@@ -105,16 +102,6 @@ export default function EditContactPage() {
       router.push(`/contacts/${id}`);
     }
   }, [updateResult, router, id]);
-
-  if (loading) {
-    return (
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0A66C2]"></div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <Card>
