@@ -3,11 +3,12 @@
 import type { OAuthResponse } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
 import { getSupabaseClient } from '@/lib/database/client/isomorphic';
-import { getAppBaseUrl } from '@/lib/environments/url';
+import { getAppBaseUrl, getBaseUrl } from '@/lib/environments/url';
 
 export async function signInWithLinkedIn() {
   const url = getAppBaseUrl();
   const authCallbackUrl = `${url}/auth/callback`;
+  console.info('---> url', { url, authCallbackUrl, changed: getBaseUrl() });
   const oAuthResponse = await (await getSupabaseClient()).auth.signInWithOAuth({
     provider: 'linkedin_oidc',
     options: {
