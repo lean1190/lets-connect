@@ -1,9 +1,10 @@
-import { IconCircles, IconCloud, IconQrcode } from '@tabler/icons-react';
+import { IconBrandGithub, IconCircles, IconCloud, IconQrcode } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { CtaButton } from '@/components/ui/cta-button';
 import { isSignedIn } from '@/lib/auth/session/isomorphic';
+import { githubUrl } from '@/lib/constants/links';
 import { AppRoute } from '@/lib/constants/navigation';
 
 export default async function LandingPage() {
@@ -31,9 +32,20 @@ export default async function LandingPage() {
             />
             <div className="text-2xl font-bold">Let&apos;s Connect</div>
           </div>
-          <Link href={redirectTo}>
-            <Button variant="glass">{isIn ? 'Go to app' : 'Sign in'}</Button>
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white/60 hover:text-white transition-colors"
+              aria-label="GitHub repository"
+            >
+              <IconBrandGithub className="w-6 h-6" />
+            </Link>
+            <Link href={redirectTo}>
+              <Button variant="glass">{isIn ? 'Go to app' : 'Sign in'}</Button>
+            </Link>
+          </div>
         </nav>
 
         {/* Hero Section */}
