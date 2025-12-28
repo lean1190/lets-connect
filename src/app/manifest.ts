@@ -2,15 +2,28 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Let's connect",
-    short_name: 'LetsCo',
-    description: 'Fill this',
+    name: "Let's Connect",
+    short_name: 'LetsConnect',
+    description: 'A simple and effective way to stay in touch with your entrepreneurial circle',
     start_url: '/',
     display: 'standalone',
     orientation: 'portrait',
-    theme_color: '#ffffff',
-    background_color: '#ffffff',
+    theme_color: '#0e0f13',
+    background_color: '#0e0f13',
+    scope: '/',
     icons: [
+      {
+        src: '/web-app-manifest-192x192.png',
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'any'
+      },
+      {
+        src: '/web-app-manifest-512x512.png',
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'any'
+      },
       {
         src: '/web-app-manifest-192x192.png',
         sizes: '192x192',
