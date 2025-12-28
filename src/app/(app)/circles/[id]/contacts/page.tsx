@@ -1,8 +1,6 @@
 import { IconUserPlus } from '@tabler/icons-react';
-import { format } from 'date-fns';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { ContactCard } from '@/components/contact-card';
+import type { ContactOutput } from '@/lib/contacts/types';
 import { getCircleById, getContactsInCircle } from '@/lib/server-actions/circles';
 
 export default async function CircleContactsPage({ params }: { params: { id: string } }) {
@@ -17,13 +15,15 @@ export default async function CircleContactsPage({ params }: { params: { id: str
     );
   }
 
-  const formatDate = (dateString: string) => {
-    try {
-      return format(new Date(dateString), 'MMM d');
-    } catch {
-      return '';
-    }
-  };
+  // Convert the simplified contact objects to ContactOutput format
+  const contactOutputs: ContactOutput[] = contacts.map((contact) => ({
+    id: contact.id,
+    name: contact.name,
+    profileLink: contact.profileLink || '',
+    reason: contact.reason || '',
+    dateAdded: contact.dateAdded,
+    circles: [] // Not needed for this view
+  }));
 
   return (
     <>
@@ -31,7 +31,7 @@ export default async function CircleContactsPage({ params }: { params: { id: str
         <h1 className="text-2xl font-semibold text-foreground">{circle.name}</h1>
       </div>
 
-      {contacts.length === 0 ? (
+      {contactOutputs.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
           <IconUserPlus
             className="w-16 h-16 text-gray-400 dark:text-muted-foreground mb-4"
@@ -46,37 +46,8 @@ export default async function CircleContactsPage({ params }: { params: { id: str
         </div>
       ) : (
         <div className="space-y-4">
-          {contacts.map((contact) => (
-            <Card key={contact.id} className="hover:border-white/30 transition-all">
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-foreground">
-                    {contact.name}
-                  </h3>
-                  <span className="text-xs text-gray-500 dark:text-muted-foreground">
-                    {formatDate(contact.dateAdded)}
-                  </span>
-                </div>
-                <p className="text-gray-700 dark:text-muted-foreground mb-4 line-clamp-2">
-                  {contact.reason}
-                </p>
-                {contact.profileLink && (
-                  <Link
-                    href={contact.profileLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-400 font-semibold text-sm hover:underline block mb-4"
-                  >
-                    View Profile →
-                  </Link>
-                )}
-                <Link href={`/contacts/${contact.id}`}>
-                  <Button variant="outline" size="sm" className="w-full">
-                    View Contact
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+          {contactOutputs.map((contact) => (
+            <ContactCard key={contact.id} contact={contact} showCirclesCount={false} />
           ))}
         </div>
       )}
