@@ -11,7 +11,7 @@ export function ThemeSwitcher() {
     <div className="flex items-center justify-between">
       <div>
         <p className="text-sm font-medium text-foreground">Theme</p>
-        <p className="text-xs text-muted-foreground mt-1">Choose your preferred theme</p>
+        <p className="text-xs text-muted-foreground mt-1">App style</p>
       </div>
       <div className="flex gap-2">
         <Button
