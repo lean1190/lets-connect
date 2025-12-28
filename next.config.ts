@@ -3,7 +3,8 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactCompiler: true,
   images: {
-    remotePatterns: []
+    remotePatterns: [],
+    qualities: [25, 50, 75, 100]
   }
 };
 

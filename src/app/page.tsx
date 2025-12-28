@@ -115,14 +115,66 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        {/* CTA Section */}
+        {/* Visual Showcase */}
         <section className="container mx-auto px-6 py-20">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">See it in action</h2>
+              <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+                Simple and powerful network management
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 mb-20">
+              {/* Contacts Image */}
+              <div className="group relative">
+                <div className="absolute -inset-1 bg-linear-to-r from-blue-700 via-cyan-600 to-blue-700 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 overflow-hidden">
+                  <div className="aspect-video relative rounded-xl overflow-hidden shadow-2xl transform group-hover:scale-105 transition-transform duration-300">
+                    <Image
+                      src="/examples/contacts.png"
+                      alt="Contacts Management"
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                  </div>
+                  <div className="mt-4 text-center">
+                    <h3 className="text-lg font-semibold">Manage Contacts</h3>
+                    <p className="text-sm text-gray-400">Organize with ease</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Circles Image */}
+              <div className="group relative">
+                <div className="absolute -inset-1 bg-linear-to-r from-blue-700 via-cyan-600 to-blue-700 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
+                <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl p-6 border border-white/10 overflow-hidden">
+                  <div className="aspect-video relative rounded-xl overflow-hidden shadow-2xl transform group-hover:scale-105 transition-transform duration-300">
+                    <Image
+                      src="/examples/circles.png"
+                      alt="Circles Organization"
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                  </div>
+                  <div className="mt-4 text-center">
+                    <h3 className="text-lg font-semibold">Create Circles</h3>
+                    <p className="text-sm text-gray-400">Group your network</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="container mx-auto px-6 pb-20">
           <div className="max-w-4xl mx-auto">
             <div className="bg-white/8 backdrop-blur-2xl rounded-3xl p-12 md:p-16 border border-white/20 shadow-2xl shadow-black/20 text-center">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Build your entrepreneurial circle
-              </h2>
-              <p className="text-xl text-gray-300 mb-8">One person at a time</p>
+              <h2 className="text-3xl md:text-4xl font-bold mb-2">Build your circle</h2>
+              <p className="text-xl text-gray-300 mb-8">One contact at a time</p>
               <CtaButton href={redirectTo} />
             </div>
           </div>
