@@ -54,7 +54,7 @@ export default async function SettingsPage() {
                 start, consider this button 😄👇
               </p>
               <CtaButton href="https://paypal.me/leanvilas" className="w-full" size="sm">
-                Donate
+                Subscribe
               </CtaButton>
             </div>
 

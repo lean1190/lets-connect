@@ -24,7 +24,7 @@ export default async function LandingPage() {
         <nav className="container mx-auto px-6 py-8 flex justify-between items-center">
           <div className="flex items-center">
             <Image
-              src="/logo/transparent.png"
+              src="/logo/dark.png"
               alt="Let's Connect Logo"
               width={64}
               height={64}

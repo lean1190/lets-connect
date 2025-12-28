@@ -37,16 +37,16 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',
-    apple: '/apple-touch-icon.png'
+    apple: '/apple-icon.png'
   },
-  keywords: 'connect, entrepreneur, circle, networking, network, founder',
+  keywords: 'connect, entrepreneur, contact, circle, networking, network, founder',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
     title: "Let's connect"
   },
   openGraph: {
-    images: ['/logo/transparent.png'],
+    images: ['/web-app-manifest-512x512.png'],
     url: appUrl,
     locale: 'en_US',
     type: 'website'

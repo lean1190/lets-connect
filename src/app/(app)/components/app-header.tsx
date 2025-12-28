@@ -1,4 +1,5 @@
 import { IconCamera, IconQrcode } from '@tabler/icons-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { AppRoute } from '@/lib/constants/navigation';
@@ -12,7 +13,25 @@ export function AppHeader({ title }: Props) {
     <header className="bg-white dark:bg-card border-b dark:border-border sticky top-0 z-10">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <h1 className="text-lg font-medium text-foreground">{title}</h1>
+          <div className="flex items-center">
+            <div className="relative">
+              <Image
+                src="/logo/light.png"
+                alt="Let's Connect Logo"
+                width={42}
+                height={42}
+                className="dark:hidden"
+              />
+              <Image
+                src="/logo/dark.png"
+                alt="Let's Connect Logo"
+                width={42}
+                height={42}
+                className="hidden dark:block"
+              />
+            </div>
+            <h1 className="text-lg font-medium text-foreground">{title}</h1>
+          </div>
           <div className="flex items-center gap-2">
             <Link href={AppRoute.MyQr}>
               <Button variant="outline" className="px-4 py-2 text-sm font-semibold">
