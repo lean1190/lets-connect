@@ -62,15 +62,13 @@ export function GroupsList({ groups }: GroupsListProps) {
   return (
     <div className="space-y-6">
       {/* Search */}
-      <div className="flex justify-end">
-        <Input
-          type="search"
-          placeholder="Search groups..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-xs"
-        />
-      </div>
+      <Input
+        type="search"
+        placeholder="Search groups..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="w-full"
+      />
 
       {/* Groups list */}
       <div className="space-y-4">
