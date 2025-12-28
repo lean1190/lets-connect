@@ -21,18 +21,18 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { route: AppRoute.Contacts, icon: IconUser, label: 'Contacts' },
-  { route: AppRoute.Groups, icon: IconCircles, label: 'Groups' },
+  { route: AppRoute.Circles, icon: IconCircles, label: 'Circles' },
   { route: AppRoute.Settings, icon: IconSettings, label: 'Settings' }
 ];
 
-const newRoutes: AppRoute[] = [AppRoute.NewGroup, AppRoute.NewContact];
+const newRoutes: AppRoute[] = [AppRoute.NewCircle, AppRoute.NewContact];
 
 export function AppNavigation() {
   const pathname = usePathname();
 
   const isActivePathname = useCallback((expected: AppRoute) => pathname === expected, [pathname]);
   const newRoute = useMemo(
-    () => (pathname?.startsWith(AppRoute.Groups) ? AppRoute.NewGroup : AppRoute.NewContact),
+    () => (pathname?.startsWith(AppRoute.Circles) ? AppRoute.NewCircle : AppRoute.NewContact),
     [pathname]
   );
 

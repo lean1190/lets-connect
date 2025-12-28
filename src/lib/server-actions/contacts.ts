@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import type { ContactOutput, GroupOutput } from '@/lib/database/app-types';
+import type { CircleOutput, ContactOutput } from '@/lib/database/app-types';
 import { getSupabaseClient } from '@/lib/database/client/isomorphic';
 import { actionClient } from './client';
 
@@ -10,7 +10,7 @@ const createContactSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   profileLink: z.string().url('Invalid URL'),
   reason: z.string().min(1, 'Reason is required'),
-  groupIds: z.array(z.uuid()).optional()
+  circleIds: z.array(z.uuid()).optional()
 });
 
 const updateContactSchema = z.object({
@@ -18,7 +18,7 @@ const updateContactSchema = z.object({
   name: z.string().min(1).optional(),
   profileLink: z.string().url().optional(),
   reason: z.string().min(1).optional(),
-  groupIds: z.array(z.uuid()).optional()
+  circleIds: z.array(z.uuid()).optional()
 });
 
 const deleteContactSchema = z.object({
@@ -53,19 +53,21 @@ export const createContact = actionClient
       throw new Error(`Failed to create contact: ${contactError.message}`);
     }
 
-    if (parsedInput.groupIds && parsedInput.groupIds.length > 0) {
-      const contactGroups = parsedInput.groupIds.map((groupId) => ({
+    if (parsedInput.circleIds && parsedInput.circleIds.length > 0) {
+      const contactCircles = parsedInput.circleIds.map((circleId) => ({
         id: crypto.randomUUID(),
         created_at: createdAt,
         contact_id: id,
-        group_id: groupId,
+        circle_id: circleId,
         user_id: user.id
       }));
 
-      const { error: groupsError } = await supabase.from('contacts_groups').insert(contactGroups);
+      const { error: circlesError } = await supabase
+        .from('contacts_circles')
+        .insert(contactCircles);
 
-      if (groupsError) {
-        throw new Error(`Failed to add contact to groups: ${groupsError.message}`);
+      if (circlesError) {
+        throw new Error(`Failed to add contact to circles: ${circlesError.message}`);
       }
     }
 
@@ -102,26 +104,28 @@ export const updateContact = actionClient
       }
     }
 
-    if (parsedInput.groupIds !== undefined) {
+    if (parsedInput.circleIds !== undefined) {
       await supabase
-        .from('contacts_groups')
+        .from('contacts_circles')
         .delete()
         .eq('contact_id', parsedInput.id)
         .eq('user_id', user.id);
 
-      if (parsedInput.groupIds.length > 0) {
-        const contactGroups = parsedInput.groupIds.map((groupId) => ({
+      if (parsedInput.circleIds.length > 0) {
+        const contactCircles = parsedInput.circleIds.map((circleId) => ({
           id: crypto.randomUUID(),
           created_at: new Date().toISOString(),
           contact_id: parsedInput.id,
-          group_id: groupId,
+          circle_id: circleId,
           user_id: user.id
         }));
 
-        const { error: groupsError } = await supabase.from('contacts_groups').insert(contactGroups);
+        const { error: circlesError } = await supabase
+          .from('contacts_circles')
+          .insert(contactCircles);
 
-        if (groupsError) {
-          throw new Error(`Failed to update contact groups: ${groupsError.message}`);
+        if (circlesError) {
+          throw new Error(`Failed to update contact circles: ${circlesError.message}`);
         }
       }
     }
@@ -177,29 +181,29 @@ export async function getContacts(): Promise<ContactOutput[]> {
     return [];
   }
 
-  const contactsWithGroups: ContactOutput[] = await Promise.all(
+  const contactsWithCircles: ContactOutput[] = await Promise.all(
     contacts.map(async (contact) => {
-      const { data: contactGroups } = await supabase
-        .from('contacts_groups')
-        .select('group_id')
+      const { data: contactCircles } = await supabase
+        .from('contacts_circles')
+        .select('circle_id')
         .eq('contact_id', contact.id)
         .eq('user_id', user.id);
 
-      const groupIds =
-        contactGroups?.map((cg) => cg.group_id).filter((id): id is string => id !== null) || [];
-      let groups: GroupOutput[] = [];
+      const circleIds =
+        contactCircles?.map((cc) => cc.circle_id).filter((id): id is string => id !== null) || [];
+      let circles: CircleOutput[] = [];
 
-      if (groupIds.length > 0) {
-        const { data: groupData } = await supabase
-          .from('groups')
+      if (circleIds.length > 0) {
+        const { data: circleData } = await supabase
+          .from('circles')
           .select('id, name, created_at')
-          .in('id', groupIds);
+          .in('id', circleIds);
 
-        groups =
-          groupData?.map((g) => ({
-            id: g.id,
-            name: g.name,
-            createdAt: g.created_at
+        circles =
+          circleData?.map((c) => ({
+            id: c.id,
+            name: c.name,
+            createdAt: c.created_at
           })) || [];
       }
 
@@ -209,12 +213,12 @@ export async function getContacts(): Promise<ContactOutput[]> {
         profileLink: contact.url || '',
         reason: contact.reason || '',
         dateAdded: contact.created_at,
-        groups
+        circles
       };
     })
   );
 
-  return contactsWithGroups;
+  return contactsWithCircles;
 }
 
 export async function getContactById(id: string) {
@@ -238,32 +242,32 @@ export async function getContactById(id: string) {
     return null;
   }
 
-  const { data: contactGroups } = await supabase
-    .from('contacts_groups')
-    .select('group_id')
+  const { data: contactCircles } = await supabase
+    .from('contacts_circles')
+    .select('circle_id')
     .eq('contact_id', id)
     .eq('user_id', user.id);
 
-  const groupIds =
-    contactGroups?.map((cg) => cg.group_id).filter((id): id is string => id !== null) || [];
-  let groups: GroupOutput[] = [];
+  const circleIds =
+    contactCircles?.map((cc) => cc.circle_id).filter((id): id is string => id !== null) || [];
+  let circles: CircleOutput[] = [];
 
-  if (groupIds.length > 0) {
-    const { data: groupData } = await supabase
-      .from('groups')
+  if (circleIds.length > 0) {
+    const { data: circleData } = await supabase
+      .from('circles')
       .select('id, name, created_at')
-      .in('id', groupIds);
+      .in('id', circleIds);
 
-    groups =
-      groupData?.map((g) => ({
-        id: g.id,
-        name: g.name,
-        createdAt: g.created_at
+    circles =
+      circleData?.map((c) => ({
+        id: c.id,
+        name: c.name,
+        createdAt: c.created_at
       })) || [];
   }
 
   return {
     ...contact,
-    groups
+    circles
   };
 }

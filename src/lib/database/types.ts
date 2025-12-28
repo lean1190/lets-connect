@@ -8,73 +8,7 @@ export type Database = {
   };
   public: {
     Tables: {
-      contacts: {
-        Row: {
-          created_at: string;
-          id: string;
-          name: string;
-          reason: string | null;
-          url: string | null;
-          user_id: string;
-        };
-        Insert: {
-          created_at?: string;
-          id?: string;
-          name: string;
-          reason?: string | null;
-          url?: string | null;
-          user_id: string;
-        };
-        Update: {
-          created_at?: string;
-          id?: string;
-          name?: string;
-          reason?: string | null;
-          url?: string | null;
-          user_id?: string;
-        };
-        Relationships: [];
-      };
-      contacts_groups: {
-        Row: {
-          contact_id: string | null;
-          created_at: string;
-          group_id: string | null;
-          id: string;
-          user_id: string | null;
-        };
-        Insert: {
-          contact_id?: string | null;
-          created_at?: string;
-          group_id?: string | null;
-          id?: string;
-          user_id?: string | null;
-        };
-        Update: {
-          contact_id?: string | null;
-          created_at?: string;
-          group_id?: string | null;
-          id?: string;
-          user_id?: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'contacts_groups_contact_id_fkey';
-            columns: ['contact_id'];
-            isOneToOne: false;
-            referencedRelation: 'contacts';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'contacts_groups_group_id_fkey';
-            columns: ['group_id'];
-            isOneToOne: false;
-            referencedRelation: 'groups';
-            referencedColumns: ['id'];
-          }
-        ];
-      };
-      groups: {
+      circles: {
         Row: {
           color: string | null;
           created_at: string;
@@ -106,6 +40,72 @@ export type Database = {
           user_id?: string | null;
         };
         Relationships: [];
+      };
+      contacts: {
+        Row: {
+          created_at: string;
+          id: string;
+          name: string;
+          reason: string | null;
+          url: string | null;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          name: string;
+          reason?: string | null;
+          url?: string | null;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          name?: string;
+          reason?: string | null;
+          url?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      contacts_circles: {
+        Row: {
+          circle_id: string | null;
+          contact_id: string | null;
+          created_at: string;
+          id: string;
+          user_id: string | null;
+        };
+        Insert: {
+          circle_id?: string | null;
+          contact_id?: string | null;
+          created_at?: string;
+          id?: string;
+          user_id?: string | null;
+        };
+        Update: {
+          circle_id?: string | null;
+          contact_id?: string | null;
+          created_at?: string;
+          id?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'contacts_groups_contact_id_fkey';
+            columns: ['contact_id'];
+            isOneToOne: false;
+            referencedRelation: 'contacts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'contacts_groups_group_id_fkey';
+            columns: ['circle_id'];
+            isOneToOne: false;
+            referencedRelation: 'circles';
+            referencedColumns: ['id'];
+          }
+        ];
       };
       settings: {
         Row: {

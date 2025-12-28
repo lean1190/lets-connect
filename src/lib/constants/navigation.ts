@@ -7,10 +7,10 @@ export enum AppRoute {
   EditContact = '/contacts/',
   Scan = '/scan',
   MyQr = '/my-qr',
-  Groups = '/groups',
-  NewGroup = '/groups/new',
-  ViewGroup = '/groups/',
-  EditGroup = '/edit',
+  Circles = '/circles',
+  NewCircle = '/circles/new',
+  ViewCircle = '/circles/',
+  EditCircle = '/edit',
   Settings = '/settings'
 }
 

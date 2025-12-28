@@ -36,8 +36,8 @@ function searchContacts(contacts: ContactOutput[], query: string): ContactOutput
       return true;
     }
 
-    // Search in group names
-    if (contact.groups?.some((group) => group.name.toLowerCase().includes(lowerQuery))) {
+    // Search in circle names
+    if (contact.circles?.some((circle) => circle.name.toLowerCase().includes(lowerQuery))) {
       return true;
     }
 
@@ -133,11 +133,11 @@ export function ContactsList({ contacts }: ContactsListProps) {
                       </div>
                       <div className="flex-1 bg-gray-50 dark:bg-muted rounded-lg p-3">
                         <div className="text-xs text-gray-500 dark:text-muted-foreground mb-1">
-                          Groups
+                          Circles
                         </div>
                         <div className="text-lg font-semibold text-gray-900 dark:text-foreground">
-                          In {contact.groups?.length || 0}{' '}
-                          {contact.groups?.length === 1 ? 'group' : 'groups'}
+                          In {contact.circles?.length || 0}{' '}
+                          {contact.circles?.length === 1 ? 'circle' : 'circles'}
                         </div>
                       </div>
                     </div>

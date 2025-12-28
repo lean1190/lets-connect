@@ -2,18 +2,18 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import type { GroupOutput } from '@/lib/database/app-types';
+import type { CircleOutput } from '@/lib/database/app-types';
 import { getSupabaseClient } from '@/lib/database/client/isomorphic';
 import { actionClient } from './client';
 
-const createGroupSchema = z.object({
-  name: z.string().min(1, 'Group name is required'),
+const createCircleSchema = z.object({
+  name: z.string().min(1, 'Circle name is required'),
   color: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   icon: z.string().optional().nullable()
 });
 
-const updateGroupSchema = z.object({
+const updateCircleSchema = z.object({
   id: z.uuid(),
   name: z.string().min(1).optional(),
   color: z.string().optional().nullable(),
@@ -21,12 +21,12 @@ const updateGroupSchema = z.object({
   icon: z.string().optional().nullable()
 });
 
-const deleteGroupSchema = z.object({
+const deleteCircleSchema = z.object({
   id: z.uuid()
 });
 
-export const createGroup = actionClient
-  .schema(createGroupSchema)
+export const createCircle = actionClient
+  .schema(createCircleSchema)
   .action(async ({ parsedInput }) => {
     const supabase = await getSupabaseClient();
     const {
@@ -40,7 +40,7 @@ export const createGroup = actionClient
     const id = crypto.randomUUID();
     const now = new Date().toISOString();
 
-    const { error } = await supabase.from('groups').insert({
+    const { error } = await supabase.from('circles').insert({
       id,
       created_at: now,
       name: parsedInput.name,
@@ -52,15 +52,15 @@ export const createGroup = actionClient
     });
 
     if (error) {
-      throw new Error(`Failed to create group: ${error.message}`);
+      throw new Error(`Failed to create circle: ${error.message}`);
     }
 
-    revalidatePath('/groups');
+    revalidatePath('/circles');
     return { id };
   });
 
-export const updateGroup = actionClient
-  .schema(updateGroupSchema)
+export const updateCircle = actionClient
+  .schema(updateCircleSchema)
   .action(async ({ parsedInput }) => {
     const supabase = await getSupabaseClient();
     const {
@@ -95,22 +95,22 @@ export const updateGroup = actionClient
     }
 
     const { error } = await supabase
-      .from('groups')
+      .from('circles')
       .update(updateData)
       .eq('id', parsedInput.id)
       .eq('user_id', user.id);
 
     if (error) {
-      throw new Error(`Failed to update group: ${error.message}`);
+      throw new Error(`Failed to update circle: ${error.message}`);
     }
 
-    revalidatePath('/groups');
-    revalidatePath(`/groups/${parsedInput.id}`);
+    revalidatePath('/circles');
+    revalidatePath(`/circles/${parsedInput.id}`);
     return { success: true };
   });
 
-export const deleteGroup = actionClient
-  .schema(deleteGroupSchema)
+export const deleteCircle = actionClient
+  .schema(deleteCircleSchema)
   .action(async ({ parsedInput }) => {
     const supabase = await getSupabaseClient();
     const {
@@ -122,20 +122,20 @@ export const deleteGroup = actionClient
     }
 
     const { error } = await supabase
-      .from('groups')
+      .from('circles')
       .delete()
       .eq('id', parsedInput.id)
       .eq('user_id', user.id);
 
     if (error) {
-      throw new Error(`Failed to delete group: ${error.message}`);
+      throw new Error(`Failed to delete circle: ${error.message}`);
     }
 
-    revalidatePath('/groups');
+    revalidatePath('/circles');
     return { success: true };
   });
 
-export async function getGroups(): Promise<GroupOutput[]> {
+export async function getCircles(): Promise<CircleOutput[]> {
   const supabase = await getSupabaseClient();
   const {
     data: { user }
@@ -145,40 +145,40 @@ export async function getGroups(): Promise<GroupOutput[]> {
     return [];
   }
 
-  const { data: groups, error } = await supabase
-    .from('groups')
+  const { data: circles, error } = await supabase
+    .from('circles')
     .select('*')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
 
-  if (error || !groups) {
+  if (error || !circles) {
     return [];
   }
 
-  const groupsWithCounts: GroupOutput[] = await Promise.all(
-    groups.map(async (group) => {
+  const circlesWithCounts: CircleOutput[] = await Promise.all(
+    circles.map(async (circle) => {
       const { count } = await supabase
-        .from('contacts_groups')
+        .from('contacts_circles')
         .select('*', { count: 'exact', head: true })
-        .eq('group_id', group.id)
+        .eq('circle_id', circle.id)
         .eq('user_id', user.id);
 
       return {
-        id: group.id,
-        name: group.name,
-        createdAt: group.created_at,
+        id: circle.id,
+        name: circle.name,
+        createdAt: circle.created_at,
         contactCount: count || 0,
-        color: group.color || null,
-        description: group.description || null,
-        icon: group.icon || null
+        color: circle.color || null,
+        description: circle.description || null,
+        icon: circle.icon || null
       };
     })
   );
 
-  return groupsWithCounts;
+  return circlesWithCounts;
 }
 
-export async function getGroupById(id: string): Promise<GroupOutput | null> {
+export async function getCircleById(id: string): Promise<CircleOutput | null> {
   const supabase = await getSupabaseClient();
   const {
     data: { user }
@@ -188,35 +188,35 @@ export async function getGroupById(id: string): Promise<GroupOutput | null> {
     return null;
   }
 
-  const { data: group, error } = await supabase
-    .from('groups')
+  const { data: circle, error } = await supabase
+    .from('circles')
     .select('*')
     .eq('id', id)
     .eq('user_id', user.id)
     .single();
 
-  if (error || !group) {
+  if (error || !circle) {
     return null;
   }
 
   const { count } = await supabase
-    .from('contacts_groups')
+    .from('contacts_circles')
     .select('*', { count: 'exact', head: true })
-    .eq('group_id', id)
+    .eq('circle_id', id)
     .eq('user_id', user.id);
 
   return {
-    id: group.id,
-    name: group.name,
-    createdAt: group.created_at,
+    id: circle.id,
+    name: circle.name,
+    createdAt: circle.created_at,
     contactCount: count || 0,
-    color: group.color || null,
-    description: group.description || null,
-    icon: group.icon || null
+    color: circle.color || null,
+    description: circle.description || null,
+    icon: circle.icon || null
   };
 }
 
-export async function getContactsInGroup(groupId: string) {
+export async function getContactsInCircle(circleId: string) {
   const supabase = await getSupabaseClient();
   const {
     data: { user }
@@ -226,18 +226,18 @@ export async function getContactsInGroup(groupId: string) {
     return [];
   }
 
-  const { data: contactGroups } = await supabase
-    .from('contacts_groups')
+  const { data: contactCircles } = await supabase
+    .from('contacts_circles')
     .select('contact_id')
-    .eq('group_id', groupId)
+    .eq('circle_id', circleId)
     .eq('user_id', user.id);
 
-  if (!contactGroups || contactGroups.length === 0) {
+  if (!contactCircles || contactCircles.length === 0) {
     return [];
   }
 
-  const contactIds = contactGroups
-    .map((cg) => cg.contact_id)
+  const contactIds = contactCircles
+    .map((cc) => cc.contact_id)
     .filter((id): id is string => id !== null);
 
   const { data: contacts, error } = await supabase

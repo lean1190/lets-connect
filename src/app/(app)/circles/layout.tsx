@@ -8,11 +8,11 @@ import { PageWithBackButtonLayout } from '../components/page-with-back-button-la
 import { PageWithNavigationLayout } from '../components/page-with-navigation-layout';
 
 const titles: Record<string, string> = {
-  [AppRoute.Groups]: 'Groups',
-  [AppRoute.NewGroup]: 'New group'
+  [AppRoute.Circles]: 'Circles',
+  [AppRoute.NewCircle]: 'New circle'
 };
 
-export default function GroupsLayout({ children }: { children: React.ReactNode }) {
+export default function CirclesLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const title = useMemo(
@@ -24,7 +24,7 @@ export default function GroupsLayout({ children }: { children: React.ReactNode }
     [pathname]
   );
 
-  return pathname === AppRoute.Groups ? (
+  return pathname === AppRoute.Circles ? (
     <PageWithNavigationLayout title={title}>{children}</PageWithNavigationLayout>
   ) : (
     <PageWithBackButtonLayout title={title}>{children}</PageWithBackButtonLayout>

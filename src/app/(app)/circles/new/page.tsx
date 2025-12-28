@@ -1,9 +1,9 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { IconPicker } from '@/components/icon-picker';
@@ -18,12 +18,11 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { getGroupById, updateGroup } from '@/lib/server-actions/groups';
+import { createCircle } from '@/lib/server-actions/circles';
 import { isExecuting } from '@/lib/server-actions/status';
-import { DeleteGroupButton } from '../components/delete-group-button';
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Group name is required').trim(),
+  name: z.string().min(1, 'Circle name is required').trim(),
   color: z.string().optional().nullable(),
   description: z.string().optional().nullable(),
   icon: z.string().optional().nullable()
@@ -31,17 +30,9 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function EditGroupPage() {
+export default function NewCirclePage() {
   const router = useRouter();
-  const params = useParams();
-  const id = params.id as string;
-  const [groupName, setGroupName] = useState('');
-
-  const {
-    execute: updateGroupAction,
-    status: updateStatus,
-    result: updateResult
-  } = useAction(updateGroup);
+  const { execute: createCircleAction, status, result } = useAction(createCircle);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -53,31 +44,8 @@ export default function EditGroupPage() {
     }
   });
 
-  useEffect(() => {
-    async function loadData() {
-      try {
-        const group = await getGroupById(id);
-
-        if (group) {
-          setGroupName(group.name);
-          form.reset({
-            name: group.name,
-            color: group.color || null,
-            description: group.description || null,
-            icon: group.icon || null
-          });
-        }
-      } catch (error) {
-        console.error('Error loading group:', error);
-        alert('Failed to load group');
-      }
-    }
-    loadData();
-  }, [id, form]);
-
   const onSubmit = (values: FormValues) => {
-    updateGroupAction({
-      id,
+    createCircleAction({
       name: values.name,
       color: values.color || null,
       description: values.description || null,
@@ -86,12 +54,12 @@ export default function EditGroupPage() {
   };
 
   useEffect(() => {
-    if (updateResult?.serverError) {
-      alert(`Error: ${updateResult.serverError}`);
-    } else if (updateResult?.data) {
-      router.push(`/groups`);
+    if (result?.serverError) {
+      alert(`Error: ${result.serverError}`);
+    } else if (result?.data) {
+      router.push('/circles');
     }
-  }, [updateResult, router]);
+  }, [result, router]);
 
   return (
     <Card>
@@ -104,14 +72,15 @@ export default function EditGroupPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>
-                    Group Name <span className="text-red-500">*</span>
+                    Circle Name <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="text"
-                      placeholder="Enter group name"
-                      className="mt-1 text-sm"
+                      placeholder="Enter circle name"
+                      className="mt-1"
+                      autoFocus
                     />
                   </FormControl>
                   <FormMessage />
@@ -129,8 +98,8 @@ export default function EditGroupPage() {
                     <Input
                       {...field}
                       type="text"
-                      placeholder="Enter group description"
-                      className="mt-1 text-sm"
+                      placeholder="Enter circle description"
+                      className="mt-1"
                       value={field.value || ''}
                     />
                   </FormControl>
@@ -179,16 +148,13 @@ export default function EditGroupPage() {
               />
             </div>
 
-            <div className="flex items-center justify-between">
-              <DeleteGroupButton groupId={id} groupName={groupName || form.watch('name')} />
-              <div className="flex gap-4 items-center">
-                <Button type="button" variant="outline" onClick={() => router.back()}>
-                  Cancel
-                </Button>
-                <Button type="submit" disabled={isExecuting(updateStatus)}>
-                  {isExecuting(updateStatus) ? 'Saving...' : 'Save'}
-                </Button>
-              </div>
+            <div className="flex gap-6 items-center justify-end">
+              <Button type="button" variant="outline" onClick={() => router.back()}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isExecuting(status)}>
+                {isExecuting(status) ? 'Creating...' : 'Create Circle'}
+              </Button>
             </div>
           </form>
         </Form>

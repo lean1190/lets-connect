@@ -17,8 +17,8 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { createCircle, getCircles } from '@/lib/server-actions/circles';
 import { getContactById, updateContact } from '@/lib/server-actions/contacts';
-import { createGroup, getGroups } from '@/lib/server-actions/groups';
 import { isExecuting } from '@/lib/server-actions/status';
 import { DeleteContactButton } from '../components/delete-contact-button';
 
@@ -26,7 +26,7 @@ const formSchema = z.object({
   profileLink: z.string().optional(),
   name: z.string().min(1, 'Name is required').trim(),
   reason: z.string().trim().optional(),
-  groupIds: z.array(z.string()).optional()
+  circleIds: z.array(z.string()).optional()
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -36,9 +36,9 @@ export default function EditContactPage() {
   const params = useParams();
   const id = params.id as string;
 
-  const [allGroups, setAllGroups] = useState<Array<{ id: string; name: string }>>([]);
-  const [showAddGroup, setShowAddGroup] = useState(false);
-  const [newGroupName, setNewGroupName] = useState('');
+  const [allCircles, setAllCircles] = useState<Array<{ id: string; name: string }>>([]);
+  const [showAddCircle, setShowAddCircle] = useState(false);
+  const [newCircleName, setNewCircleName] = useState('');
 
   const {
     execute: updateContactAction,
@@ -46,10 +46,10 @@ export default function EditContactPage() {
     result: updateResult
   } = useAction(updateContact);
   const {
-    execute: createGroupAction,
-    status: createGroupStatus,
-    result: createGroupResult
-  } = useAction(createGroup);
+    execute: createCircleAction,
+    status: createCircleStatus,
+    result: createCircleResult
+  } = useAction(createCircle);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -57,26 +57,26 @@ export default function EditContactPage() {
       profileLink: '',
       name: '',
       reason: '',
-      groupIds: []
+      circleIds: []
     }
   });
 
-  const selectedGroups = form.watch('groupIds') || [];
+  const selectedCircles = form.watch('circleIds') || [];
 
   useEffect(() => {
     async function loadData() {
       try {
-        const [contact, groups] = await Promise.all([getContactById(id), getGroups()]);
+        const [contact, circles] = await Promise.all([getContactById(id), getCircles()]);
 
         if (contact) {
           form.reset({
             profileLink: contact.url || '',
             name: contact.name,
             reason: contact.reason || '',
-            groupIds: contact.groups?.map((g) => g.id) || []
+            circleIds: contact.circles?.map((c) => c.id) || []
           });
         }
-        setAllGroups(groups);
+        setAllCircles(circles);
       } catch (error) {
         console.error('Error loading contact:', error);
         alert('Failed to load contact');
@@ -85,41 +85,41 @@ export default function EditContactPage() {
     loadData();
   }, [id, form]);
 
-  const toggleGroup = (groupId: string) => {
-    const currentGroups = form.getValues('groupIds') || [];
-    const newGroups = currentGroups.includes(groupId)
-      ? currentGroups.filter((gid: string) => gid !== groupId)
-      : [...currentGroups, groupId];
-    form.setValue('groupIds', newGroups);
+  const toggleCircle = (circleId: string) => {
+    const currentCircles = form.getValues('circleIds') || [];
+    const newCircles = currentCircles.includes(circleId)
+      ? currentCircles.filter((cid: string) => cid !== circleId)
+      : [...currentCircles, circleId];
+    form.setValue('circleIds', newCircles);
   };
 
-  const handleCreateGroup = async () => {
-    if (!newGroupName.trim()) {
+  const handleCreateCircle = async () => {
+    if (!newCircleName.trim()) {
       return;
     }
 
-    createGroupAction({ name: newGroupName.trim() });
+    createCircleAction({ name: newCircleName.trim() });
   };
 
   useEffect(() => {
-    if (createGroupResult?.serverError) {
-      alert(`Error: ${createGroupResult.serverError}`);
-    } else if (createGroupResult?.data?.id) {
-      // Reload groups and select the newly created one
-      async function reloadGroups() {
-        const groups = await getGroups();
-        setAllGroups(groups);
-        const newGroup = groups.find((g) => g.id === createGroupResult.data?.id);
-        if (newGroup) {
-          const currentGroups = form.getValues('groupIds') || [];
-          form.setValue('groupIds', [...currentGroups, newGroup.id]);
+    if (createCircleResult?.serverError) {
+      alert(`Error: ${createCircleResult.serverError}`);
+    } else if (createCircleResult?.data?.id) {
+      // Reload circles and select the newly created one
+      async function reloadCircles() {
+        const circles = await getCircles();
+        setAllCircles(circles);
+        const newCircle = circles.find((c) => c.id === createCircleResult.data?.id);
+        if (newCircle) {
+          const currentCircles = form.getValues('circleIds') || [];
+          form.setValue('circleIds', [...currentCircles, newCircle.id]);
         }
       }
-      reloadGroups();
-      setNewGroupName('');
-      setShowAddGroup(false);
+      reloadCircles();
+      setNewCircleName('');
+      setShowAddCircle(false);
     }
-  }, [createGroupResult, form]);
+  }, [createCircleResult, form]);
 
   const onSubmit = (values: FormValues) => {
     updateContactAction({
@@ -127,7 +127,7 @@ export default function EditContactPage() {
       name: values.name,
       profileLink: values.profileLink || '',
       reason: values.reason || '',
-      groupIds: values.groupIds && values.groupIds.length > 0 ? values.groupIds : undefined
+      circleIds: values.circleIds && values.circleIds.length > 0 ? values.circleIds : undefined
     });
   };
 
@@ -203,36 +203,36 @@ export default function EditContactPage() {
             />
 
             <div>
-              <FormLabel>Groups</FormLabel>
+              <FormLabel>Circles</FormLabel>
               <div className="mt-2 flex flex-wrap gap-2 items-center">
-                {allGroups.map((group) => (
+                {allCircles.map((circle) => (
                   <button
-                    key={group.id}
+                    key={circle.id}
                     type="button"
-                    onClick={() => toggleGroup(group.id)}
+                    onClick={() => toggleCircle(circle.id)}
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                      selectedGroups.includes(group.id)
+                      selectedCircles.includes(circle.id)
                         ? 'bg-[#0A66C2] border border-transparent text-white'
                         : 'bg-white dark:bg-card border border-gray-300 dark:border-border text-gray-700 dark:text-foreground hover:bg-gray-50 dark:hover:bg-accent'
                     }`}
                   >
-                    {group.name}
+                    {circle.name}
                   </button>
                 ))}
-                {showAddGroup ? (
+                {showAddCircle ? (
                   <div className="flex items-center gap-2">
                     <Input
                       type="text"
-                      placeholder="Group name"
-                      value={newGroupName}
-                      onChange={(e) => setNewGroupName(e.target.value)}
+                      placeholder="Circle name"
+                      value={newCircleName}
+                      onChange={(e) => setNewCircleName(e.target.value)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           e.preventDefault();
-                          handleCreateGroup();
+                          handleCreateCircle();
                         } else if (e.key === 'Escape') {
-                          setShowAddGroup(false);
-                          setNewGroupName('');
+                          setShowAddCircle(false);
+                          setNewCircleName('');
                         }
                       }}
                       className="h-9 w-32 text-sm"
@@ -241,18 +241,18 @@ export default function EditContactPage() {
                     <Button
                       type="button"
                       size="sm"
-                      onClick={handleCreateGroup}
-                      disabled={isExecuting(createGroupStatus) || !newGroupName.trim()}
+                      onClick={handleCreateCircle}
+                      disabled={isExecuting(createCircleStatus) || !newCircleName.trim()}
                     >
-                      {isExecuting(createGroupStatus) ? '...' : 'Add'}
+                      {isExecuting(createCircleStatus) ? '...' : 'Add'}
                     </Button>
                     <Button
                       type="button"
                       variant="outline"
                       size="sm"
                       onClick={() => {
-                        setShowAddGroup(false);
-                        setNewGroupName('');
+                        setShowAddCircle(false);
+                        setNewCircleName('');
                       }}
                     >
                       Cancel
@@ -263,7 +263,7 @@ export default function EditContactPage() {
                     type="button"
                     variant="outline"
                     size="sm"
-                    onClick={() => setShowAddGroup(true)}
+                    onClick={() => setShowAddCircle(true)}
                     className="px-4 py-2 rounded-full text-sm font-medium"
                   >
                     + Add

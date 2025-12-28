@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 
-export default function EditGroupLoading() {
+export default function EditCircleLoading() {
   return (
     <Card>
       <CardContent className="pt-6">

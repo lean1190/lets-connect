@@ -84,8 +84,8 @@ export default async function LandingPage() {
               </div>
               <h3 className="text-2xl font-bold mb-4">Organize Your Network</h3>
               <p className="text-gray-400 leading-relaxed">
-                Group your contacts and add notes so you never forget the context of your
-                connections.
+                Organize your contacts in circles and add notes so you never forget the context of
+                your connections.
               </p>
             </div>
 

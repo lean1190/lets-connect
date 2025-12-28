@@ -7,8 +7,8 @@ describe('getTitle', () => {
     '/contacts': 'Contacts',
     '/contacts/new': 'New contact',
     '/contacts/': 'Edit contact',
-    '/groups': 'Groups',
-    '/groups/new': 'New group'
+    '/circles': 'Circles',
+    '/circles/new': 'New circle'
   };
 
   describe('exact pathname match', () => {
@@ -20,8 +20,8 @@ describe('getTitle', () => {
       expect(getTitle({ pathname: '/contacts/new', titles: mockTitles })).toBe('New contact');
     });
 
-    it('should return the title for groups route', () => {
-      expect(getTitle({ pathname: '/groups', titles: mockTitles })).toBe('Groups');
+    it('should return the title for circles route', () => {
+      expect(getTitle({ pathname: '/circles', titles: mockTitles })).toBe('Circles');
     });
   });
 
@@ -49,7 +49,7 @@ describe('getTitle', () => {
     it('should not match partial route if pathname does not start with it', () => {
       expect(
         getTitle({
-          pathname: '/groups/123',
+          pathname: '/circles/123',
           titles: mockTitles,
           partialRoute: AppRoute.EditContact
         })
@@ -201,19 +201,19 @@ describe('getTitle', () => {
       ).toBe('Edit contact');
     });
 
-    it('should work with groups layout scenario', () => {
+    it('should work with circles layout scenario', () => {
       const titles = {
-        '/groups': 'Groups',
-        '/groups/new': 'New group',
-        '/groups/': 'Group Details'
+        '/circles': 'Circles',
+        '/circles/new': 'New circle',
+        '/circles/': 'Circle Details'
       };
       expect(
         getTitle({
-          pathname: '/groups/xyz-789',
+          pathname: '/circles/xyz-789',
           titles,
-          partialRoute: AppRoute.ViewGroup
+          partialRoute: AppRoute.ViewCircle
         })
-      ).toBe('Group Details');
+      ).toBe('Circle Details');
     });
   });
 });

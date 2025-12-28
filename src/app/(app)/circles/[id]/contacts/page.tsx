@@ -3,16 +3,16 @@ import { format } from 'date-fns';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { getContactsInGroup, getGroupById } from '@/lib/server-actions/groups';
+import { getCircleById, getContactsInCircle } from '@/lib/server-actions/circles';
 
-export default async function GroupContactsPage({ params }: { params: { id: string } }) {
+export default async function CircleContactsPage({ params }: { params: { id: string } }) {
   const { id } = await params;
-  const [group, contacts] = await Promise.all([getGroupById(id), getContactsInGroup(id)]);
+  const [circle, contacts] = await Promise.all([getCircleById(id), getContactsInCircle(id)]);
 
-  if (!group) {
+  if (!circle) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
-        <p>Group not found</p>
+        <p>Circle not found</p>
       </div>
     );
   }
@@ -28,7 +28,7 @@ export default async function GroupContactsPage({ params }: { params: { id: stri
   return (
     <>
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-foreground">{group.name}</h1>
+        <h1 className="text-2xl font-semibold text-foreground">{circle.name}</h1>
       </div>
 
       {contacts.length === 0 ? (
@@ -38,10 +38,10 @@ export default async function GroupContactsPage({ params }: { params: { id: stri
             stroke={1.5}
           />
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-foreground mb-2">
-            No contacts in this group
+            No contacts in this circle
           </h2>
           <p className="text-gray-600 dark:text-muted-foreground">
-            Edit a contact to add them to this group
+            Edit a contact to add them to this circle
           </p>
         </div>
       ) : (

@@ -7,7 +7,7 @@ export interface Contact {
   name: string;
 }
 
-export interface Group {
+export interface Circle {
   id: string;
   created_at: string;
   name: string;
@@ -15,11 +15,11 @@ export interface Group {
   user_id: string;
 }
 
-export interface ContactGroup {
+export interface ContactCircle {
   id: string;
   created_at: string;
   contact_id: string;
-  group_id: string;
+  circle_id: string;
   user_id: string;
 }
 
@@ -27,10 +27,10 @@ export interface CreateContactInput {
   name: string;
   profileLink: string;
   reason: string;
-  groupIds?: string[];
+  circleIds?: string[];
 }
 
-export interface CreateGroupInput {
+export interface CreateCircleInput {
   name: string;
 }
 
@@ -40,10 +40,10 @@ export interface ContactOutput {
   profileLink: string;
   reason: string;
   dateAdded: string;
-  groups?: GroupOutput[];
+  circles?: CircleOutput[];
 }
 
-export interface GroupOutput {
+export interface CircleOutput {
   id: string;
   name: string;
   createdAt: string;

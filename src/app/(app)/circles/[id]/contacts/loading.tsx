@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 
-export default function GroupContactsLoading() {
+export default function CircleContactsLoading() {
   return (
     <>
       <div className="mb-6">
