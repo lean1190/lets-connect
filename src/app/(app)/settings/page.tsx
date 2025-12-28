@@ -63,7 +63,7 @@ export default async function SettingsPage() {
                 Questions?{' '}
                 <a
                   href="mailto:me@leanvilas.com"
-                  className="text-[#0A66C2] hover:underline dark:text-blue-400"
+                  className="text-blue-400 hover:underline dark:text-blue-400"
                 >
                   me@leanvilas.com
                 </a>
@@ -83,11 +83,11 @@ export default async function SettingsPage() {
       </form>
 
       <div className="text-xs flex justify-center gap-2 items-center">
-        <Link href="/terms" className="text-[#0A66C2] hover:underline dark:text-blue-400">
+        <Link href="/terms" className="text-blue-400 hover:underline dark:text-blue-400">
           Terms and Conditions
         </Link>
         <span>•</span>
-        <Link href="/privacy" className="text-[#0A66C2] hover:underline dark:text-blue-400">
+        <Link href="/privacy" className="text-blue-400 hover:underline dark:text-blue-400">
           Privacy Policy
         </Link>
       </div>

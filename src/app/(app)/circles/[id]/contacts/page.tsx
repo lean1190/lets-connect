@@ -65,7 +65,7 @@ export default async function CircleContactsPage({ params }: { params: { id: str
                     href={contact.profileLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#0A66C2] font-semibold text-sm hover:underline block mb-4"
+                    className="text-blue-400 font-semibold text-sm hover:underline block mb-4"
                   >
                     View Profile →
                   </Link>

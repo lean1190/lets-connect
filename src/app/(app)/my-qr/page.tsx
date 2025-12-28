@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useAction } from 'next-safe-action/hooks';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -52,63 +53,68 @@ export default function MyQRPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 relative">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
-        {!linkedInUrl && !isEditing ? (
-          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
-            <span className="text-6xl mb-5">🔗</span>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-3">Set up your QR code</h2>
-            <p className="text-gray-600 mb-8 max-w-md">Add your LinkedIn or Wsp URL</p>
-            <Button onClick={startEditing} className="bg-[#0A66C2]">
-              Add URL
-            </Button>
-          </div>
-        ) : isEditing ? (
-          <Card>
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="linkedinUrl">URL (e.g. LinkedIn or Wsp)</Label>
-                  <Input
-                    id="linkedinUrl"
-                    type="url"
-                    placeholder="https://linkedin.com/in/yourprofile"
-                    value={tempUrl}
-                    onChange={(e) => setTempUrl(e.target.value)}
-                    className="mt-1"
-                    autoFocus
-                  />
-                </div>
-                <div className="flex gap-4">
-                  <Button variant="outline" onClick={() => setIsEditing(false)} className="flex-1">
-                    Cancel
-                  </Button>
-                  <Button onClick={saveLinkedInUrl} className="flex-1 bg-[#0A66C2]">
-                    Save
-                  </Button>
-                </div>
+    <div>
+      {!linkedInUrl && !isEditing ? (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+          <span className="text-6xl mb-5">🔗</span>
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-foreground mb-3">
+            Set up your QR code
+          </h2>
+          <p className="text-gray-600 dark:text-muted-foreground mb-8 max-w-md">
+            Add your LinkedIn or Wsp URL
+          </p>
+          <Button onClick={startEditing} className="bg-[#0A66C2]">
+            Add URL
+          </Button>
+        </div>
+      ) : isEditing ? (
+        <Card>
+          <CardContent className="pt-6">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="linkedinUrl">URL (e.g. LinkedIn or Wsp)</Label>
+                <Input
+                  id="linkedinUrl"
+                  type="url"
+                  placeholder="https://linkedin.com/in/yourprofile"
+                  value={tempUrl}
+                  onChange={(e) => setTempUrl(e.target.value)}
+                  className="mt-1"
+                  autoFocus
+                />
               </div>
-            </CardContent>
+              <div className="flex gap-4">
+                <Button variant="outline" onClick={() => setIsEditing(false)} className="flex-1">
+                  Cancel
+                </Button>
+                <Button onClick={saveLinkedInUrl} className="flex-1 bg-[#0A66C2]">
+                  Save
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="flex flex-col items-center">
+          <Card className="p-6 mb-4">
+            <QRCodeSVG value={linkedInUrl} size={200} />
           </Card>
-        ) : (
-          <div className="flex flex-col items-center">
-            <Card className="p-8 mb-6">
-              <QRCodeSVG value={linkedInUrl} size={200} />
-            </Card>
-            <p className="text-[#0A66C2] text-sm mb-4 text-center">{linkedInUrl}</p>
-            <Button
-              variant="outline"
-              onClick={startEditing}
-              className="border-[#0A66C2] text-[#0A66C2]"
-            >
-              Change URL
-            </Button>
-            <p className="text-gray-500 text-sm text-center mt-8 max-w-md">
-              Let others scan this QR code to connect with you
-            </p>
-          </div>
-        )}
-      </div>
+          <p className="text-gray-500 dark:text-muted-foreground text-sm text-center mb-6 max-w-md">
+            Let others scan this QR code to connect with you
+          </p>
+          <Link
+            href={linkedInUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-400 hover:underline text-sm mb-4 text-center"
+          >
+            {linkedInUrl}
+          </Link>
+          <Button variant="outline" onClick={startEditing}>
+            Change URL
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

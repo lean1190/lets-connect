@@ -149,7 +149,7 @@ export default function ScanPage() {
         </div>
       </div>
       <p className="absolute bottom-32 left-1/2 transform -translate-x-1/2 text-white text-center px-4 z-10">
-        Position the LinkedIn or WhatsApp QR code within the frame
+        Position the QR code within the frame
       </p>
     </div>
   );

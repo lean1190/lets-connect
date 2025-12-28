@@ -68,7 +68,7 @@ export default async function LandingPage() {
             {/* Feature 1 */}
             <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-[#0A66C2]/50 transition-all">
               <div className="w-14 h-14 bg-[#0A66C2]/20 rounded-lg flex items-center justify-center mb-6">
-                <IconQrcode className="w-7 h-7 text-[#0A66C2]" />
+                <IconQrcode className="w-7 h-7 text-blue-400" />
               </div>
               <h3 className="text-2xl font-bold mb-4">Scan & Connect</h3>
               <p className="text-gray-400 leading-relaxed">
@@ -80,7 +80,7 @@ export default async function LandingPage() {
             {/* Feature 2 */}
             <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-[#0A66C2]/50 transition-all">
               <div className="w-14 h-14 bg-[#0A66C2]/20 rounded-lg flex items-center justify-center mb-6">
-                <IconCircles className="w-7 h-7 text-[#0A66C2]" />
+                <IconCircles className="w-7 h-7 text-blue-400" />
               </div>
               <h3 className="text-2xl font-bold mb-4">Organize Your Network</h3>
               <p className="text-gray-400 leading-relaxed">
@@ -92,7 +92,7 @@ export default async function LandingPage() {
             {/* Feature 3 */}
             <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-[#0A66C2]/50 transition-all">
               <div className="w-14 h-14 bg-[#0A66C2]/20 rounded-lg flex items-center justify-center mb-6">
-                <IconCloud className="w-7 h-7 text-[#0A66C2]" />
+                <IconCloud className="w-7 h-7 text-blue-400" />
               </div>
               <h3 className="text-2xl font-bold mb-4">Sync Everywhere</h3>
               <p className="text-gray-400 leading-relaxed">

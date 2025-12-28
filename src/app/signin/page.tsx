@@ -57,7 +57,7 @@ export default async function SigninPage() {
 
                 <form action={signInWithLinkedIn} className="pt-4">
                   <CtaButton type="submit" size="lg" className="w-full">
-                    <span className="hidden sm:inline-block bg-white text-[#0A66C2] px-2.5 py-1 rounded text-xs font-extrabold leading-none tracking-tight">
+                    <span className="hidden sm:inline-block bg-white text-blue-400 px-2.5 py-1 rounded text-xs font-extrabold leading-none tracking-tight">
                       in
                     </span>
                     Sign in with LinkedIn
