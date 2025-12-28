@@ -2,7 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import type { CircleOutput, ContactOutput } from '@/lib/database/app-types';
+import type { CircleOutput } from '@/lib/circles/types';
+import type { ContactOutput } from '@/lib/contacts/types';
 import { getSupabaseClient } from '@/lib/database/client/isomorphic';
 import { actionClient } from './client';
 

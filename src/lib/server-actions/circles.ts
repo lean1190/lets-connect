@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import type { CircleOutput } from '@/lib/database/app-types';
+import type { CircleOutput } from '@/lib/circles/types';
 import { getSupabaseClient } from '@/lib/database/client/isomorphic';
 import { actionClient } from './client';
 

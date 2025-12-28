@@ -8,8 +8,8 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import type { CircleOutput } from '@/lib/circles/types';
 import { AppRoute } from '@/lib/constants/navigation';
-import type { CircleOutput } from '@/lib/database/app-types';
 
 type CirclesListProps = {
   circles: CircleOutput[];

@@ -12,7 +12,7 @@ import {
   filterContactsByDate,
   groupContactsByDate
 } from '@/lib/contacts/date-grouping';
-import type { ContactOutput } from '@/lib/database/app-types';
+import type { ContactOutput } from '@/lib/contacts/types';
 
 type ContactsListProps = {
   contacts: ContactOutput[];

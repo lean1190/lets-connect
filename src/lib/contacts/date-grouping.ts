@@ -1,4 +1,4 @@
-import type { ContactOutput } from '@/lib/database/app-types';
+import type { ContactOutput } from '@/lib/contacts/types';
 
 export type DateFilter = 'all' | 'today' | 'last3days' | 'lastWeek' | 'lastMonth';
 
