@@ -90,19 +90,19 @@ describe('getTitle', () => {
   });
 
   describe('priority order', () => {
-    it('should prioritize partial route match over exact match when both exist', () => {
+    it('should prioritize exact match over partial route match when both exist', () => {
       const titles = {
         '/contacts/123': 'Specific Contact',
         '/contacts/': 'Edit contact'
       };
-      // Note: The function prioritizes partial route over exact match
+      // Note: The function prioritizes exact match first
       expect(
         getTitle({
           pathname: '/contacts/123',
           titles,
           partialRoute: AppRoute.EditContact
         })
-      ).toBe('Edit contact');
+      ).toBe('Specific Contact');
     });
 
     it('should prioritize partial route over defaultTitle', () => {
@@ -211,7 +211,7 @@ describe('getTitle', () => {
         getTitle({
           pathname: '/circles/xyz-789',
           titles,
-          partialRoute: AppRoute.ViewCircle
+          partialRoute: AppRoute.EditCircle
         })
       ).toBe('Circle Details');
     });

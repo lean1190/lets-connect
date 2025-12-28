@@ -9,8 +9,7 @@ export enum AppRoute {
   MyQr = '/my-qr',
   Circles = '/circles',
   NewCircle = '/circles/new',
-  ViewCircle = '/circles/',
-  EditCircle = '/edit',
+  EditCircle = '/circles/',
   Settings = '/settings'
 }
 

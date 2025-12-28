@@ -9,7 +9,8 @@ import { PageWithNavigationLayout } from '../components/page-with-navigation-lay
 
 const titles: Record<string, string> = {
   [AppRoute.Circles]: 'Circles',
-  [AppRoute.NewCircle]: 'New circle'
+  [AppRoute.NewCircle]: 'New circle',
+  [AppRoute.EditCircle]: 'Edit circle'
 };
 
 export default function CirclesLayout({ children }: { children: React.ReactNode }) {
@@ -19,7 +20,8 @@ export default function CirclesLayout({ children }: { children: React.ReactNode 
     () =>
       getTitle({
         pathname,
-        titles
+        titles,
+        partialRoute: AppRoute.EditCircle
       }),
     [pathname]
   );

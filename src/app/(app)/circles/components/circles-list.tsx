@@ -122,13 +122,13 @@ export function CirclesList({ circles }: CirclesListProps) {
               </div>
 
               <div className="flex gap-3">
-                <Link href={`${AppRoute.ViewCircle}${circle.id}`} className="flex-1">
+                <Link href={`${AppRoute.EditCircle}${circle.id}`} className="flex-1">
                   <Button variant="outline" className="w-full">
                     Edit
                   </Button>
                 </Link>
                 <Link
-                  href={`${AppRoute.ViewCircle}${circle.id}${AppRoute.Contacts}`}
+                  href={`${AppRoute.EditCircle}${circle.id}${AppRoute.Contacts}`}
                   className="flex-1"
                 >
                   <Button className="w-full">View contacts</Button>
