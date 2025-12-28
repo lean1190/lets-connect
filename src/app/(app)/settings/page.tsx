@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -35,7 +36,7 @@ export default async function SettingsPage() {
       <Card className="mb-10">
         <CardContent className="pt-6">
           <div>
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-6">About</h2>
+            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">About</h2>
 
             <div className="space-y-3 mb-4">
               <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -80,6 +81,16 @@ export default async function SettingsPage() {
           Sign out
         </Button>
       </form>
+
+      <div className="text-xs flex justify-center gap-2 items-center">
+        <Link href="/terms" className="text-[#0A66C2] hover:underline dark:text-blue-400">
+          Terms and Conditions
+        </Link>
+        <span>•</span>
+        <Link href="/privacy" className="text-[#0A66C2] hover:underline dark:text-blue-400">
+          Privacy Policy
+        </Link>
+      </div>
     </div>
   );
 }

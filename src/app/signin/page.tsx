@@ -63,6 +63,17 @@ export default async function SigninPage() {
                     Sign in with LinkedIn
                   </CtaButton>
                 </form>
+
+                <p className="text-xs text-gray-400 text-center mt-4">
+                  By signing up you accept the{' '}
+                  <Link href="/terms" className="text-blue-400 hover:text-blue-300 underline">
+                    Terms and Conditions
+                  </Link>
+                  , and the{' '}
+                  <Link href="/privacy" className="text-blue-400 hover:text-blue-300 underline">
+                    Privacy Policy
+                  </Link>
+                </p>
               </div>
             </div>
           </div>
