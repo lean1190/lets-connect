@@ -149,7 +149,7 @@ export async function getGroups(): Promise<GroupOutput[]> {
     .from('groups')
     .select('*')
     .eq('user_id', user.id)
-    .order('name', { ascending: true });
+    .order('created_at', { ascending: false });
 
   if (error || !groups) {
     return [];
