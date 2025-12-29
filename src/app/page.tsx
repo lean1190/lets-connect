@@ -12,7 +12,7 @@ export default async function LandingPage() {
   const redirectTo = isIn ? AppRoute.Contacts : AppRoute.Signin;
 
   return (
-    <div className="min-h-screen text-white bg-[#0e0f13] relative overflow-hidden">
+    <div className="min-h-dvh text-white bg-[#0e0f13] relative overflow-hidden">
       {/* Background gradient effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#0A66C2]/20 rounded-full blur-3xl opacity-50"></div>
