@@ -36,7 +36,7 @@ export default async function SettingsPage() {
       <Card className="mb-10">
         <CardContent className="pt-6">
           <div>
-            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">About</h2>
+            <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-6">About</h2>
 
             <div className="space-y-3 mb-4">
               <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -51,10 +51,10 @@ export default async function SettingsPage() {
             <div className="pt-4 border-t border-gray-200 dark:border-gray-700 mb-6">
               <p className="text-xs text-gray-600 dark:text-gray-400 mb-4">
                 If you are one of those people who want to help a cause and don't know where to
-                start, consider this button 😄👇
+                start, consider this button 👇
               </p>
-              <CtaButton href="https://paypal.me/leanvilas" className="w-full" size="sm">
-                Subscribe
+              <CtaButton href="http://buymeacoffee.com/leanvilas" className="w-full" size="sm">
+                Support the cause 😁
               </CtaButton>
             </div>
 

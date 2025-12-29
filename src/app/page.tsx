@@ -26,13 +26,13 @@ export default async function LandingPage() {
             <Image
               src="/logo/dark.png"
               alt="Let's Connect Logo"
-              width={64}
-              height={64}
-              className="w-16 h-16"
+              width={40}
+              height={40}
+              className="w-10 h-10"
             />
-            <div className="text-2xl font-bold">Let&apos;s Connect</div>
+            <div className="text-lg md:text-2xl font-bold">Let&apos;s Connect</div>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <Link
               href={githubUrl}
               target="_blank"
@@ -51,9 +51,9 @@ export default async function LandingPage() {
         {/* Hero Section */}
         <section className="container mx-auto px-6 py-20 md:py-32">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            <h1 className="text-3xl md:text-7xl font-bold mb-6 leading-tight">
               Stay in touch with your
-              <span className="bg-gradient-to-r from-[#0A66C2] to-[#007AFF] bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-[#0A66C2] to-[#007AFF] bg-clip-text text-transparent">
                 {' '}
                 entrepreneurial circle
               </span>

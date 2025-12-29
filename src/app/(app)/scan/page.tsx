@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import type QrScanner from 'qr-scanner';
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { AppRoute } from '@/lib/constants/navigation';
@@ -9,8 +10,7 @@ export default function ScanPage() {
   const router = useRouter();
   const [scanned, setScanned] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // biome-ignore lint/suspicious/noExplicitAny: test
-  const scannerRef = useRef<any>(null);
+  const scannerRef = useRef<QrScanner | null>(null);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ export default function ScanPage() {
 
   if (hasPermission === false) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-8">
+      <div className="h-dvh min-h-dvh bg-black flex items-center justify-center p-8">
         <div className="text-center text-white">
           <p className="text-lg mb-4">Camera permission is required to scan QR codes.</p>
           <p className="text-sm text-gray-400 mb-8">
@@ -97,7 +97,7 @@ export default function ScanPage() {
 
   return (
     <div className="relative">
-      <video id="qr-reader" className="w-full h-screen object-cover">
+      <video id="qr-reader" className="h-dvh min-h-dvh w-full min-w-full object-cover">
         <track kind="captions" />
       </video>
       {error && (
