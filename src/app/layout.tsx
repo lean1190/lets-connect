@@ -35,16 +35,16 @@ export const metadata: Metadata = {
   title: "Let's connect",
   description: 'Keep in touch with your entrepreneurial circles',
   metadataBase: appUrl,
-  manifest: '/manifest.webmanifest',
+  authors: [{ name: 'Lean Vilas' }],
+  keywords: 'connect, entrepreneur, contact, circle, networking, network, founder',
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',
     apple: '/apple-icon.png'
   },
-  keywords: 'connect, entrepreneur, contact, circle, networking, network, founder',
   appleWebApp: {
     capable: true,
-    statusBarStyle: 'default',
+    statusBarStyle: 'black-translucent',
     title: "Let's connect"
   },
   openGraph: {
@@ -52,8 +52,7 @@ export const metadata: Metadata = {
     url: appUrl,
     locale: 'en_US',
     type: 'website'
-  },
-  authors: [{ name: 'Lean Vilas' }]
+  }
 };
 
 export default function RootLayout({
