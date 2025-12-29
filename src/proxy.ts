@@ -10,15 +10,18 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
-     * - signin (signin page)
+     * - signin
+     * - houston
      * - auth callback urls
      * - terms & conditions and privacy policy
+     * - manifest
+     * - sw.js
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      * - images
      */
-    '/((?!signin|auth|terms|privacy|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
+    '/((?!signin|houston|auth|terms|privacy|manifest|sw.js|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
   ],
   missing: [
     { type: 'header', key: 'next-router-prefetch' },
