@@ -1,7 +1,7 @@
 import { IconUserPlus } from '@tabler/icons-react';
-import { ContactCard } from '@/components/contact-card';
 import type { ContactOutput } from '@/lib/contacts/types';
 import { getCircleById, getContactsInCircle } from '@/lib/server-actions/circles';
+import { ContactsList } from '../../../components/contacts-list';
 
 export default async function CircleContactsPage({ params }: { params: { id: string } }) {
   const { id } = await params;
@@ -45,11 +45,7 @@ export default async function CircleContactsPage({ params }: { params: { id: str
           </p>
         </div>
       ) : (
-        <div className="space-y-4">
-          {contactOutputs.map((contact) => (
-            <ContactCard key={contact.id} contact={contact} showCirclesCount={false} />
-          ))}
-        </div>
+        <ContactsList contacts={contactOutputs} showCirclesCount={false} />
       )}
     </>
   );

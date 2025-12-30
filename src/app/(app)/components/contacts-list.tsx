@@ -17,6 +17,7 @@ import type { ContactOutput } from '@/lib/contacts/types';
 
 type ContactsListProps = {
   contacts: ContactOutput[];
+  showCirclesCount?: boolean;
 };
 
 function searchContacts(contacts: ContactOutput[], query: string): ContactOutput[] {
@@ -46,7 +47,7 @@ function searchContacts(contacts: ContactOutput[], query: string): ContactOutput
   });
 }
 
-export function ContactsList({ contacts }: ContactsListProps) {
+export function ContactsList({ contacts, showCirclesCount = true }: ContactsListProps) {
   const [filter, setFilter] = useState<DateFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -207,7 +208,11 @@ export function ContactsList({ contacts }: ContactsListProps) {
               {/* Contacts in this group */}
               <div className="space-y-4">
                 {group.contacts.map((contact) => (
-                  <ContactCard key={contact.id} contact={contact} />
+                  <ContactCard
+                    key={contact.id}
+                    contact={contact}
+                    showCirclesCount={showCirclesCount}
+                  />
                 ))}
               </div>
             </div>
