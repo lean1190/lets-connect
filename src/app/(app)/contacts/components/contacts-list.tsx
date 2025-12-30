@@ -1,8 +1,11 @@
 'use client';
 
+import { IconFilter } from '@tabler/icons-react';
 import { useState } from 'react';
 import { ContactCard } from '@/components/contact-card';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   type DateFilter,
   filterContactsByDate,
@@ -44,6 +47,7 @@ function searchContacts(contacts: ContactOutput[], query: string): ContactOutput
 export function ContactsList({ contacts }: ContactsListProps) {
   const [filter, setFilter] = useState<DateFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   // Sort contacts by date (newest first) - already sorted from server, but ensure it
   const sortedContacts = [...contacts].sort((a, b) => {
@@ -70,17 +74,77 @@ export function ContactsList({ contacts }: ContactsListProps) {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="flex-1"
         />
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value as DateFilter)}
-          className="rounded-md border border-input bg-background px-3 py-2 text-sm shadow-xs focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:border-ring dark:bg-input/30 dark:border-input"
-        >
-          <option value="all">All contacts</option>
-          <option value="today">Today</option>
-          <option value="last3days">Last 3 days</option>
-          <option value="lastWeek">Last week</option>
-          <option value="lastMonth">Last month</option>
-        </select>
+        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" size="icon">
+              <IconFilter size={20} />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-56 p-0">
+            <div className="flex flex-col">
+              <button
+                type="button"
+                onClick={() => {
+                  setFilter('all');
+                  setIsPopoverOpen(false);
+                }}
+                className={`px-4 py-2 text-left text-sm hover:bg-accent ${
+                  filter === 'all' ? 'bg-accent font-medium' : ''
+                }`}
+              >
+                All contacts
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setFilter('today');
+                  setIsPopoverOpen(false);
+                }}
+                className={`px-4 py-2 text-left text-sm hover:bg-accent ${
+                  filter === 'today' ? 'bg-accent font-medium' : ''
+                }`}
+              >
+                Today
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setFilter('last3days');
+                  setIsPopoverOpen(false);
+                }}
+                className={`px-4 py-2 text-left text-sm hover:bg-accent ${
+                  filter === 'last3days' ? 'bg-accent font-medium' : ''
+                }`}
+              >
+                Last 3 days
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setFilter('lastWeek');
+                  setIsPopoverOpen(false);
+                }}
+                className={`px-4 py-2 text-left text-sm hover:bg-accent ${
+                  filter === 'lastWeek' ? 'bg-accent font-medium' : ''
+                }`}
+              >
+                Last week
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setFilter('lastMonth');
+                  setIsPopoverOpen(false);
+                }}
+                className={`px-4 py-2 text-left text-sm hover:bg-accent rounded-b-md ${
+                  filter === 'lastMonth' ? 'bg-accent font-medium' : ''
+                }`}
+              >
+                Last month
+              </button>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
 
       {/* Grouped contacts with separators */}
