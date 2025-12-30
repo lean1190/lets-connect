@@ -9,8 +9,8 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: AppRoute.Contacts,
     display: 'standalone',
     orientation: 'portrait',
-    theme_color: '#0e0f13',
-    background_color: '#0e0f13',
+    theme_color: '#101828',
+    background_color: '#101828',
     scope: '/',
     icons: [
       {
