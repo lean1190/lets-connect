@@ -9,6 +9,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
+    "debug": "next dev --inspect",
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
@@ -20,7 +21,7 @@
     "dependencies:check": "ncu",
     "dependencies:update": "ncu --interactive && npm install && npm run lint:all",
     "upgrade:next": "npx @next/codemod",
-    "analyze": "cross-env ANALYZE=true next build",
+    "analyze": "next experimental-analyze",
     "prepare": "husky"
   },
   "dependencies": {
