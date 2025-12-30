@@ -1,11 +1,13 @@
 'use client';
 
-import { IconFilter } from '@tabler/icons-react';
+import { IconEdit, IconExternalLink, IconFilter, IconList } from '@tabler/icons-react';
+import Link from 'next/link';
 import { useState } from 'react';
 import { ContactCard } from '@/components/contact-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { AppRoute } from '@/lib/constants/navigation';
 import {
   type DateFilter,
   filterContactsByDate,
@@ -48,6 +50,7 @@ export function ContactsList({ contacts }: ContactsListProps) {
   const [filter, setFilter] = useState<DateFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [isCompactView, setIsCompactView] = useState(false);
 
   // Sort contacts by date (newest first) - already sorted from server, but ensure it
   const sortedContacts = [...contacts].sort((a, b) => {
@@ -74,6 +77,14 @@ export function ContactsList({ contacts }: ContactsListProps) {
           onChange={(e) => setSearchQuery(e.target.value)}
           className="flex-1"
         />
+        <Button
+          variant={isCompactView ? 'default' : 'outline'}
+          size="icon"
+          onClick={() => setIsCompactView(!isCompactView)}
+          aria-label="Toggle compact view"
+        >
+          <IconList size={20} />
+        </Button>
         <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
           <PopoverTrigger asChild>
             <Button variant="outline" size="icon">
@@ -147,28 +158,62 @@ export function ContactsList({ contacts }: ContactsListProps) {
         </Popover>
       </div>
 
-      {/* Grouped contacts with separators */}
-      <div className="space-y-6">
-        {groupedContacts.map((group) => (
-          <div key={group.label} className="space-y-4">
-            {/* Date separator */}
-            <div className="flex items-center gap-3">
-              <div className="h-px flex-1 bg-gray-200 dark:bg-border" />
-              <h2 className="text-sm font-medium text-gray-500 dark:text-muted-foreground">
-                {group.label}
-              </h2>
-              <div className="h-px flex-1 bg-gray-200 dark:bg-border" />
-            </div>
-
-            {/* Contacts in this group */}
-            <div className="space-y-4">
-              {group.contacts.map((contact) => (
-                <ContactCard key={contact.id} contact={contact} />
+      {isCompactView ? (
+        <div className="border rounded-lg overflow-hidden">
+          <table className="w-full">
+            <tbody>
+              {filteredContacts.map((contact) => (
+                <tr
+                  key={contact.id}
+                  className="border-b last:border-b-0 bg-white dark:bg-gray-900/50 hover:bg-accent/50 transition-colors"
+                >
+                  <td className="px-4 py-2">
+                    <span className="text-sm font-medium text-gray-900 dark:text-foreground">
+                      {contact.name}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2">
+                    <div className="flex gap-2 justify-end">
+                      <Link href={`${AppRoute.EditContact}${contact.id}`}>
+                        <Button variant="outline" size="icon" aria-label="Edit contact">
+                          <IconEdit size={18} />
+                        </Button>
+                      </Link>
+                      <Link href={contact.profileLink} target="_blank" rel="noopener noreferrer">
+                        <Button size="icon" aria-label="Go to profile">
+                          <IconExternalLink size={18} />
+                        </Button>
+                      </Link>
+                    </div>
+                  </td>
+                </tr>
               ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {groupedContacts.map((group) => (
+            <div key={group.label} className="space-y-4">
+              {/* Date separator */}
+              <div className="flex items-center gap-3">
+                <div className="h-px flex-1 bg-gray-200 dark:bg-border" />
+                <h2 className="text-sm font-medium text-gray-500 dark:text-muted-foreground">
+                  {group.label}
+                </h2>
+                <div className="h-px flex-1 bg-gray-200 dark:bg-border" />
+              </div>
+
+              {/* Contacts in this group */}
+              <div className="space-y-4">
+                {group.contacts.map((contact) => (
+                  <ContactCard key={contact.id} contact={contact} />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {filteredContacts.length === 0 && (
         <div className="text-center py-12 text-gray-500 dark:text-muted-foreground">
