@@ -70,7 +70,7 @@ export default async function LandingPage() {
         {/* Solution */}
         <section className="container mx-auto px-6 pt-8 pb-20">
           <div className="max-w-4xl mx-auto text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">Stay in touch</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Build your network</h2>
             <p className="text-xl text-gray-400">
               Everything you need to maintain meaningful connections
             </p>
