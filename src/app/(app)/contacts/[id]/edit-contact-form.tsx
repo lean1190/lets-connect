@@ -33,7 +33,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-type EditContactFormProps = {
+type Props = {
   contactId: string;
   initialContact: {
     url: string | null;
@@ -44,11 +44,7 @@ type EditContactFormProps = {
   initialCircles: CircleOutput[];
 };
 
-export function EditContactForm({
-  contactId,
-  initialContact,
-  initialCircles
-}: EditContactFormProps) {
+export function EditContactForm({ contactId, initialContact, initialCircles }: Props) {
   const router = useRouter();
   const [allCircles, setAllCircles] = useState<CircleOutput[]>(initialCircles);
   const [showAddCircle, setShowAddCircle] = useState(false);
