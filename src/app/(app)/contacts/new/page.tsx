@@ -17,9 +17,11 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import type { CircleOutput } from '@/lib/circles/types';
 import { createCircle, getCircles } from '@/lib/server-actions/circles';
 import { createContact } from '@/lib/server-actions/contacts';
 import { isExecuting } from '@/lib/server-actions/status';
+import { CircleButton } from '../components/circle-button';
 
 const formSchema = z.object({
   profileLink: z.string().min(1, 'Profile link is required'),
@@ -35,7 +37,7 @@ function NewContactForm() {
   const searchParams = useSearchParams();
   const profileLinkFromQr = searchParams.get('profileLink') || '';
 
-  const [allCircles, setAllCircles] = useState<Array<{ id: string; name: string }>>([]);
+  const [allCircles, setAllCircles] = useState<CircleOutput[]>([]);
   const [showAddCircle, setShowAddCircle] = useState(false);
   const [newCircleName, setNewCircleName] = useState('');
 
@@ -198,18 +200,12 @@ function NewContactForm() {
               <FormLabel>Circles</FormLabel>
               <div className="mt-2 flex flex-wrap gap-2 items-center">
                 {allCircles.map((circle) => (
-                  <button
+                  <CircleButton
                     key={circle.id}
-                    type="button"
+                    circle={circle}
+                    isSelected={selectedCircles.includes(circle.id)}
                     onClick={() => toggleCircle(circle.id)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                      selectedCircles.includes(circle.id)
-                        ? 'bg-[#0A66C2] border border-transparent text-white'
-                        : 'bg-white dark:bg-card border border-gray-300 dark:border-border text-gray-700 dark:text-foreground hover:bg-gray-50 dark:hover:bg-accent'
-                    }`}
-                  >
-                    {circle.name}
-                  </button>
+                  />
                 ))}
                 {showAddCircle ? (
                   <div className="flex items-center gap-2">
@@ -264,7 +260,7 @@ function NewContactForm() {
               </div>
             </div>
 
-            <div className="flex gap-6 items-center justify-end">
+            <div className="flex gap-4 items-center justify-end">
               <Button type="button" variant="outline" onClick={() => router.back()}>
                 Cancel
               </Button>
