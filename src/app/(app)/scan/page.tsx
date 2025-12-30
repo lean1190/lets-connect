@@ -115,7 +115,7 @@ export default function ScanPage() {
                 }
               }
             }}
-            className="w-full bg-[#0A66C2]"
+            className="w-full"
           >
             Try Again
           </Button>

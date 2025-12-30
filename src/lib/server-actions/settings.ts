@@ -7,11 +7,11 @@ import { actionClient } from './client';
 
 const updateSettingsSchema = z.object({
   theme: z.enum(['light', 'dark']).optional(),
-  qrLink: z.string().url().optional().nullable()
+  qrLink: z.url().optional().nullable()
 });
 
 export const updateSettings = actionClient
-  .schema(updateSettingsSchema)
+  .inputSchema(updateSettingsSchema)
   .action(async ({ parsedInput }) => {
     const supabase = await getSupabaseClient();
     const {
@@ -66,6 +66,7 @@ export const updateSettings = actionClient
     }
 
     revalidatePath('/settings');
+    revalidatePath('/my-qr');
     return { success: true };
   });
 
