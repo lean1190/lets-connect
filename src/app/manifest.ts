@@ -1,11 +1,12 @@
 import type { MetadataRoute } from 'next';
+import { AppRoute } from '@/lib/constants/navigation';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Let's Connect",
     short_name: 'LetsConnect',
     description: 'A simple and effective way to stay in touch with your entrepreneurial circle',
-    start_url: '/',
+    start_url: AppRoute.Contacts,
     display: 'standalone',
     orientation: 'portrait',
     theme_color: '#0e0f13',
