@@ -1,6 +1,6 @@
 'use client';
 
-import { IconX } from '@tabler/icons-react';
+import { IconHandClick, IconShare2, IconSquarePlus, IconX } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 
@@ -62,12 +62,21 @@ export function InstallPrompt() {
           </button>
         </div>
         <p className="text-xs text-gray-600 dark:text-muted-foreground mb-3">
-          Add this app to your home screen for quick access and a better experience.
+          You'll get a much better experience.
         </p>
-        <ol className="text-xs text-gray-600 dark:text-muted-foreground space-y-2 mb-3 list-decimal list-inside">
-          <li>Tap the Share button</li>
-          <li>Scroll down and tap &quot;Add to Home Screen&quot;</li>
-          <li>Tap &quot;Add&quot; to confirm</li>
+        <ol className="text-xs text-gray-600 dark:text-muted-foreground space-y-1 mb-3">
+          <li className="flex items-center gap-1">
+            <IconShare2 aria-hidden="true" size={20} className="text-blue-500 mb-1" />
+            1. Tap the Share button
+          </li>
+          <li className="flex items-center gap-1">
+            <IconSquarePlus aria-hidden="true" size={20} className="text-blue-500 mb-1" />
+            2. Scroll down and tap &quot;Add to Home Screen&quot;
+          </li>
+          <li className="flex items-center gap-1">
+            <IconHandClick aria-hidden="true" size={20} className="text-blue-500 mb-1" />
+            3. Tap &quot;Add&quot; to confirm
+          </li>
         </ol>
         <Button onClick={handleDismiss} variant="outline" size="sm" className="w-full">
           Got it
