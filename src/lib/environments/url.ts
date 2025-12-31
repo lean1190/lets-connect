@@ -1,5 +1,5 @@
 import { productionUrl } from '../constants/links';
-import { isProduction } from './is-dev';
+import { isProduction } from './is-env';
 
 export function getAppBaseUrl() {
   if (isProduction()) {

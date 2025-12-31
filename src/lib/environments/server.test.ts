@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { isServer } from './server';
+import { removeWindow } from '../testing/window';
+import { isBrowser, isServer } from './server';
 
 describe('isServer', () => {
   test('should return false when window is defined', () => {
@@ -8,14 +9,19 @@ describe('isServer', () => {
   });
 
   test('should return true when window is undefined', () => {
-    // Mock window as undefined
-    const originalWindow = global.window;
-    // @ts-expect-error - temporarily delete window
-    delete global.window;
-
+    removeWindow();
     expect(isServer()).toBe(true);
+  });
+});
 
-    // Restore window
-    global.window = originalWindow;
+describe('isBrowser', () => {
+  test('should return true when window is defined', () => {
+    // In vitest/jsdom environment, window is defined
+    expect(isBrowser()).toBe(true);
+  });
+
+  test('should return false when window is undefined', () => {
+    removeWindow();
+    expect(isBrowser()).toBe(false);
   });
 });
