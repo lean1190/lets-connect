@@ -1,65 +1,73 @@
 import { describe, expect, it } from 'vitest';
+import { variabilityTest } from '@/lib/testing/variability';
 import { hasId, newId, validateUuid } from './id';
 
 describe('hasId', () => {
-  it('should return true for an object with an id string', () => {
-    expect(hasId({ id: '123' })).toBe(true);
+  const testCases = variabilityTest<unknown, boolean>({
+    'should return true for an object with an id string': {
+      input: { id: '123' },
+      expected: true
+    },
+    'should return false for an object without an id': {
+      input: { name: 'test' },
+      expected: false
+    },
+    'should return false for an object with id as a number': {
+      input: { id: 123 },
+      expected: false
+    },
+    'should return false for an object with id as null': {
+      input: { id: null },
+      expected: false
+    },
+    'should return false for an object with id as undefined': {
+      input: { id: undefined },
+      expected: false
+    },
+    'should return false for an object with id as an object': {
+      input: { id: {} },
+      expected: false
+    },
+    'should return false for an object with id as an array': {
+      input: { id: [] },
+      expected: false
+    },
+    'should return false for null': {
+      input: null,
+      expected: false
+    },
+    'should return false for undefined': {
+      input: undefined,
+      expected: false
+    },
+    'should return false for a number': {
+      input: 123,
+      expected: false
+    },
+    'should return false for a string': {
+      input: 'string',
+      expected: false
+    },
+    'should return false for a boolean': {
+      input: true,
+      expected: false
+    },
+    'should return false for an array': {
+      input: [],
+      expected: false
+    },
+    'should return false for a function': {
+      input: () => {},
+      expected: false
+    },
+    'should return true for an object with additional properties and a valid id': {
+      input: { id: 'abc', name: 'test', age: 30 },
+      expected: true
+    }
   });
 
-  it('should return false for an object without an id', () => {
-    expect(hasId({ name: 'test' })).toBe(false);
-  });
-
-  it('should return false for an object with id as a number', () => {
-    expect(hasId({ id: 123 })).toBe(false);
-  });
-
-  it('should return false for an object with id as null', () => {
-    expect(hasId({ id: null })).toBe(false);
-  });
-
-  it('should return false for an object with id as undefined', () => {
-    expect(hasId({ id: undefined })).toBe(false);
-  });
-
-  it('should return false for an object with id as an object', () => {
-    expect(hasId({ id: {} })).toBe(false);
-  });
-
-  it('should return false for an object with id as an array', () => {
-    expect(hasId({ id: [] })).toBe(false);
-  });
-
-  it('should return false for null', () => {
-    expect(hasId(null)).toBe(false);
-  });
-
-  it('should return false for undefined', () => {
-    expect(hasId(undefined)).toBe(false);
-  });
-
-  it('should return false for a number', () => {
-    expect(hasId(123)).toBe(false);
-  });
-
-  it('should return false for a string', () => {
-    expect(hasId('string')).toBe(false);
-  });
-
-  it('should return false for a boolean', () => {
-    expect(hasId(true)).toBe(false);
-  });
-
-  it('should return false for an array', () => {
-    expect(hasId([])).toBe(false);
-  });
-
-  it('should return false for a function', () => {
-    expect(hasId(() => {})).toBe(false);
-  });
-
-  it('should return true for an object with additional properties and a valid id', () => {
-    expect(hasId({ id: 'abc', name: 'test', age: 30 })).toBe(true);
+  it.each(testCases)('$caseName', ({ input, expected }) => {
+    expect(hasId(input)).toBe(expected);
   });
 });
 

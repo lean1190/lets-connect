@@ -1,16 +1,14 @@
 import type { PostgrestError } from '@supabase/supabase-js';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { describe, expect, test } from 'vitest';
+import { replaceConsoleError } from '@/lib/testing/console';
 import { handleDatabaseResponse, hasFirstElement } from './response-handler';
 
 describe('Supabase response handler utilities', () => {
-  let mockConsoleError: ReturnType<typeof vi.spyOn>;
-
-  beforeEach(() => {
-    mockConsoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
-  });
+  const setup = () => ({ mockConsoleError: replaceConsoleError() });
 
   describe('handleDatabaseResponse', () => {
     test('should return data when no error', () => {
+      const { mockConsoleError } = setup();
       const testData = { id: 1, name: 'Test' };
       const result = handleDatabaseResponse({
         data: testData,
@@ -22,6 +20,7 @@ describe('Supabase response handler utilities', () => {
     });
 
     test('should throw error and log when error exists', () => {
+      const { mockConsoleError } = setup();
       const testError: PostgrestError = {
         message: 'Database error',
         details: 'Some details',

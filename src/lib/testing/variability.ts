@@ -4,7 +4,7 @@ type VariabilityTestCase<T, K> = {
   expected: K;
 };
 
-export const variabilityTest = <T, K>(cases: {
+export const variabilityTest = <T = unknown, K = unknown>(cases: {
   [key: string]: { input: T; expected: K };
 }): VariabilityTestCase<T, K>[] =>
   Object.entries(cases).map(([caseName, { input, expected }]) => ({
