@@ -1,7 +1,7 @@
 import { IconUser } from '@tabler/icons-react';
 import Link from 'next/link';
 import { CtaButton } from '@/components/ui/cta-button';
-import { getContacts } from '@/lib/server-actions/contacts';
+import { getContacts } from '@/lib/contacts/get/get';
 import { ContactsList } from '../components/contacts-list';
 
 export default async function ContactsPage() {

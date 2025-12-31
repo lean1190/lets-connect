@@ -2,7 +2,8 @@
 
 import { useAction } from 'next-safe-action/hooks';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { getSettings, updateSettings } from '@/lib/server-actions/settings';
+import { getSettings } from '@/lib/settings/get/get';
+import { updateSettings } from '@/lib/settings/update/actions/update';
 
 type Theme = 'light' | 'dark';
 

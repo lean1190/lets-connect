@@ -18,7 +18,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { updateSettings } from '@/lib/server-actions/settings';
+import { updateSettings } from '@/lib/settings/update/actions/update';
 
 const QRCodeSVG = dynamic(() => import('qrcode.react').then((mod) => mod.QRCodeSVG), {
   ssr: false

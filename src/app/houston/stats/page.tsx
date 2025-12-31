@@ -1,4 +1,4 @@
-import { getStats } from '@/lib/server-actions/stats';
+import { getStats } from '@/lib/houston/stats/actions/stats';
 import AuthGuard from '../components/auth-guard';
 import { StatsCharts } from './stats-charts';
 

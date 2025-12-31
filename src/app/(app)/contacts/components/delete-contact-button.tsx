@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
-import { deleteContact } from '@/lib/server-actions/contacts';
+import { deleteContact } from '@/lib/contacts/delete/actions/delete';
 
 export function DeleteContactButton({
   contactId,

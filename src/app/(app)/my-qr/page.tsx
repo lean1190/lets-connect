@@ -1,4 +1,4 @@
-import { getSettings } from '@/lib/server-actions/settings';
+import { getSettings } from '@/lib/settings/get/get';
 import { MyQRPageClient } from './my-qr-page-client';
 
 export default async function MyQRPage() {

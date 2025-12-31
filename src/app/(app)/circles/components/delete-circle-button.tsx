@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
-import { deleteCircle } from '@/lib/server-actions/circles';
+import { deleteCircle } from '@/lib/circles/delete/actions/delete';
 
 export function DeleteCircleButton({
   circleId,

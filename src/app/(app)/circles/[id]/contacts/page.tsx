@@ -1,9 +1,10 @@
 import { IconUserPlus } from '@tabler/icons-react';
+import { getCircleById } from '@/lib/circles/get/by-id';
+import { getContactsInCircle } from '@/lib/circles/get/contacts';
 import type { ContactOutput } from '@/lib/contacts/types';
-import { getCircleById, getContactsInCircle } from '@/lib/server-actions/circles';
 import { ContactsList } from '../../../components/contacts-list';
 
-export default async function CircleContactsPage({ params }: { params: { id: string } }) {
+export default async function CircleContactsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const [circle, contacts] = await Promise.all([getCircleById(id), getContactsInCircle(id)]);
 

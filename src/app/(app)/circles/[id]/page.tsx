@@ -1,4 +1,4 @@
-import { getCircleById } from '@/lib/server-actions/circles';
+import { getCircleById } from '@/lib/circles/get/by-id';
 import { EditCircleForm } from './edit-circle-form';
 
 export default async function EditCirclePage({ params }: { params: Promise<{ id: string }> }) {

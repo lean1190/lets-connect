@@ -17,9 +17,10 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { getCircles } from '@/lib/circles/get/get';
 import type { CircleOutput } from '@/lib/circles/types';
-import { createCircle, getCircles } from '@/lib/server-actions/circles';
-import { updateContact } from '@/lib/server-actions/contacts';
+import { createCircle } from '@/lib/circles/update/actions/create';
+import { updateContact } from '@/lib/contacts/update/actions/update';
 import { isExecuting } from '@/lib/server-actions/status';
 import { CircleButton } from '../components/circle-button';
 import { DeleteContactButton } from '../components/delete-contact-button';

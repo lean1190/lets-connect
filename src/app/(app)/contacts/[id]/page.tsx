@@ -1,5 +1,5 @@
-import { getCircles } from '@/lib/server-actions/circles';
-import { getContactById } from '@/lib/server-actions/contacts';
+import { getCircles } from '@/lib/circles/get/get';
+import { getContactById } from '@/lib/contacts/get/by-id';
 import { EditContactForm } from './edit-contact-form';
 
 export default async function EditContactPage({ params }: { params: Promise<{ id: string }> }) {

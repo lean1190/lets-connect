@@ -18,7 +18,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { updateCircle } from '@/lib/server-actions/circles';
+import { updateCircle } from '@/lib/circles/update/actions/update';
 import { isExecuting } from '@/lib/server-actions/status';
 import { DeleteCircleButton } from '../components/delete-circle-button';
 

@@ -18,7 +18,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { createCircle } from '@/lib/server-actions/circles';
+import { createCircle } from '@/lib/circles/update/actions/create';
 import { isExecuting } from '@/lib/server-actions/status';
 
 const formSchema = z.object({

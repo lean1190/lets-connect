@@ -1,41 +1,56 @@
 import type { HookActionStatus } from 'next-safe-action/hooks';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { variabilityTest } from '@/lib/testing/variability';
 import { isError, isExecuting } from './status';
 
 describe('server action status utilities', () => {
-  describe('isLoading', () => {
-    test('should return true for executing status', () => {
-      expect(isExecuting('executing' as HookActionStatus)).toBe(true);
+  describe('isExecuting', () => {
+    const testCases = variabilityTest<HookActionStatus, boolean>({
+      'should return true for executing status': {
+        input: 'executing' as HookActionStatus,
+        expected: true
+      },
+      'should return false for idle status': {
+        input: 'idle' as HookActionStatus,
+        expected: false
+      },
+      'should return false for hasSucceeded status': {
+        input: 'hasSucceeded' as HookActionStatus,
+        expected: false
+      },
+      'should return false for hasErrored status': {
+        input: 'hasErrored' as HookActionStatus,
+        expected: false
+      }
     });
 
-    test('should return false for idle status', () => {
-      expect(isExecuting('idle' as HookActionStatus)).toBe(false);
-    });
-
-    test('should return false for hasSucceeded status', () => {
-      expect(isExecuting('hasSucceeded' as HookActionStatus)).toBe(false);
-    });
-
-    test('should return false for hasErrored status', () => {
-      expect(isExecuting('hasErrored' as HookActionStatus)).toBe(false);
+    it.each(testCases)('$caseName', ({ input, expected }) => {
+      expect(isExecuting(input)).toBe(expected);
     });
   });
 
   describe('isError', () => {
-    test('should return true for hasErrored status', () => {
-      expect(isError('hasErrored' as HookActionStatus)).toBe(true);
+    const testCases = variabilityTest<HookActionStatus, boolean>({
+      'should return true for hasErrored status': {
+        input: 'hasErrored' as HookActionStatus,
+        expected: true
+      },
+      'should return false for idle status': {
+        input: 'idle' as HookActionStatus,
+        expected: false
+      },
+      'should return false for executing status': {
+        input: 'executing' as HookActionStatus,
+        expected: false
+      },
+      'should return false for hasSucceeded status': {
+        input: 'hasSucceeded' as HookActionStatus,
+        expected: false
+      }
     });
 
-    test('should return false for idle status', () => {
-      expect(isError('idle' as HookActionStatus)).toBe(false);
-    });
-
-    test('should return false for executing status', () => {
-      expect(isError('executing' as HookActionStatus)).toBe(false);
-    });
-
-    test('should return false for hasSucceeded status', () => {
-      expect(isError('hasSucceeded' as HookActionStatus)).toBe(false);
+    it.each(testCases)('$caseName', ({ input, expected }) => {
+      expect(isError(input)).toBe(expected);
     });
   });
 });

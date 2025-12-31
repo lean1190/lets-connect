@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { getSupabaseClient } from '@/lib/database/client/isomorphic';
-import { actionClient } from './client';
+import { actionClient } from '../../../server-actions/client';
 
 const updateSettingsSchema = z.object({
   theme: z.enum(['light', 'dark']).optional(),
@@ -69,25 +69,3 @@ export const updateSettings = actionClient
     revalidatePath('/my-qr');
     return { success: true };
   });
-
-export async function getSettings() {
-  const supabase = await getSupabaseClient();
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    return { theme: 'light' as const, qrLink: null };
-  }
-
-  const { data: settings } = await supabase
-    .from('settings')
-    .select('theme, qr_link')
-    .eq('user_id', user.id)
-    .single();
-
-  return {
-    theme: (settings?.theme as 'light' | 'dark') || 'light',
-    qrLink: settings?.qr_link || null
-  };
-}
