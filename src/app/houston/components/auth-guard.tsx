@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useId, useState } from 'react';
-import { checkHoustonAuth, loginHouston } from '@/lib/houston/actions/auth';
+import { checkHoustonAuth } from '@/lib/houston/auth/check';
+import { loginHouston } from '@/lib/houston/auth/login';
 
-interface AuthGuardProps {
+type Props = {
   children: React.ReactNode;
-}
+};
 
-export default function AuthGuard({ children }: AuthGuardProps) {
+export default function AuthGuard({ children }: Props) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [credentials, setCredentials] = useState({
@@ -65,7 +66,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         <div className="max-w-md w-full space-y-8">
           <div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-              Houston Control Panel
+              Houston Admin Panel
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
               Enter your credentials to access the admin dashboard

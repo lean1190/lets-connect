@@ -12,6 +12,10 @@ export const defaultServerError = new ServerActionError(
   'UnknownServerError'
 );
 
+export function isServerActionError(error: unknown) {
+  return error instanceof Error && error.name === 'ServerActionError';
+}
+
 export function createServerActionError({
   type,
   message
