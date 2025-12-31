@@ -9,7 +9,7 @@ export default function HoustonLayout({ children }: { children: React.ReactNode 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <Link href={'/'}>
-              <Image src="/logo.png" alt="Logo" width={80} height={43} priority={false} />
+              <Image src="/logo/light.png" alt="Logo" width={50} height={50} priority={false} />
             </Link>
             <div className="flex items-center gap-6">
               <Navigation />
