@@ -1,12 +1,12 @@
 import { getCircleById } from '@/lib/circles/get/by-id';
-import { EditCircleForm } from './edit-circle-form';
+import { EditCirclePageClient } from './page-client';
 
 export default async function EditCirclePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const circle = await getCircleById(id);
 
   return (
-    <EditCircleForm
+    <EditCirclePageClient
       circleId={id}
       initialCircle={
         circle

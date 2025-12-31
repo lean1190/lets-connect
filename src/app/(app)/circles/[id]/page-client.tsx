@@ -41,7 +41,7 @@ type Props = {
   } | null;
 };
 
-export function EditCircleForm({ circleId, initialCircle }: Props) {
+export function EditCirclePageClient({ circleId, initialCircle }: Props) {
   const router = useRouter();
   const {
     execute: updateCircleAction,
