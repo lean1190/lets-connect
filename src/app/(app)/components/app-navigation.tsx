@@ -7,15 +7,21 @@ import { usePathname } from 'next/navigation';
 import { useCallback, useMemo } from 'react';
 import { AppRoute } from '@/lib/constants/navigation';
 
+const navItemStyles = {
+  base: 'flex items-center gap-2 px-4 py-2 rounded-full transition-all',
+  active: 'bg-white/20 text-white',
+  inactive: 'text-white/60 hover:text-white/80'
+};
+
 const getNavItemClassName = (isActive: boolean): string =>
-  clsx('flex items-center gap-2 px-4 py-2 rounded-full transition-all', {
-    'bg-white/20 text-white': isActive,
-    'text-white/60 hover:text-white/80': !isActive
+  clsx(navItemStyles.base, {
+    [navItemStyles.active]: isActive,
+    [navItemStyles.inactive]: !isActive
   });
 
 type NavItem = {
   route: AppRoute;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
   label: string;
 };
 
@@ -25,8 +31,6 @@ const navItems: NavItem[] = [
   { route: AppRoute.Settings, icon: IconSettings, label: 'Settings' }
 ];
 
-const newRoutes: AppRoute[] = [AppRoute.NewCircle, AppRoute.NewContact];
-
 export function AppNavigation() {
   const pathname = usePathname();
 
@@ -35,8 +39,6 @@ export function AppNavigation() {
     () => (pathname?.startsWith(AppRoute.Circles) ? AppRoute.NewCircle : AppRoute.NewContact),
     [pathname]
   );
-
-  const isNewActive = useMemo(() => newRoutes.includes(pathname as AppRoute), [pathname]);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 pb-safe">
@@ -53,14 +55,20 @@ export function AppNavigation() {
 
               return (
                 <Link key={item.route} href={item.route} className={getNavItemClassName(isActive)}>
-                  <Icon className="w-5 h-5" />
+                  <Icon size={20} className="w-5 h-5" />
                   {isActive && <span className="text-sm font-medium">{item.label}</span>}
                 </Link>
               );
             })}
-            <Link href={newRoute} className={getNavItemClassName(isNewActive)}>
-              <IconPlus className="w-5 h-5" />
-              {isNewActive && <span className="text-sm font-medium">New</span>}
+            <Link
+              href={newRoute}
+              className={clsx(
+                navItemStyles.active,
+                'px-4 py-2 rounded-full transition-all',
+                'hover:bg-white/15 hover:text-white'
+              )}
+            >
+              <IconPlus size={20} className="w-5 h-5" />
             </Link>
           </div>
         </div>
