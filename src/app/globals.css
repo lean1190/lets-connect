@@ -130,3 +130,26 @@
     }
   }
 }
+
+@keyframes confetti-burst {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(var(--random-x, 0)) rotate(720deg) scale(0);
+    opacity: 0;
+  }
+}
+
+.confetti-piece {
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  bottom: 0;
+  animation: confetti-burst ease-out forwards;
+  border-radius: 2px;
+}
