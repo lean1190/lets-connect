@@ -1,0 +1,12 @@
+name: "node.js check"
+on: [push]
+jobs:
+  is-my-node-vulnerable:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '24.11.0'
+      - name: Run
+        run: npx is-my-node-vulnerable
