@@ -1,58 +1,110 @@
 'use client';
 
-import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { useRouter } from 'next/navigation';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
+} from 'recharts';
 
-type StatsChartsProps = {
-  stats: {
-    usersCount: number;
-    contactsCount: number;
-    circlesCount: number;
-  };
+type Period = 'this-month' | 'last-3-months' | 'last-6-months' | 'last-12-months';
+
+type MonthlyDataPoint = {
+  month: string;
+  users: number;
+  contacts: number;
+  circles: number;
 };
 
-export function StatsCharts({ stats }: StatsChartsProps) {
-  const chartData = [
-    {
-      name: 'Signed Up Users',
-      value: stats.usersCount
-    },
-    {
-      name: 'Contacts Created',
-      value: stats.contactsCount
-    },
-    {
-      name: 'Circles Created',
-      value: stats.circlesCount
-    }
-  ];
+type StatsChartsProps = {
+  data: MonthlyDataPoint[];
+  period: Period;
+};
+
+const periodOptions: { value: Period; label: string }[] = [
+  { value: 'this-month', label: 'This month' },
+  { value: 'last-3-months', label: 'Last 3 months' },
+  { value: 'last-6-months', label: 'Last 6 months' },
+  { value: 'last-12-months', label: 'Last 12 months' }
+];
+
+function formatMonthLabel(month: string): string {
+  const [year, monthNum] = month.split('-');
+  const date = new Date(parseInt(year, 10), parseInt(monthNum, 10) - 1);
+  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
+
+export function StatsCharts({ data, period }: StatsChartsProps) {
+  const router = useRouter();
+
+  const handlePeriodChange = (newPeriod: Period) => {
+    const params = new URLSearchParams();
+    params.set('period', newPeriod);
+    router.push(`/houston/stats?${params.toString()}`);
+  };
+
+  const chartData = data.map((point) => ({
+    month: formatMonthLabel(point.month),
+    'Signed Up Users': point.users,
+    'Contacts Created': point.contacts,
+    'Circles Created': point.circles
+  }));
 
   return (
     <div className="space-y-8">
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Count Overview</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={chartData}>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-gray-900">Monthly Statistics</h2>
+          <div className="flex items-center gap-2">
+            <select
+              id="period-select"
+              value={period}
+              onChange={(e) => handlePeriodChange(e.target.value as Period)}
+              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-900 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-colors"
+            >
+              {periodOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="month" />
             <YAxis />
-            <Bar dataKey="value" fill="#3b82f6" />
-          </BarChart>
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="Signed Up Users" stroke="#3b82f6" strokeWidth={2} />
+            <Line type="monotone" dataKey="Contacts Created" stroke="#10b981" strokeWidth={2} />
+            <Line type="monotone" dataKey="Circles Created" stroke="#f59e0b" strokeWidth={2} />
+          </LineChart>
         </ResponsiveContainer>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm font-medium text-gray-500 mb-2">Signed Up Users</h3>
-          <p className="text-3xl font-bold text-gray-900">{stats.usersCount}</p>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm font-medium text-gray-500 mb-2">Contacts Created</h3>
-          <p className="text-3xl font-bold text-gray-900">{stats.contactsCount}</p>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-sm font-medium text-gray-500 mb-2">Circles Created</h3>
-          <p className="text-3xl font-bold text-gray-900">{stats.circlesCount}</p>
-        </div>
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Monthly Breakdown</h2>
+        <ResponsiveContainer width="100%" height={400}>
+          <BarChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="Signed Up Users" fill="#3b82f6" />
+            <Bar dataKey="Contacts Created" fill="#10b981" />
+            <Bar dataKey="Circles Created" fill="#f59e0b" />
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );
