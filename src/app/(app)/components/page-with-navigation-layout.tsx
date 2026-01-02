@@ -1,14 +1,12 @@
-'use client';
+import AppHeader from './app-header';
+import AppNavigation from './app-navigation';
 
-import { AppHeader } from './app-header';
-import { AppNavigation } from './app-navigation';
-
-type PageWithNavigationLayoutProps = {
-  title: string;
+type Props = {
+  title?: string;
   children: React.ReactNode;
 };
 
-export function PageWithNavigationLayout({ title, children }: PageWithNavigationLayoutProps) {
+export default function PageWithNavigationLayout({ title, children }: Props) {
   return (
     <div className="min-h-dvh bg-gray-50 dark:bg-background">
       <AppHeader title={title} />

@@ -1,6 +1,6 @@
 'use client';
 
-import { IconCircles, IconPlus, IconSettings, IconUser } from '@tabler/icons-react';
+import { IconCircles, IconPlus, IconUser } from '@tabler/icons-react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -27,11 +27,10 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { route: AppRoute.Contacts, icon: IconUser, label: 'Contacts' },
-  { route: AppRoute.Circles, icon: IconCircles, label: 'Circles' },
-  { route: AppRoute.Settings, icon: IconSettings, label: 'Settings' }
+  { route: AppRoute.Circles, icon: IconCircles, label: 'Circles' }
 ];
 
-export function AppNavigation() {
+export default function AppNavigation() {
   const pathname = usePathname();
 
   const isActivePathname = useCallback((expected: AppRoute) => pathname === expected, [pathname]);

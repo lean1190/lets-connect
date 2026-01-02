@@ -10,7 +10,8 @@ export enum AppRoute {
   Circles = '/circles',
   NewCircle = '/circles/new',
   EditCircle = '/circles/',
-  Settings = '/settings'
+  Settings = '/settings',
+  About = '/about'
 }
 
 export const alwaysAllowedRoutes = [AppRoute.Landing, AppRoute.Signin];

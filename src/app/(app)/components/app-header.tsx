@@ -1,36 +1,26 @@
 import { IconCamera, IconQrcode } from '@tabler/icons-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { getUser } from '@/lib/auth/session/isomorphic';
 import { AppRoute } from '@/lib/constants/navigation';
+import { getSettings } from '@/lib/settings/get/get';
+import AppMenu from './app-menu';
 
 type Props = {
-  title: string;
+  title?: string;
 };
 
-export function AppHeader({ title }: Props) {
+export default async function AppHeader({ title }: Props) {
+  const user = await getUser();
+  const settings = await getSettings();
+
   return (
     <header className="bg-white dark:bg-card border-b dark:border-border sticky top-0 z-10">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <div className="relative">
-              <Image
-                src="/logo/light.png"
-                alt="Let's Connect Logo"
-                width={42}
-                height={42}
-                className="dark:hidden"
-              />
-              <Image
-                src="/logo/dark.png"
-                alt="Let's Connect Logo"
-                width={42}
-                height={42}
-                className="hidden dark:block"
-              />
-            </div>
-            <h1 className="text-lg font-medium text-foreground">{title}</h1>
+          <div className="flex items-center gap-2">
+            <AppMenu user={user} settings={settings} />
+            {title ? <h1 className="text-lg font-medium text-foreground">{title}</h1> : null}
           </div>
           <div className="flex items-center gap-2">
             <Link href={AppRoute.MyQr}>
