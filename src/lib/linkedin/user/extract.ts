@@ -1,13 +1,21 @@
 import type { NullableSession, NullableUser } from '@/lib/auth/session/types';
 
 export function extractLinkedInAccessToken(session: NullableSession) {
-  return session?.provider_token;
+  return session?.provider_token ?? '';
 }
 
 export function extractLinkedInId(user: NullableUser) {
-  return user?.identities?.[0]?.id;
+  return user?.identities?.[0]?.id ?? '';
 }
 
 export function extractLinkedInProfileImage(user: NullableUser) {
-  return user?.user_metadata?.picture as string;
+  return (user?.user_metadata?.picture as string) ?? '';
+}
+
+export function extractLinkedInEmail(user: NullableUser) {
+  return user?.email ?? 'No email?';
+}
+
+export function extractLinkedInName(user: NullableUser) {
+  return user?.user_metadata?.name ?? 'You';
 }

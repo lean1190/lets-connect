@@ -4,7 +4,7 @@ import { useAction } from 'next-safe-action/hooks';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { getTheme } from '@/lib/settings/get/get';
 import { Theme } from '@/lib/settings/types';
-import { updateSettings } from '@/lib/settings/update/actions/update';
+import { updateSettingsAction } from '@/lib/settings/update/actions/update';
 
 type ThemeContextType = {
   theme: Theme;
@@ -24,7 +24,7 @@ function applyTheme(newTheme: Theme) {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(Theme.Light);
-  const { execute: updateSettingsAction } = useAction(updateSettings);
+  const { execute: executeUpdateSettings } = useAction(updateSettingsAction);
 
   useEffect(() => {
     // Get theme from database
@@ -48,7 +48,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setThemeState(newTheme);
     applyTheme(newTheme);
     // Save to database
-    updateSettingsAction({ theme: newTheme });
+    executeUpdateSettings({ theme: newTheme });
   };
 
   // Always provide the context, even before mounting

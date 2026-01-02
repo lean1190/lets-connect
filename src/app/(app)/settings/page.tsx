@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
@@ -5,11 +6,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import { CtaButton } from '@/components/ui/cta-button';
 import { getUser } from '@/lib/auth/session/isomorphic';
 import { signOut } from '@/lib/auth/signout';
+import { extractLinkedInEmail, extractLinkedInName } from '@/lib/linkedin/user/extract';
+import { getSettings } from '@/lib/settings/get/get';
 
 export default async function SettingsPage() {
   const user = await getUser();
-  const email = user?.email ?? 'No email?';
-  const name = user?.user_metadata?.name ?? 'You';
+  const settings = await getSettings();
+
+  const email = extractLinkedInEmail(user);
+  const name = extractLinkedInName(user);
+  const profileImageUrl = settings.profile_image_url;
 
   return (
     <div className="space-y-6">
@@ -17,9 +23,21 @@ export default async function SettingsPage() {
         <CardContent className="pt-6">
           <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-[#0A66C2] flex items-center justify-center">
-                <span className="text-white text-xl font-bold">{name[0].toUpperCase()}</span>
-              </div>
+              {profileImageUrl ? (
+                <div className="w-12 h-12 rounded-full overflow-hidden relative shrink-0">
+                  <Image
+                    src={profileImageUrl}
+                    alt={name}
+                    fill
+                    className="object-cover"
+                    sizes="48px"
+                  />
+                </div>
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-[#0A66C2] flex items-center justify-center shrink-0">
+                  <span className="text-white text-xl font-bold">{name[0].toUpperCase()}</span>
+                </div>
+              )}
               <div className="flex-1">
                 <p className="font-semibold text-gray-900 dark:text-gray-100">{name}</p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">{email}</p>

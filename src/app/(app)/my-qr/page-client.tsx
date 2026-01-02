@@ -18,7 +18,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { updateSettings } from '@/lib/settings/update/actions/update';
+import { updateSettingsAction } from '@/lib/settings/update/actions/update';
 
 const QRCodeSVG = dynamic(() => import('qrcode.react').then((mod) => mod.QRCodeSVG), {
   ssr: false
@@ -50,7 +50,7 @@ export function MyQRPageClient({ initialQrLink }: Props) {
   });
 
   const onSubmit = async (values: FormValues) => {
-    await updateSettings({ qrLink: values.qrLink || null });
+    await updateSettingsAction({ qrLink: values.qrLink || null });
     setIsEditing(false);
   };
 

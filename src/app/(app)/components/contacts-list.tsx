@@ -15,7 +15,7 @@ import {
   groupContactsByDate
 } from '@/lib/contacts/date-grouping';
 import type { ContactOutput } from '@/lib/contacts/types';
-import { updateSettings } from '@/lib/settings/update/actions/update';
+import { updateSettingsAction } from '@/lib/settings/update/actions/update';
 import { ContactsListMode } from '../../../lib/settings/types';
 
 type ContactsListProps = {
@@ -60,7 +60,7 @@ export function ContactsList({
   const [searchQuery, setSearchQuery] = useState('');
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [isCompactView, setIsCompactView] = useState(initialListMode === ContactsListMode.Compact);
-  const { execute: updateSettingsAction } = useAction(updateSettings);
+  const { execute: executeUpdateSettings } = useAction(updateSettingsAction);
 
   useEffect(() => {
     setIsCompactView(initialListMode === ContactsListMode.Compact);
@@ -69,10 +69,9 @@ export function ContactsList({
   const handleToggleView = useCallback(() => {
     const newMode = isCompactView ? ContactsListMode.Card : ContactsListMode.Compact;
     setIsCompactView(!isCompactView);
-    updateSettingsAction({ contactsListMode: newMode });
-  }, [isCompactView, updateSettingsAction]);
+    executeUpdateSettings({ contactsListMode: newMode });
+  }, [isCompactView, executeUpdateSettings]);
 
-  // Sort contacts by date (newest first) - already sorted from server, but ensure it
   const sortedContacts = useMemo(
     () =>
       [...contacts].sort((a, b) => {

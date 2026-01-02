@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { AppRoute } from '@/lib/constants/navigation';
 import { getSupabaseClient } from '@/lib/database/client/isomorphic';
+import { updateProfilePictureUrl } from '@/lib/settings/update/update';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -16,6 +17,8 @@ export async function GET(request: Request) {
     const supabase = await getSupabaseClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
+      updateProfilePictureUrl();
+
       const forwardedHost = request.headers.get('x-forwarded-host'); // original origin before load balancer
       const isLocalEnv = process.env.NODE_ENV === 'development';
       if (isLocalEnv) {

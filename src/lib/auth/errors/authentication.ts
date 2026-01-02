@@ -1,5 +1,5 @@
-import { extractLinkedInAccessToken } from '@/lib/linkedin/user/extract';
-import type { CurrentUserSession } from '../session/types';
+import type { User } from '@supabase/supabase-js';
+import type { NullableUser } from '../session/types';
 
 export enum AuthenticationErrorType {
   Unauthorized = 'Unauthorized',
@@ -26,18 +26,19 @@ export class AuthenticationError extends Error {
   }
 }
 
-export function checkUnauthorized({
-  user,
-  session
-}: CurrentUserSession): AuthenticationError | null {
-  const hasToken = extractLinkedInAccessToken(session);
-
-  if (user && hasToken) {
+export function checkAuthenticated(user: NullableUser): AuthenticationError | null {
+  if (user) {
     return null;
   }
 
   return new AuthenticationError(
     'User is not properly authenticated',
-    !user ? AuthenticationErrorType.Unauthorized : AuthenticationErrorType.SessionExpired
+    AuthenticationErrorType.Unauthorized
   );
+}
+
+export function checkAuthenticatedOrThrow(user: NullableUser): user is User {
+  const error = checkAuthenticated(user);
+  if (error) throw error;
+  return true;
 }

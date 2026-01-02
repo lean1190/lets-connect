@@ -3,7 +3,16 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactCompiler: true,
   images: {
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'media.licdn.com'
+      },
+      {
+        protocol: 'https',
+        hostname: '**.licdn.com'
+      }
+    ],
     qualities: [25, 50, 75, 100]
   },
   async headers() {
