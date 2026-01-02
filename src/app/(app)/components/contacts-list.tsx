@@ -2,7 +2,8 @@
 
 import { IconEdit, IconExternalLink, IconFilter, IconList } from '@tabler/icons-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useAction } from 'next-safe-action/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ContactCard } from '@/components/contact-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,10 +15,13 @@ import {
   groupContactsByDate
 } from '@/lib/contacts/date-grouping';
 import type { ContactOutput } from '@/lib/contacts/types';
+import { updateSettings } from '@/lib/settings/update/actions/update';
+import { ContactsListMode } from '../../../lib/settings/types';
 
 type ContactsListProps = {
   contacts: ContactOutput[];
   showCirclesCount?: boolean;
+  initialListMode?: ContactsListMode;
 };
 
 function searchContacts(contacts: ContactOutput[], query: string): ContactOutput[] {
@@ -47,24 +51,41 @@ function searchContacts(contacts: ContactOutput[], query: string): ContactOutput
   });
 }
 
-export function ContactsList({ contacts, showCirclesCount = true }: ContactsListProps) {
+export function ContactsList({
+  contacts,
+  showCirclesCount = true,
+  initialListMode = ContactsListMode.Card
+}: ContactsListProps) {
   const [filter, setFilter] = useState<DateFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const [isCompactView, setIsCompactView] = useState(false);
+  const [isCompactView, setIsCompactView] = useState(initialListMode === ContactsListMode.Compact);
+  const { execute: updateSettingsAction } = useAction(updateSettings);
+
+  useEffect(() => {
+    setIsCompactView(initialListMode === ContactsListMode.Compact);
+  }, [initialListMode]);
+
+  const handleToggleView = useCallback(() => {
+    const newMode = isCompactView ? ContactsListMode.Card : ContactsListMode.Compact;
+    setIsCompactView(!isCompactView);
+    updateSettingsAction({ contactsListMode: newMode });
+  }, [isCompactView, updateSettingsAction]);
 
   // Sort contacts by date (newest first) - already sorted from server, but ensure it
-  const sortedContacts = [...contacts].sort((a, b) => {
-    return new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime();
-  });
+  const sortedContacts = useMemo(
+    () =>
+      [...contacts].sort((a, b) => {
+        return new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime();
+      }),
+    [contacts]
+  );
 
-  // Filter contacts based on selected date filter
-  const dateFilteredContacts = filterContactsByDate(sortedContacts, filter);
-
-  // Apply search filter to date-filtered contacts
+  const dateFilteredContacts = useMemo(
+    () => filterContactsByDate(sortedContacts, filter),
+    [filter, sortedContacts]
+  );
   const filteredContacts = searchContacts(dateFilteredContacts, searchQuery);
-
-  // Group filtered contacts by date ranges
   const groupedContacts = groupContactsByDate(filteredContacts);
 
   return (
@@ -81,7 +102,7 @@ export function ContactsList({ contacts, showCirclesCount = true }: ContactsList
         <Button
           variant={isCompactView ? 'default' : 'outline'}
           size="icon"
-          onClick={() => setIsCompactView(!isCompactView)}
+          onClick={handleToggleView}
           aria-label="Toggle compact view"
         >
           <IconList size={20} />

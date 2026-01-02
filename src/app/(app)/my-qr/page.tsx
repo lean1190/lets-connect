@@ -3,5 +3,5 @@ import { MyQRPageClient } from './page-client';
 
 export default async function MyQRPage() {
   const settings = await getSettings();
-  return <MyQRPageClient initialQrLink={settings.qrLink} />;
+  return <MyQRPageClient initialQrLink={settings.qr_link} />;
 }

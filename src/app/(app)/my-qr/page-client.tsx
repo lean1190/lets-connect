@@ -49,10 +49,6 @@ export function MyQRPageClient({ initialQrLink }: Props) {
     }
   });
 
-  // useEffect(() => {
-  //   form.reset({ qrLink: initialQrLink || '' });
-  // }, [initialQrLink, form]);
-
   const onSubmit = async (values: FormValues) => {
     await updateSettings({ qrLink: values.qrLink || null });
     setIsEditing(false);

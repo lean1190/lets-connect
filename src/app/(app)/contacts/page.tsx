@@ -2,10 +2,11 @@ import { IconUser } from '@tabler/icons-react';
 import Link from 'next/link';
 import { CtaButton } from '@/components/ui/cta-button';
 import { getContacts } from '@/lib/contacts/get/get';
+import { getContactsListMode } from '@/lib/settings/get/get';
 import { ContactsList } from '../components/contacts-list';
 
 export default async function ContactsPage() {
-  const contacts = await getContacts();
+  const [contacts, settings] = await Promise.all([getContacts(), getContactsListMode()]);
 
   if (contacts.length === 0) {
     return (
@@ -27,5 +28,5 @@ export default async function ContactsPage() {
     );
   }
 
-  return <ContactsList contacts={contacts} />;
+  return <ContactsList contacts={contacts} initialListMode={settings.contacts_list_mode} />;
 }

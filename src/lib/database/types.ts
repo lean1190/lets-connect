@@ -109,24 +109,30 @@ export type Database = {
       };
       settings: {
         Row: {
+          contacts_list_mode: string | null;
           created_at: string;
           id: string;
+          profile_image_url: string | null;
           qr_link: string | null;
           theme: string | null;
           updated_at: string;
           user_id: string | null;
         };
         Insert: {
+          contacts_list_mode?: string | null;
           created_at?: string;
           id?: string;
+          profile_image_url?: string | null;
           qr_link?: string | null;
           theme?: string | null;
           updated_at: string;
           user_id?: string | null;
         };
         Update: {
+          contacts_list_mode?: string | null;
           created_at?: string;
           id?: string;
+          profile_image_url?: string | null;
           qr_link?: string | null;
           theme?: string | null;
           updated_at?: string;

@@ -3,11 +3,13 @@
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { getSupabaseClient } from '@/lib/database/client/isomorphic';
+import { ContactsListMode, Theme } from '@/lib/settings/types';
 import { actionClient } from '../../../server-actions/client';
 
 const updateSettingsSchema = z.object({
-  theme: z.enum(['light', 'dark']).optional(),
-  qrLink: z.url().optional().nullable()
+  theme: z.enum(Theme).optional(),
+  qrLink: z.url().optional().nullable(),
+  contactsListMode: z.enum(ContactsListMode).optional()
 });
 
 export const updateSettings = actionClient
@@ -22,7 +24,6 @@ export const updateSettings = actionClient
       throw new Error('Not authenticated');
     }
 
-    // Check if settings exist
     const { data: existingSettings } = await supabase
       .from('settings')
       .select('id')
@@ -33,6 +34,7 @@ export const updateSettings = actionClient
     const updateData: {
       theme?: string | null;
       qr_link?: string | null;
+      contacts_list_mode?: string | null;
       updated_at: string;
     } = {
       updated_at: now
@@ -43,6 +45,9 @@ export const updateSettings = actionClient
     }
     if (parsedInput.qrLink !== undefined) {
       updateData.qr_link = parsedInput.qrLink;
+    }
+    if (parsedInput.contactsListMode !== undefined) {
+      updateData.contacts_list_mode = parsedInput.contactsListMode;
     }
 
     if (existingSettings) {
@@ -67,5 +72,6 @@ export const updateSettings = actionClient
 
     revalidatePath('/settings');
     revalidatePath('/my-qr');
-    return { success: true };
+    revalidatePath('/contacts');
+    revalidatePath('/circles');
   });

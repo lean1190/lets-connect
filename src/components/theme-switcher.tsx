@@ -2,6 +2,7 @@
 
 import { IconMoon, IconSun } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
+import { Theme } from '@/lib/settings/types';
 import { useTheme } from './theme-provider';
 
 export function ThemeSwitcher() {
@@ -16,9 +17,9 @@ export function ThemeSwitcher() {
       <div className="flex gap-2">
         <Button
           type="button"
-          variant={theme === 'light' ? 'default' : 'outline'}
+          variant={theme === Theme.Light ? 'default' : 'outline'}
           size="sm"
-          onClick={() => setTheme('light')}
+          onClick={() => setTheme(Theme.Light)}
           className="flex items-center gap-2"
         >
           <IconSun className="w-4 h-4" />
@@ -26,9 +27,9 @@ export function ThemeSwitcher() {
         </Button>
         <Button
           type="button"
-          variant={theme === 'dark' ? 'default' : 'outline'}
+          variant={theme === Theme.Dark ? 'default' : 'outline'}
           size="sm"
-          onClick={() => setTheme('dark')}
+          onClick={() => setTheme(Theme.Dark)}
           className="flex items-center gap-2"
         >
           <IconMoon className="w-4 h-4" />

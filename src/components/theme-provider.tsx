@@ -2,10 +2,9 @@
 
 import { useAction } from 'next-safe-action/hooks';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { getSettings } from '@/lib/settings/get/get';
+import { getTheme } from '@/lib/settings/get/get';
+import { Theme } from '@/lib/settings/types';
 import { updateSettings } from '@/lib/settings/update/actions/update';
-
-type Theme = 'light' | 'dark';
 
 type ThemeContextType = {
   theme: Theme;
@@ -16,7 +15,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 function applyTheme(newTheme: Theme) {
   const root = document.documentElement;
-  if (newTheme === 'dark') {
+  if (newTheme === Theme.Dark) {
     root.classList.add('dark');
   } else {
     root.classList.remove('dark');
@@ -24,22 +23,22 @@ function applyTheme(newTheme: Theme) {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>('light');
+  const [theme, setThemeState] = useState<Theme>(Theme.Light);
   const { execute: updateSettingsAction } = useAction(updateSettings);
 
   useEffect(() => {
     // Get theme from database
     async function loadTheme() {
       try {
-        const settings = await getSettings();
-        const initialTheme = settings.theme || 'light';
+        const settings = await getTheme();
+        const initialTheme = (settings.theme as Theme) ?? Theme.Light;
         setThemeState(initialTheme);
         applyTheme(initialTheme);
       } catch (error) {
         console.error('Error loading theme:', error);
         // Fallback to light theme
-        setThemeState('light');
-        applyTheme('light');
+        setThemeState(Theme.Light);
+        applyTheme(Theme.Light);
       }
     }
     loadTheme();
