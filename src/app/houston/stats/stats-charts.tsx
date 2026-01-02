@@ -23,7 +23,7 @@ type MonthlyDataPoint = {
   circles: number;
 };
 
-type StatsChartsProps = {
+type Props = {
   data: MonthlyDataPoint[];
   period: Period;
 };
@@ -41,7 +41,7 @@ function formatMonthLabel(month: string): string {
   return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 }
 
-export function StatsCharts({ data, period }: StatsChartsProps) {
+export function StatsCharts({ data, period }: Props) {
   const router = useRouter();
 
   const handlePeriodChange = (newPeriod: Period) => {

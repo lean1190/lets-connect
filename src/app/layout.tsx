@@ -5,7 +5,6 @@ import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Viewport } from 'next';
 import { InstallPrompt } from '@/components/install-prompt';
-import { NewYearEasterEgg } from '@/components/new-year-easter-egg';
 import { ServiceWorkerRegistration } from '@/components/service-worker-registration';
 import { ThemeProvider } from '@/components/theme-provider';
 import { getAppBaseUrl } from '@/lib/environments/url';
@@ -99,13 +98,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head />
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider>{children}</ThemeProvider>
         <InstallPrompt />
         <ServiceWorkerRegistration />
-        <NewYearEasterEgg />
         <Analytics />
         <SpeedInsights />
       </body>
