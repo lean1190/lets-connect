@@ -1,9 +1,8 @@
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
-import PageWithNavigationLayout from '../components/page-with-navigation-layout';
 
 export default function EventsLoading() {
   return (
-    <PageWithNavigationLayout title="Events">
+    <>
       <div className="relative w-full h-48 md:h-64 rounded-lg overflow-hidden mb-6 bg-gray-200 dark:bg-muted animate-pulse" />
 
       <div className="space-y-8">
@@ -37,6 +36,6 @@ export default function EventsLoading() {
           </div>
         ))}
       </div>
-    </PageWithNavigationLayout>
+    </>
   );
 }
