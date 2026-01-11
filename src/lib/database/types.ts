@@ -142,6 +142,7 @@ export type Database = {
           contacts_list_mode: string | null;
           created_at: string;
           id: string;
+          is_admin: boolean;
           profile_image_url: string | null;
           qr_link: string | null;
           theme: string | null;
@@ -152,6 +153,7 @@ export type Database = {
           contacts_list_mode?: string | null;
           created_at?: string;
           id?: string;
+          is_admin?: boolean;
           profile_image_url?: string | null;
           qr_link?: string | null;
           theme?: string | null;
@@ -162,6 +164,7 @@ export type Database = {
           contacts_list_mode?: string | null;
           created_at?: string;
           id?: string;
+          is_admin?: boolean;
           profile_image_url?: string | null;
           qr_link?: string | null;
           theme?: string | null;

@@ -1,6 +1,14 @@
 'use client';
 
-import { IconCalendar, IconInfoCircle, IconMenu2, IconSettings, IconX } from '@tabler/icons-react';
+import {
+  IconCalendar,
+  IconDashboard,
+  IconInfoCircle,
+  IconMenu2,
+  IconSettings,
+  IconShare,
+  IconX
+} from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -122,14 +130,16 @@ export default function AppMenu({ user, settings }: Props) {
 
             {/* Navigation Links */}
             <div className="space-y-2">
-              <Link
-                href={AppRoute.Events}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent text-sm font-medium transition-colors"
-              >
-                <IconCalendar className="h-5 w-5" />
-                Events
-              </Link>
+              {settings.is_admin ? (
+                <Link
+                  href={AppRoute.Events}
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent text-sm font-medium transition-colors"
+                >
+                  <IconCalendar className="h-5 w-5" />
+                  Events
+                </Link>
+              ) : null}
               <Link
                 href={AppRoute.Settings}
                 onClick={() => setOpen(false)}
@@ -138,6 +148,9 @@ export default function AppMenu({ user, settings }: Props) {
                 <IconSettings className="h-5 w-5" />
                 Settings
               </Link>
+            </div>
+
+            <div className="pt-4 border-t space-y-2">
               <Link
                 href={AppRoute.About}
                 onClick={() => setOpen(false)}
@@ -146,12 +159,49 @@ export default function AppMenu({ user, settings }: Props) {
                 <IconInfoCircle className="h-5 w-5" />
                 About
               </Link>
+              {settings.is_admin && (
+                <Link
+                  href="/houston"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent text-sm font-medium transition-colors"
+                >
+                  <IconDashboard className="h-5 w-5" />
+                  Houston
+                </Link>
+              )}
             </div>
 
-            {/* Sign Out */}
-            <div className="pt-4 border-t mt-auto">
+            {/* Share & Sign Out */}
+            <div className="pt-4 border-t space-y-4">
+              <Button
+                variant="default"
+                className="w-full flex items-center gap-3"
+                onClick={async () => {
+                  const signupUrl = `${window.location.origin}${AppRoute.Signin}`;
+                  const shareText = `Join me on Let's connect! ${signupUrl}`;
+
+                  if (navigator.share) {
+                    try {
+                      await navigator.share({
+                        text: shareText
+                      });
+                      setOpen(false);
+                    } catch {
+                      // User cancelled or error occurred, fallback to copy
+                      await navigator.clipboard.writeText(shareText);
+                    }
+                  } else {
+                    // Fallback: copy to clipboard
+                    await navigator.clipboard.writeText(shareText);
+                    setOpen(false);
+                  }
+                }}
+              >
+                <IconShare className="h-5 w-5" />
+                Share
+              </Button>
               <form action={signOut}>
-                <Button type="submit" variant="outline" className="w-full">
+                <Button type="submit" variant="secondary" className="w-full">
                   Sign out
                 </Button>
               </form>

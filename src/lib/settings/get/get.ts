@@ -11,7 +11,8 @@ const defaultSettings: Settings = {
   profile_image_url: null,
   theme: Theme.Light,
   qr_link: null,
-  contacts_list_mode: ContactsListMode.Card
+  contacts_list_mode: ContactsListMode.Card,
+  is_admin: false
 };
 
 export async function getSettings() {
