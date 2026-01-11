@@ -7,7 +7,7 @@ import { actionClient } from '@/lib/server-actions/client';
 
 const createContactSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  profileLink: z.string().url('Invalid URL'),
+  profileLink: z.url('Invalid URL'),
   reason: z.string().min(1, 'Reason is required'),
   circleIds: z.array(z.uuid()).optional()
 });

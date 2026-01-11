@@ -1,6 +1,6 @@
 'use client';
 
-import { IconMenu2, IconX } from '@tabler/icons-react';
+import { IconCalendar, IconInfoCircle, IconMenu2, IconSettings, IconX } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -123,17 +123,27 @@ export default function AppMenu({ user, settings }: Props) {
             {/* Navigation Links */}
             <div className="space-y-2">
               <Link
+                href={AppRoute.Events}
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent text-sm font-medium transition-colors"
+              >
+                <IconCalendar className="h-5 w-5" />
+                Events
+              </Link>
+              <Link
                 href={AppRoute.Settings}
                 onClick={() => setOpen(false)}
-                className="block px-4 py-2 rounded-md hover:bg-accent text-sm font-medium transition-colors"
+                className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent text-sm font-medium transition-colors"
               >
+                <IconSettings className="h-5 w-5" />
                 Settings
               </Link>
               <Link
                 href={AppRoute.About}
                 onClick={() => setOpen(false)}
-                className="block px-4 py-2 rounded-md hover:bg-accent text-sm font-medium transition-colors"
+                className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent text-sm font-medium transition-colors"
               >
+                <IconInfoCircle className="h-5 w-5" />
                 About
               </Link>
             </div>

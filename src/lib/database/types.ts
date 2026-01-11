@@ -107,6 +107,36 @@ export type Database = {
           }
         ];
       };
+      events: {
+        Row: {
+          created_at: string;
+          description: string | null;
+          ends_at: string;
+          id: string;
+          name: string;
+          starts_at: string;
+          url: string;
+        };
+        Insert: {
+          created_at?: string;
+          description?: string | null;
+          ends_at: string;
+          id?: string;
+          name: string;
+          starts_at: string;
+          url: string;
+        };
+        Update: {
+          created_at?: string;
+          description?: string | null;
+          ends_at?: string;
+          id?: string;
+          name?: string;
+          starts_at?: string;
+          url?: string;
+        };
+        Relationships: [];
+      };
       settings: {
         Row: {
           contacts_list_mode: string | null;

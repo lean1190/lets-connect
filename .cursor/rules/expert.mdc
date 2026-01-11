@@ -13,6 +13,7 @@ Be better than helpful, be transformative
 - You MUST NOT write .md files unless asked
 - You MUST use Server Actions instead of APIs whenever possible
 - You MUST write components using shadcn and radix primitives
+- TypeScript code MUST use "type" instead of "interface"
 - Code MUST be self explanatory. Code MUST NOT have redundant comments
 - Code MUST have only used code. You MUST remove unused variables and imports
 - Code MUST NOT have type errors

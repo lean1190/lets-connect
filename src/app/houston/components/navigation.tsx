@@ -8,7 +8,8 @@ export default function Navigation() {
 
   const navItems = [
     { href: '/houston', label: 'Dashboard' },
-    { href: '/houston/stats', label: 'Statistics' }
+    { href: '/houston/stats', label: 'Statistics' },
+    { href: '/houston/events', label: 'Events' }
   ];
 
   return (
