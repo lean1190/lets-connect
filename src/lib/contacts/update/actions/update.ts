@@ -7,9 +7,9 @@ import { actionClient } from '@/lib/server-actions/client';
 
 const updateContactSchema = z.object({
   id: z.uuid(),
-  name: z.string().min(1).optional(),
-  profileLink: z.url().optional(),
-  reason: z.string().min(1).optional(),
+  name: z.string().min(1).max(120).optional(),
+  profileLink: z.url().max(500).optional(),
+  reason: z.string().min(1).max(2000).optional(),
   circleIds: z.array(z.uuid()).optional()
 });
 

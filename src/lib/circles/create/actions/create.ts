@@ -6,9 +6,13 @@ import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { actionClient } from '@/lib/server-actions/client';
 
 const createCircleSchema = z.object({
-  name: z.string().min(1, 'Circle name is required'),
+  name: z.string().min(1, 'Circle name is required').max(120, 'Name can be 120 characters long'),
+  description: z
+    .string()
+    .max(1000, 'Description can be 1000 characters long')
+    .optional()
+    .nullable(),
   color: z.string().optional().nullable(),
-  description: z.string().optional().nullable(),
   icon: z.string().optional().nullable()
 });
 
