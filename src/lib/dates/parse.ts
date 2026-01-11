@@ -18,11 +18,11 @@ export function parseDateRange(
   baseYear: number = new Date().getFullYear()
 ): { starts_at: string; ends_at: string } {
   const trimmed = dateRange.trim();
-  const parts = trimmed.split(/[–-]/).map((p) => p.trim());
-  const startPart = parts[0];
-  const endPart = parts[1];
+  const rangeMatch = trimmed.match(/^(.+?)(?<!\s)[–-](?!\s)(.+)$/);
+  const startPart = rangeMatch ? rangeMatch[1].trim() : trimmed;
+  const endPart = rangeMatch ? rangeMatch[2].trim() : undefined;
 
-  const startMatch = startPart.match(/^([a-z]+)\s+(\d+)$/i);
+  const startMatch = startPart.match(/^([a-z]+)\s+(-?\d+)$/i);
   if (!startMatch) {
     throw new Error(`Unable to parse start date: ${dateRange}`);
   }
@@ -44,7 +44,7 @@ export function parseDateRange(
 
   let endDate: Date;
   if (endPart) {
-    const endMatch = endPart.match(/^([a-z]+)\s+(\d+)$/i);
+    const endMatch = endPart.match(/^([a-z]+)\s+(-?\d+)$/i);
     if (endMatch) {
       const endMonthName = endMatch[1]?.toLowerCase() ?? '';
       const endDay = Number.parseInt(endMatch[2] ?? '0', 10);
