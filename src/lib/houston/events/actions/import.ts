@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { createPrivilegedClient } from '@/lib/database/client/server';
+import { createDatabaseServerClient } from '@/lib/database/client/server';
 import type { TablesInsert } from '@/lib/database/types';
 import { actionClient } from '@/lib/server-actions/client';
 
@@ -23,7 +23,7 @@ const importEventsSchema = z.object({
 export const importEvents = actionClient
   .inputSchema(importEventsSchema)
   .action(async ({ parsedInput }) => {
-    const supabase = await createPrivilegedClient();
+    const supabase = await createDatabaseServerClient();
     let inserted = 0;
     let skipped = 0;
     const errors: string[] = [];

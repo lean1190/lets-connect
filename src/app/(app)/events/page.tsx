@@ -1,5 +1,3 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { IconCalendar, IconExternalLink } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,19 +11,21 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { foundNewsletterUrl } from '@/lib/constants/links';
+import { getEvents } from '@/lib/events/get';
 import { cn } from '@/lib/utils';
 import PageWithNavigationLayout from '../components/page-with-navigation-layout';
 
-interface Event {
-  date: string;
-  dateParsed: string | null;
+type Event = {
+  id: string;
   name: string;
+  description: string | null;
   url: string;
-  description: string;
-}
+  starts_at: string;
+  ends_at: string;
+  created_at: string;
+};
 
-function formatDate(dateStr: string | null): string {
-  if (!dateStr) return '';
+function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
   return date.toLocaleDateString('en-US', {
     month: 'short',
@@ -34,31 +34,59 @@ function formatDate(dateStr: string | null): string {
   });
 }
 
-function isUpcoming(dateStr: string | null): boolean {
-  if (!dateStr) return false;
+function formatDateRange(startsAt: string, endsAt: string): string {
+  const startDate = new Date(startsAt);
+  const endDate = new Date(endsAt);
+
+  // Reset to midnight for day comparison
+  const startDay = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+  const endDay = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+  // If same day, just return single date
+  if (startDay.getTime() === endDay.getTime()) {
+    return formatDate(startsAt);
+  }
+
+  // Different days - format as range
+  const startFormatted = startDate.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric'
+  });
+
+  const endFormatted = endDate.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+
+  // If same year, don't repeat year in start
+  if (startDate.getFullYear() === endDate.getFullYear()) {
+    return `${startFormatted} - ${endFormatted}`;
+  }
+
+  // Different years - include year in both
+  const startWithYear = startDate.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+
+  return `${startWithYear} - ${endFormatted}`;
+}
+
+function isUpcoming(dateStr: string): boolean {
   const eventDate = new Date(dateStr);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return eventDate >= today;
 }
 
-function isToday(dateStr: string | null): boolean {
-  if (!dateStr) return false;
+function isToday(dateStr: string): boolean {
   const eventDate = new Date(dateStr);
   eventDate.setHours(0, 0, 0, 0);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   return eventDate.getTime() === today.getTime();
-}
-
-function getEvents(): Event[] {
-  try {
-    const filePath = join(process.cwd(), 'scripts', 'events.json');
-    const fileContents = readFileSync(filePath, 'utf-8');
-    return JSON.parse(fileContents) as Event[];
-  } catch {
-    return [];
-  }
 }
 
 function categorizeEvents(events: Event[]): {
@@ -88,9 +116,7 @@ function categorizeEvents(events: Event[]): {
   const upcoming: Event[] = [];
 
   for (const event of events) {
-    if (!event.dateParsed) continue;
-
-    const eventDate = new Date(event.dateParsed);
+    const eventDate = new Date(event.starts_at);
     eventDate.setHours(0, 0, 0, 0);
 
     if (eventDate < today) continue;
@@ -108,8 +134,7 @@ function categorizeEvents(events: Event[]): {
 
   // Sort each category by date
   const sortByDate = (a: Event, b: Event) => {
-    if (!a.dateParsed || !b.dateParsed) return 0;
-    return new Date(a.dateParsed).getTime() - new Date(b.dateParsed).getTime();
+    return new Date(a.starts_at).getTime() - new Date(b.starts_at).getTime();
   };
 
   thisWeek.sort(sortByDate);
@@ -121,8 +146,8 @@ function categorizeEvents(events: Event[]): {
 }
 
 function EventCard({ event, index }: { event: Event; index: number }) {
-  const upcoming = isUpcoming(event.dateParsed);
-  const today = isToday(event.dateParsed);
+  const upcoming = isUpcoming(event.starts_at);
+  const today = isToday(event.starts_at);
   return (
     <Card
       key={index}
@@ -155,7 +180,7 @@ function EventCard({ event, index }: { event: Event; index: number }) {
               >
                 <IconCalendar className="h-4 w-4" />
                 <span className="font-medium">
-                  {event.dateParsed ? formatDate(event.dateParsed) : event.date}
+                  {formatDateRange(event.starts_at, event.ends_at)}
                 </span>
               </div>
             </div>
@@ -198,7 +223,7 @@ function EventSection({ title, events }: { title: string; events: Event[] }) {
 }
 
 export default async function EventsPage() {
-  const events = getEvents();
+  const events = await getEvents();
   const { thisWeek, thisMonth, nextMonth, upcoming } = categorizeEvents(events);
 
   const hasAnyEvents =

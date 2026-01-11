@@ -2,9 +2,9 @@
 
 import { useAction } from 'next-safe-action/hooks';
 import { useState } from 'react';
+import { Input } from '@/components/ui/input';
 import { fetchEventsFromUrl } from '@/lib/houston/events/actions/fetch';
 import { importEvents } from '@/lib/houston/events/actions/import';
-import AuthGuard from '../../components/auth-guard';
 
 const monthMap: Record<string, number> = {
   january: 0,
@@ -178,133 +178,129 @@ export default function ImportEventsPage() {
   };
 
   return (
-    <AuthGuard>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Import Events</h1>
-          <a
-            href="/houston/events"
-            className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-          >
-            Back to Events
-          </a>
-        </div>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-gray-900">Import Events</h1>
+        <a
+          href="/houston/events"
+          className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+        >
+          Back to Events
+        </a>
+      </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="url" className="block text-sm font-medium text-gray-700 mb-2">
-                Newsletter URL
-              </label>
-              <input
-                id="url"
-                type="url"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-                placeholder="https://www.foundhamburg.com/p/..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div>
-              <label htmlFor="year" className="block text-sm font-medium text-gray-700 mb-2">
-                Base Year
-              </label>
-              <input
-                id="year"
-                type="number"
-                value={baseYear}
-                onChange={(e) => setBaseYear(Number.parseInt(e.target.value, 10))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="url" className="block text-sm font-medium text-gray-700 mb-2">
+              Newsletter URL
+            </label>
+            <Input
+              id="url"
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://www.foundhamburg.com/p/..."
+            />
+          </div>
+          <div>
+            <label htmlFor="year" className="block text-sm font-medium text-gray-700 mb-2">
+              Base Year
+            </label>
+            <Input
+              id="year"
+              type="number"
+              value={baseYear}
+              onChange={(e) => setBaseYear(Number.parseInt(e.target.value, 10))}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={handleFetch}
+            disabled={fetchStatus === 'executing'}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {fetchStatus === 'executing' ? 'Fetching...' : 'Fetch Events'}
+          </button>
+        </div>
+      </div>
+
+      {parsedEvents.length > 0 && (
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Imported Events ({parsedEvents.length})
+            </h2>
             <button
               type="button"
-              onClick={handleFetch}
-              disabled={fetchStatus === 'executing'}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              onClick={handleImport}
+              disabled={importStatus === 'executing'}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {fetchStatus === 'executing' ? 'Fetching...' : 'Fetch Events'}
+              {importStatus === 'executing' ? 'Importing...' : 'Import to Database'}
             </button>
           </div>
-        </div>
-
-        {parsedEvents.length > 0 && (
-          <div className="bg-white rounded-lg shadow overflow-hidden">
-            <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-              <h2 className="text-lg font-semibold text-gray-900">
-                Imported Events ({parsedEvents.length})
-              </h2>
-              <button
-                type="button"
-                onClick={handleImport}
-                disabled={importStatus === 'executing'}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                {importStatus === 'executing' ? 'Importing...' : 'Import to Database'}
-              </button>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Date Range
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Name
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Description
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      URL
-                    </th>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Date Range
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Name
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Description
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    URL
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {parsedEvents.map((event, index) => (
+                  <tr key={index}>
+                    <td className="px-4 py-3">
+                      <Input
+                        type="text"
+                        value={event.dateRange}
+                        onChange={(e) => updateDateRange(index, e.target.value)}
+                        className="text-sm"
+                      />
+                    </td>
+                    <td className="px-4 py-3">
+                      <Input
+                        type="text"
+                        value={event.name}
+                        onChange={(e) => updateEvent(index, 'name', e.target.value)}
+                        className="text-sm"
+                      />
+                    </td>
+                    <td className="px-4 py-3">
+                      <textarea
+                        value={event.description}
+                        onChange={(e) => updateEvent(index, 'description', e.target.value)}
+                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                        rows={2}
+                      />
+                    </td>
+                    <td className="px-4 py-3">
+                      <Input
+                        type="url"
+                        value={event.url || ''}
+                        onChange={(e) => updateEvent(index, 'url', e.target.value)}
+                        placeholder="https://..."
+                        className="text-sm"
+                      />
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {parsedEvents.map((event, index) => (
-                    <tr key={index}>
-                      <td className="px-4 py-3">
-                        <input
-                          type="text"
-                          value={event.dateRange}
-                          onChange={(e) => updateDateRange(index, e.target.value)}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                        />
-                      </td>
-                      <td className="px-4 py-3">
-                        <input
-                          type="text"
-                          value={event.name}
-                          onChange={(e) => updateEvent(index, 'name', e.target.value)}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                        />
-                      </td>
-                      <td className="px-4 py-3">
-                        <textarea
-                          value={event.description}
-                          onChange={(e) => updateEvent(index, 'description', e.target.value)}
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                          rows={2}
-                        />
-                      </td>
-                      <td className="px-4 py-3">
-                        <input
-                          type="url"
-                          value={event.url || ''}
-                          onChange={(e) => updateEvent(index, 'url', e.target.value)}
-                          placeholder="https://..."
-                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
-        )}
-      </div>
-    </AuthGuard>
+        </div>
+      )}
+    </div>
   );
 }

@@ -130,16 +130,14 @@ export default function AppMenu({ user, settings }: Props) {
 
             {/* Navigation Links */}
             <div className="space-y-2">
-              {settings.is_admin ? (
-                <Link
-                  href={AppRoute.Events}
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent text-sm font-medium transition-colors"
-                >
-                  <IconCalendar className="h-5 w-5" />
-                  Events
-                </Link>
-              ) : null}
+              <Link
+                href={AppRoute.Events}
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent text-sm font-medium transition-colors"
+              >
+                <IconCalendar className="h-5 w-5" />
+                Events
+              </Link>
               <Link
                 href={AppRoute.Settings}
                 onClick={() => setOpen(false)}
