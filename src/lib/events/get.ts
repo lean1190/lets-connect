@@ -1,9 +1,7 @@
 'use server';
 
 import { createDatabaseServerClient } from '@/lib/database/client/server';
-import type { Tables } from '@/lib/database/types';
-
-type Event = Tables<'events'>;
+import type { Event } from './types';
 
 export async function getEvents(): Promise<Event[]> {
   const supabase = await createDatabaseServerClient();

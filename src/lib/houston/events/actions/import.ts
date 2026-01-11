@@ -28,8 +28,6 @@ export const importEvents = actionClient
     let skipped = 0;
     const errors: string[] = [];
 
-    console.log('---> events', parsedInput.events);
-
     for (const event of parsedInput.events) {
       try {
         // Check if event already exists
