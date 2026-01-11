@@ -1,16 +1,16 @@
-import { getSupabaseClient } from '@/lib/database/client/isomorphic';
+import { createDatabaseServerClient } from '@/lib/database/client/server';
 import type { CurrentUserSession } from './types';
 
 export async function getSession() {
-  return (await (await getSupabaseClient()).auth.getSession()).data?.session ?? null;
+  return (await (await createDatabaseServerClient()).auth.getSession()).data?.session ?? null;
 }
 
 export async function getUser() {
-  return (await (await getSupabaseClient()).auth.getUser()).data?.user ?? null;
+  return (await (await createDatabaseServerClient()).auth.getUser()).data?.user ?? null;
 }
 
 export async function getClaims() {
-  return (await (await getSupabaseClient()).auth.getClaims()).data?.claims ?? null;
+  return (await (await createDatabaseServerClient()).auth.getClaims()).data?.claims ?? null;
 }
 
 export async function getCurrentUserSession() {

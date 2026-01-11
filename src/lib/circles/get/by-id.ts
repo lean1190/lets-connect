@@ -1,10 +1,10 @@
 'use server';
 
 import type { CircleOutput } from '@/lib/circles/types';
-import { getSupabaseClient } from '@/lib/database/client/isomorphic';
+import { createDatabaseServerClient } from '@/lib/database/client/server';
 
 export async function getCircleById(id: string): Promise<CircleOutput | null> {
-  const supabase = await getSupabaseClient();
+  const supabase = await createDatabaseServerClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();

@@ -1,7 +1,7 @@
 import { IconCamera, IconQrcode } from '@tabler/icons-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { getUser } from '@/lib/auth/session/isomorphic';
+import { getUser } from '@/lib/auth/session/server';
 import { AppRoute } from '@/lib/constants/navigation';
 import { getSettings } from '@/lib/settings/get/get';
 import AppMenu from './app-menu';

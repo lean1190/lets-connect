@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { getSupabaseClient } from '@/lib/database/client/isomorphic';
+import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { actionClient } from '@/lib/server-actions/client';
 
 const createContactSchema = z.object({
@@ -15,7 +15,7 @@ const createContactSchema = z.object({
 export const createContact = actionClient
   .inputSchema(createContactSchema)
   .action(async ({ parsedInput }) => {
-    const supabase = await getSupabaseClient();
+    const supabase = await createDatabaseServerClient();
     const {
       data: { user }
     } = await supabase.auth.getUser();

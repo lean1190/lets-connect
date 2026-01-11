@@ -2,10 +2,10 @@
 
 import type { CircleOutput } from '@/lib/circles/types';
 import type { ContactOutput } from '@/lib/contacts/types';
-import { getSupabaseClient } from '@/lib/database/client/isomorphic';
+import { createDatabaseServerClient } from '@/lib/database/client/server';
 
 export async function getContacts(): Promise<ContactOutput[]> {
-  const supabase = await getSupabaseClient();
+  const supabase = await createDatabaseServerClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();

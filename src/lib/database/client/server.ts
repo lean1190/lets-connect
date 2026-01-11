@@ -2,7 +2,9 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import type { Database } from '../types';
 
-export async function createClient(key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY) {
+export async function createDatabaseServerClient(
+  key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+) {
   const cookieStore = await cookies();
 
   return createServerClient<Database>(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '', key ?? '', {
@@ -25,4 +27,5 @@ export async function createClient(key = process.env.NEXT_PUBLIC_SUPABASE_PUBLIS
   });
 }
 
-export const createPrivilegedClient = () => createClient(process.env.SUPABASE_SECRET_KEY);
+export const createPrivilegedClient = () =>
+  createDatabaseServerClient(process.env.SUPABASE_SECRET_KEY);

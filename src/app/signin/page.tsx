@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { CtaButton } from '@/components/ui/cta-button';
-import { isSignedIn } from '@/lib/auth/session/isomorphic';
+import { isSignedIn } from '@/lib/auth/session/server';
 import { signInWithLinkedIn } from '@/lib/auth/signin';
 import { AppRoute } from '@/lib/constants/navigation';
 

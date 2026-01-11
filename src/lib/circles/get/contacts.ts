@@ -1,9 +1,9 @@
 'use server';
 
-import { getSupabaseClient } from '@/lib/database/client/isomorphic';
+import { createDatabaseServerClient } from '@/lib/database/client/server';
 
 export async function getContactsInCircle(circleId: string) {
-  const supabase = await getSupabaseClient();
+  const supabase = await createDatabaseServerClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { AppRoute } from '@/lib/constants/navigation';
-import { getSupabaseClient } from '@/lib/database/client/isomorphic';
+import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { updateProfilePictureUrl } from '@/lib/settings/update/update';
 
 export async function GET(request: Request) {
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   }
 
   if (code) {
-    const supabase = await getSupabaseClient();
+    const supabase = await createDatabaseServerClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
       updateProfilePictureUrl();

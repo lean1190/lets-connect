@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation';
-import { isSignedIn } from '@/lib/auth/session/isomorphic';
+import { isSignedIn } from '@/lib/auth/session/server';
 import { AppRoute } from '@/lib/constants/navigation';
 import { getSettings } from '@/lib/settings/get/get';
 

@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { getSupabaseClient } from '@/lib/database/client/isomorphic';
+import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { actionClient } from '@/lib/server-actions/client';
 
 const createCircleSchema = z.object({
@@ -15,7 +15,7 @@ const createCircleSchema = z.object({
 export const createCircle = actionClient
   .inputSchema(createCircleSchema)
   .action(async ({ parsedInput }) => {
-    const supabase = await getSupabaseClient();
+    const supabase = await createDatabaseServerClient();
     const {
       data: { user }
     } = await supabase.auth.getUser();

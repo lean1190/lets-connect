@@ -1,6 +1,6 @@
 'use server';
 
-import { getSupabaseClient } from '@/lib/database/client/isomorphic';
+import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { ContactsListMode, type Settings, Theme } from '@/lib/settings/types';
 
 const defaultSettings: Settings = {
@@ -16,7 +16,7 @@ const defaultSettings: Settings = {
 };
 
 export async function getSettings() {
-  const supabase = await getSupabaseClient();
+  const supabase = await createDatabaseServerClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();
@@ -46,7 +46,7 @@ export async function getSettings() {
 }
 
 export async function getTheme() {
-  const supabase = await getSupabaseClient();
+  const supabase = await createDatabaseServerClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();
@@ -71,7 +71,7 @@ export async function getTheme() {
 }
 
 export async function getContactsListMode() {
-  const supabase = await getSupabaseClient();
+  const supabase = await createDatabaseServerClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();

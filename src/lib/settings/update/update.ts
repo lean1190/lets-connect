@@ -1,10 +1,10 @@
 import { checkAuthenticatedOrThrow } from '@/lib/auth/errors/authentication';
-import { getSupabaseClient } from '@/lib/database/client/isomorphic';
+import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { extractLinkedInProfileImage } from '@/lib/linkedin/user/extract';
 import type { UpdateSettingsSchema } from './schema';
 
 export async function updateSettings(update: UpdateSettingsSchema) {
-  const supabase = await getSupabaseClient();
+  const supabase = await createDatabaseServerClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();
@@ -63,7 +63,7 @@ export async function updateSettings(update: UpdateSettingsSchema) {
 }
 
 export async function updateProfilePictureUrl() {
-  const supabase = await getSupabaseClient();
+  const supabase = await createDatabaseServerClient();
   const {
     data: { user }
   } = await supabase.auth.getUser();

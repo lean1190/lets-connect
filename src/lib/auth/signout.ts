@@ -1,9 +1,9 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { getSupabaseClient } from '@/lib/database/client/isomorphic';
+import { createDatabaseServerClient } from '@/lib/database/client/server';
 
 export async function signOut() {
-  await (await getSupabaseClient()).auth.signOut();
+  await (await createDatabaseServerClient()).auth.signOut();
   redirect('/');
 }

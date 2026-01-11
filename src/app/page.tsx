@@ -3,7 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { CtaButton } from '@/components/ui/cta-button';
-import { isSignedIn } from '@/lib/auth/session/isomorphic';
+import { isSignedIn } from '@/lib/auth/session/server';
 import { githubUrl } from '@/lib/constants/links';
 import { AppRoute } from '@/lib/constants/navigation';
 
