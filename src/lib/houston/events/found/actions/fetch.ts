@@ -43,8 +43,8 @@ export const fetchEventsFromUrl = actionClient
     while ((divMatch = eventDivPattern.exec(html)) !== null) {
       const divContent = divMatch[1] ?? '';
 
-      // Extract date from <b> tag: <span><b>January 31–February 1:</b></span>
-      const dateMatch = divContent.match(/<span[^>]*>\s*<b[^>]*>([^<]+?):\s*<\/b>\s*<\/span>/i);
+      // Extract date from <b> tag: <span><b>January 31–February 1:</b></span> or <span><b>January 15</b></span>
+      const dateMatch = divContent.match(/<span[^>]*>\s*<b[^>]*>([^<]+?):?\s*<\/b>\s*<\/span>/i);
       if (!dateMatch?.[1]) continue;
 
       const dateRange = cleanHtmlTags(dateMatch[1]).trim();
@@ -83,8 +83,12 @@ export const fetchEventsFromUrl = actionClient
         const paragraphMatch = divContent.match(/<p[^>]*>([\s\S]*?)<\/p>/i);
         if (paragraphMatch?.[1]) {
           const pText = cleanHtmlTags(paragraphMatch[1]);
-          // Remove date and name, get what's left
-          const remaining = pText.replace(`${dateRange}:`, '').replace(name, '').trim();
+          // Remove date and name, get what's left (handle both with and without colon)
+          const remaining = pText
+            .replace(`${dateRange}:`, '')
+            .replace(`${dateRange}`, '')
+            .replace(name, '')
+            .trim();
 
           // Extract description after dash
           const descMatch = remaining.match(/[—–-]\s*(.+)/);
