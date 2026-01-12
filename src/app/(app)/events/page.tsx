@@ -15,7 +15,7 @@ export default async function EventsPage() {
     <>
       <EventsHero />
 
-      <div className="space-y-8">
+      <div className="space-y-16">
         {!hasAnyEvents ? (
           <EventsEmptyState />
         ) : (

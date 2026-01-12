@@ -117,7 +117,11 @@ export const fetchEventsFromUrl = actionClient
 function isValidDatePattern(dateRange: string): boolean {
   const trimmed = dateRange.trim();
   // Check if it starts with a month name and has a day number
-  return /^[A-Z][a-z]+\s+\d+/.test(trimmed) || /^[A-Z][a-z]+\s+\d+[–-]/.test(trimmed);
+  const isDatePattern =
+    /^[A-Z][a-z]+\s+\d+/.test(trimmed) || /^[A-Z][a-z]+\s+\d+[–-]/.test(trimmed);
+  // Also accept recurring event patterns like "Every Saturday", "Every Monday", etc.
+  const isRecurringPattern = /^Every\s+[A-Z][a-z]+/i.test(trimmed);
+  return isDatePattern || isRecurringPattern;
 }
 
 function cleanHtmlTags(text: string): string {

@@ -194,6 +194,32 @@ describe('fetchEventsFromUrl', () => {
         url: 'https://www.meetup.com/hamburg-vue-js-meetup/events/312211655/'
       });
     });
+
+    it('should parse recurring event', async () => {
+      const html = `
+        <div style="padding-bottom:13px;padding-left:15px;padding-right:15px;padding-top:13px;">
+          <p style="color:#000000;color:var(--wt-text-on-background-color) !important;font-family:'Work Sans','Lucida Grande',Verdana,sans-serif;font-size:16px;line-height:1.5;text-align:left;">
+            <span style=""><b>Every Saturday:</b></span>
+            <span style="">&nbsp;</span>
+            <span style=""><a class="link" href="https://luma.com/yd4u93kh" target="_blank" style="-webkit-text-decoration:underline #2C6FE3;color:#2C6FE3;font-style:italic;font-weight:bold;text-decoration:underline #2C6FE3;word-break:break-word;;">Founders Running Club</a></span>
+            <span style=""> (English) — Energize your weekend with fellow entrepreneurs during a judgment-free 5K run followed by coffee and meaningful networking conversations.</span>
+          </p>
+        </div>
+      `;
+
+      mockFetch.mockResolvedValueOnce(createMockResponse(html));
+
+      const result = await fetchEventsFromUrl({ url: 'https://example.com/newsletter' });
+
+      expect(result?.data?.events).toHaveLength(1);
+      expect(result?.data?.events[0]).toEqual({
+        dateRange: 'Every Saturday',
+        name: 'Founders Running Club',
+        description:
+          'Energize your weekend with fellow entrepreneurs during a judgment-free 5K run followed by coffee and meaningful networking conversations.',
+        url: 'https://luma.com/yd4u93kh'
+      });
+    });
   });
 
   describe('filtering and skipping', () => {

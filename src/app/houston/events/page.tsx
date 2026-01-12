@@ -26,7 +26,7 @@ export default async function EventsPage() {
           </div>
         ) : (
           <div className="bg-card rounded-lg shadow border border-border overflow-hidden">
-            <div className="overflow-x-auto overflow-y-auto max-h-[calc(100vh-16rem)]">
+            <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-border">
                 <thead className="bg-muted/50 sticky top-0">
                   <tr>

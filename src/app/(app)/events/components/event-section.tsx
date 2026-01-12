@@ -11,7 +11,7 @@ export function EventSection({ title, events }: Props) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-xl font-semibold text-foreground">{title}</h2>
+      <h2 className="text-2xl font-semibold text-foreground">{title}</h2>
       <div className="space-y-4">
         {events.map((event, index) => (
           <EventCard key={index} event={event} index={index} />

@@ -4,9 +4,9 @@ import { useAction } from 'next-safe-action/hooks';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { parseDateRange } from '@/lib/dates/parse';
 import { fetchEventsFromUrl } from '@/lib/houston/events/found/actions/fetch';
 import { importEvents } from '@/lib/houston/events/found/actions/import';
+import { parseEventDate } from './parse';
 
 type ParsedEvent = {
   dateRange: string;
@@ -31,7 +31,7 @@ export function ImportEventsPageClient({ initialUrl }: Props) {
       if (data?.events) {
         const parsed = data.events.map((event) => {
           try {
-            const { starts_at, ends_at } = parseDateRange(event.dateRange, baseYear);
+            const { starts_at, ends_at } = parseEventDate(event.dateRange, baseYear);
             return {
               ...event,
               starts_at,
@@ -89,7 +89,7 @@ export function ImportEventsPageClient({ initialUrl }: Props) {
 
   const updateDateRange = (index: number, dateRange: string) => {
     try {
-      const { starts_at, ends_at } = parseDateRange(dateRange, baseYear);
+      const { starts_at, ends_at } = parseEventDate(dateRange, baseYear);
       const updated = [...parsedEvents];
       updated[index] = {
         ...updated[index],
