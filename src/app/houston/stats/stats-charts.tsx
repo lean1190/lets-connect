@@ -59,15 +59,15 @@ export function StatsCharts({ data, period }: Props) {
 
   return (
     <div className="space-y-8">
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-card rounded-lg shadow border border-border p-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-gray-900">Monthly Statistics</h2>
+          <h2 className="text-lg font-semibold text-foreground">Monthly Statistics</h2>
           <div className="flex items-center gap-2">
             <select
               id="period-select"
               value={period}
               onChange={(e) => handlePeriodChange(e.target.value as Period)}
-              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-900 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-gray-400 transition-colors"
+              className="px-4 py-2 border border-input rounded-md text-sm font-medium text-foreground bg-background shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring hover:border-input/80 transition-colors"
             >
               {periodOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -91,8 +91,8 @@ export function StatsCharts({ data, period }: Props) {
         </ResponsiveContainer>
       </div>
 
-      <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Monthly Breakdown</h2>
+      <div className="bg-card rounded-lg shadow border border-border p-6">
+        <h2 className="text-lg font-semibold text-foreground mb-4">Monthly Breakdown</h2>
         <ResponsiveContainer width="100%" height={400}>
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />

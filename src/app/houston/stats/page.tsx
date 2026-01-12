@@ -22,8 +22,8 @@ export default async function StatsPage({
     <AuthGuard>
       <div className="space-y-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Statistics</h1>
-          <p className="text-gray-600">Monthly overview of users, contacts, and circles</p>
+          <h1 className="text-2xl font-bold text-foreground mb-2">Statistics</h1>
+          <p className="text-muted-foreground">Monthly overview of users, contacts, and circles</p>
         </div>
         <StatsCharts data={data} period={period} />
       </div>

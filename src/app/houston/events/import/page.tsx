@@ -2,6 +2,7 @@
 
 import { useAction } from 'next-safe-action/hooks';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { parseDateRange } from '@/lib/dates/parse';
 import { fetchEventsFromUrl } from '@/lib/houston/events/actions/fetch';
@@ -100,20 +101,12 @@ export default function ImportEventsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-gray-900">Import Events</h1>
-        <a
-          href="/houston/events"
-          className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-        >
-          Back to Events
-        </a>
-      </div>
+      <h1 className="text-2xl font-bold text-foreground">Import Events</h1>
 
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-card rounded-lg shadow border border-border p-6">
         <div className="space-y-4">
           <div>
-            <label htmlFor="url" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="url" className="block text-sm font-medium text-foreground mb-2">
               Newsletter URL
             </label>
             <Input
@@ -125,7 +118,7 @@ export default function ImportEventsPage() {
             />
           </div>
           <div>
-            <label htmlFor="year" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="year" className="block text-sm font-medium text-foreground mb-2">
               Base Year
             </label>
             <Input
@@ -135,51 +128,46 @@ export default function ImportEventsPage() {
               onChange={(e) => setBaseYear(Number.parseInt(e.target.value, 10))}
             />
           </div>
-          <button
-            type="button"
-            onClick={handleFetch}
-            disabled={fetchStatus === 'executing'}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
+          <Button type="button" onClick={handleFetch} disabled={fetchStatus === 'executing'}>
             {fetchStatus === 'executing' ? 'Fetching...' : 'Fetch Events'}
-          </button>
+          </Button>
         </div>
       </div>
 
       {parsedEvents.length > 0 && (
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="p-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-gray-900">
+        <div className="bg-card rounded-lg shadow border border-border overflow-hidden">
+          <div className="p-4 border-b border-border flex justify-between items-center">
+            <h2 className="text-lg font-semibold text-foreground">
               Imported Events ({parsedEvents.length})
             </h2>
-            <button
+            <Button
               type="button"
               onClick={handleImport}
               disabled={importStatus === 'executing'}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="bg-green-600 dark:bg-green-700 text-white hover:bg-green-700 dark:hover:bg-green-600"
             >
               {importStatus === 'executing' ? 'Importing...' : 'Import to Database'}
-            </button>
+            </Button>
           </div>
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-border">
+              <thead className="bg-muted/50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                     Date Range
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                     Name
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                     Description
                   </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">
                     URL
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-card divide-y divide-border">
                 {parsedEvents.map((event, index) => (
                   <tr key={index}>
                     <td className="px-4 py-3">
@@ -202,7 +190,7 @@ export default function ImportEventsPage() {
                       <textarea
                         value={event.description}
                         onChange={(e) => updateEvent(index, 'description', e.target.value)}
-                        className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                        className="w-full px-2 py-1 border border-input rounded text-sm bg-background text-foreground"
                         rows={2}
                       />
                     </td>
