@@ -37,7 +37,7 @@ export const dryRunImportEvents = actionClient
     for (let i = 0; i < parsedInput.events.length; i++) {
       const event = parsedInput.events[i];
 
-      const urlValidation = z.string().url().safeParse(event.url);
+      const urlValidation = z.url().safeParse(event.url);
       if (event.url && !urlValidation.success) {
         results.push({
           index: i,

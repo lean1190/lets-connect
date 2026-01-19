@@ -1,6 +1,6 @@
 'use client';
 
-import { IconCircles, IconPlus, IconUser } from '@tabler/icons-react';
+import { IconCircles, IconPlus, IconStar, IconUser } from '@tabler/icons-react';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -25,9 +25,14 @@ type NavItem = {
   label: string;
 };
 
+const FilledStar = ({ size, className }: { size?: number; className?: string }) => (
+  <IconStar size={size} className={className} fill="currentColor" />
+);
+
 const navItems: NavItem[] = [
   { route: AppRoute.Contacts, icon: IconUser, label: 'Contacts' },
-  { route: AppRoute.Circles, icon: IconCircles, label: 'Circles' }
+  { route: AppRoute.Circles, icon: IconCircles, label: 'Circles' },
+  { route: AppRoute.Favorites, icon: FilledStar, label: 'Favs' }
 ];
 
 export default function AppNavigation() {

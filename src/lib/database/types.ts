@@ -13,6 +13,7 @@ export type Database = {
           color: string | null;
           created_at: string;
           description: string | null;
+          favorite: boolean;
           icon: string | null;
           id: string;
           name: string;
@@ -23,6 +24,7 @@ export type Database = {
           color?: string | null;
           created_at?: string;
           description?: string | null;
+          favorite?: boolean;
           icon?: string | null;
           id?: string;
           name: string;
@@ -33,6 +35,7 @@ export type Database = {
           color?: string | null;
           created_at?: string;
           description?: string | null;
+          favorite?: boolean;
           icon?: string | null;
           id?: string;
           name?: string;
@@ -44,6 +47,7 @@ export type Database = {
       contacts: {
         Row: {
           created_at: string;
+          favorite: boolean;
           id: string;
           name: string;
           reason: string | null;
@@ -52,6 +56,7 @@ export type Database = {
         };
         Insert: {
           created_at?: string;
+          favorite?: boolean;
           id?: string;
           name: string;
           reason?: string | null;
@@ -60,6 +65,7 @@ export type Database = {
         };
         Update: {
           created_at?: string;
+          favorite?: boolean;
           id?: string;
           name?: string;
           reason?: string | null;

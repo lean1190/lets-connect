@@ -1,7 +1,8 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { actionClient } from '../../../server-actions/client';
+import { AppRoute } from '@/lib/constants/navigation';
+import { actionClient } from '@/lib/server-actions/client';
 import { updateSettingsSchema } from '../schema';
 import { updateSettings } from '../update';
 
@@ -10,8 +11,8 @@ export const updateSettingsAction = actionClient
   .action(async ({ parsedInput }) => {
     await updateSettings(parsedInput);
 
-    revalidatePath('/settings');
-    revalidatePath('/my-qr');
-    revalidatePath('/contacts');
-    revalidatePath('/circles');
+    revalidatePath(AppRoute.Settings);
+    revalidatePath(AppRoute.MyQr);
+    revalidatePath(AppRoute.Contacts);
+    revalidatePath(AppRoute.Circles);
   });

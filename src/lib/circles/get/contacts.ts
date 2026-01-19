@@ -1,5 +1,6 @@
 'use server';
 
+import type { ContactOutput } from '@/lib/contacts/types';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 
 export async function getContactsInCircle(circleId: string) {
@@ -40,8 +41,8 @@ export async function getContactsInCircle(circleId: string) {
   return contacts.map((contact) => ({
     id: contact.id,
     name: contact.name,
-    profileLink: contact.url,
-    reason: contact.reason,
+    profileLink: contact.url ?? '',
+    reason: contact.reason ?? '',
     dateAdded: contact.created_at
-  }));
+  })) as ContactOutput[];
 }

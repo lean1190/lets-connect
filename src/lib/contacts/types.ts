@@ -6,5 +6,6 @@ export interface ContactOutput {
   profileLink: string;
   reason: string;
   dateAdded: string;
+  favorite: boolean;
   circles?: CircleOutput[];
 }

@@ -37,6 +37,7 @@ export async function getCircleById(id: string): Promise<CircleOutput | null> {
     contactCount: count || 0,
     color: circle.color || null,
     description: circle.description || null,
-    icon: circle.icon || null
+    icon: circle.icon || null,
+    favorite: circle.favorite
   };
 }

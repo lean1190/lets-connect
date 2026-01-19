@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import Link from 'next/link';
+import { FavoriteButton } from '@/components/favorite-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { AppRoute } from '@/lib/constants/navigation';
@@ -20,9 +21,12 @@ export function ContactCard({ contact, showCirclesCount = true }: ContactCardPro
   };
 
   return (
-    <Card className="hover:border-white/30 transition-all">
+    <Card className="hover:border-white/30 transition-all relative">
+      <div className="absolute top-4 right-4">
+        <FavoriteButton id={contact.id} type="contact" initialFavorite={contact.favorite} />
+      </div>
       <CardContent className="p-6">
-        <div className="mb-4">
+        <div className="mb-4 pr-10">
           <h3 className="text-2xl font-normal text-gray-900 dark:text-foreground mb-1">
             {contact.name}
           </h3>

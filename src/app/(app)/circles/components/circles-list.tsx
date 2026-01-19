@@ -5,6 +5,7 @@ import { IconCircles } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { useState } from 'react';
+import { FavoriteButton } from '@/components/favorite-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -73,9 +74,16 @@ export function CirclesList({ circles }: CirclesListProps) {
       {/* Circles list */}
       <div className="space-y-4">
         {filteredCircles.map((circle) => (
-          <Card key={circle.id} className="hover:border-white/30 transition-all">
+          <Card key={circle.id} className="hover:border-white/30 transition-all relative">
+            <div className="absolute top-4 right-4">
+              <FavoriteButton
+                id={circle.id}
+                type="circle"
+                initialFavorite={circle.favorite ?? false}
+              />
+            </div>
             <CardContent className="p-6">
-              <div className="flex items-start gap-4 mb-4">
+              <div className="flex items-start gap-4 mb-4 pr-10">
                 <div
                   className="w-16 h-16 bg-gray-100 dark:bg-muted rounded-lg flex items-center justify-center shrink-0 border-2"
                   style={{

@@ -38,7 +38,8 @@ export async function getCircles(): Promise<CircleOutput[]> {
         contactCount: count || 0,
         color: circle.color || null,
         description: circle.description || null,
-        icon: circle.icon || null
+        icon: circle.icon || null,
+        favorite: circle.favorite
       };
     })
   );

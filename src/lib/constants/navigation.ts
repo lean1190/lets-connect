@@ -6,10 +6,11 @@ export enum AppRoute {
   NewContact = '/contacts/new',
   EditContact = '/contacts/',
   Scan = '/scan',
-  MyQr = '/my-qr',
+  MyQr = '/qr',
   Circles = '/circles',
   NewCircle = '/circles/new',
   EditCircle = '/circles/',
+  Favorites = '/favorites',
   Settings = '/settings',
   About = '/about',
   Events = '/events'

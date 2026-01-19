@@ -56,6 +56,7 @@ export async function getContacts(): Promise<ContactOutput[]> {
         profileLink: contact.url || '',
         reason: contact.reason || '',
         dateAdded: contact.created_at,
+        favorite: contact.favorite,
         circles
       };
     })

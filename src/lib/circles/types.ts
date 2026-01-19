@@ -6,4 +6,5 @@ export interface CircleOutput {
   color?: string | null;
   description?: string | null;
   icon?: string | null;
+  favorite?: boolean;
 }
