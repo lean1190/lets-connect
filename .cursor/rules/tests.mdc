@@ -1,10 +1,10 @@
 ---
-description: Mandatory rules for writing automated unit and integration tests
-alwaysApply: false
+alwaysApply: true
 ---
 # Unit and integration tests
 
-Before starting to write the tests, explain what tests will you write.
+Write tests only when asked.
+Before starting to write the tests, explain what tests you will write.
 Explain how are these tests meaningful, and what decisions you made.
 
 - Tests configuration MUST be simple, easy to read and maintain.

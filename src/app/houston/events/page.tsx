@@ -1,5 +1,7 @@
 import { getEvents } from '@/lib/houston/events/get';
+import { EventsFilter } from '@/lib/houston/events/types';
 import AuthGuard from '../components/auth-guard';
+import { EventsFilterDropdown } from './events-filter';
 
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
@@ -12,13 +14,29 @@ function formatDate(dateStr: string): string {
   });
 }
 
-export default async function EventsPage() {
-  const events = await getEvents();
+function getValidFilter(filter: string | undefined): EventsFilter {
+  const validFilters = Object.values(EventsFilter);
+  return validFilters.includes(filter as EventsFilter)
+    ? (filter as EventsFilter)
+    : EventsFilter.Upcoming;
+}
+
+export default async function EventsPage({
+  searchParams
+}: {
+  searchParams: Promise<{ filter?: string }>;
+}) {
+  const { filter: filterParam } = await searchParams;
+  const filter = getValidFilter(filterParam);
+  const events = await getEvents(filter);
 
   return (
     <AuthGuard>
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-foreground">Events</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-foreground">Events</h1>
+          <EventsFilterDropdown filter={filter} />
+        </div>
 
         {events.length === 0 ? (
           <div className="bg-card rounded-lg shadow border border-border p-8 text-center">
