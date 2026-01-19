@@ -148,7 +148,7 @@ export default function NewCirclePage() {
               />
             </div>
 
-            <div className="flex gap-6 items-center justify-end">
+            <div className="flex gap-4 items-center justify-end">
               <Button type="button" variant="outline" onClick={() => router.back()}>
                 Cancel
               </Button>
