@@ -8,29 +8,105 @@ import { actionClient } from '@/lib/server-actions/client';
 
 type EventInsert = TablesInsert<'events'>;
 
-const importEventsSchema = z.object({
-  events: z.array(
-    z.object({
-      name: z.string().min(1),
-      description: z.string(),
-      url: z.url().optional(),
-      starts_at: z.string(),
-      ends_at: z.string()
-    })
-  )
+const eventSchema = z.object({
+  name: z.string().min(1),
+  description: z.string(),
+  url: z.string().optional(),
+  starts_at: z.string(),
+  ends_at: z.string()
 });
+
+const importEventsSchema = z.object({
+  events: z.array(eventSchema)
+});
+
+export type ImportStatus = 'import' | 'skip' | 'invalid';
+
+export type EventDryRunResult = {
+  index: number;
+  status: ImportStatus;
+  reason?: string;
+};
+
+export const dryRunImportEvents = actionClient
+  .inputSchema(importEventsSchema)
+  .action(async ({ parsedInput }) => {
+    const supabase = await createDatabaseServerClient();
+    const results: EventDryRunResult[] = [];
+
+    for (let i = 0; i < parsedInput.events.length; i++) {
+      const event = parsedInput.events[i];
+
+      const urlValidation = z.string().url().safeParse(event.url);
+      if (event.url && !urlValidation.success) {
+        results.push({
+          index: i,
+          status: 'invalid',
+          reason: 'Invalid URL format'
+        });
+        continue;
+      }
+
+      const startsAt = new Date(event.starts_at);
+      const endsAt = new Date(event.ends_at);
+      if (Number.isNaN(startsAt.getTime()) || Number.isNaN(endsAt.getTime())) {
+        results.push({
+          index: i,
+          status: 'invalid',
+          reason: 'Invalid date format'
+        });
+        continue;
+      }
+
+      if (endsAt < startsAt) {
+        results.push({
+          index: i,
+          status: 'invalid',
+          reason: 'End date is before start date'
+        });
+        continue;
+      }
+
+      const { data: existing } = await supabase
+        .from('events')
+        .select('id')
+        .eq('name', event.name)
+        .eq('starts_at', event.starts_at)
+        .single();
+
+      if (existing) {
+        results.push({
+          index: i,
+          status: 'skip',
+          reason: 'Event already exists with same name and start date'
+        });
+        continue;
+      }
+
+      results.push({
+        index: i,
+        status: 'import'
+      });
+    }
+
+    return { results };
+  });
+
+type SkippedEvent = {
+  name: string;
+  reason: string;
+};
 
 export const importEvents = actionClient
   .inputSchema(importEventsSchema)
   .action(async ({ parsedInput }) => {
     const supabase = await createDatabaseServerClient();
     let inserted = 0;
-    let skipped = 0;
+    const skippedEvents: SkippedEvent[] = [];
     const errors: string[] = [];
 
     for (const event of parsedInput.events) {
       try {
-        // Check if event already exists
         const { data: existing } = await supabase
           .from('events')
           .select('id')
@@ -39,7 +115,10 @@ export const importEvents = actionClient
           .single();
 
         if (existing) {
-          skipped++;
+          skippedEvents.push({
+            name: event.name,
+            reason: `Event already exists with same name and start date (${event.starts_at})`
+          });
           continue;
         }
 
@@ -68,5 +147,5 @@ export const importEvents = actionClient
 
     revalidatePath('/houston/events');
 
-    return { inserted, skipped, errors };
+    return { inserted, skipped: skippedEvents.length, skippedEvents, errors };
   });
