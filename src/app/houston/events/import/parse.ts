@@ -1,3 +1,4 @@
+import { addDays } from 'date-fns';
 import { parseDateRange } from '@/lib/dates/parse';
 
 export function parseRecurringEvent(dateRange: string): { starts_at: string; ends_at: string } {
@@ -23,23 +24,21 @@ export function parseRecurringEvent(dateRange: string): { starts_at: string; end
     throw new Error(`Unknown day: ${dayName}`);
   }
 
-  const today = new Date();
-  const currentDay = today.getDay();
+  const now = new Date();
+  const todayUTC = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0)
+  );
+  const currentDay = todayUTC.getUTCDay();
   let daysUntilNext = (targetDay - currentDay + 7) % 7;
   if (daysUntilNext === 0) {
     daysUntilNext = 7;
   }
 
-  const nextOccurrence = new Date(today);
-  nextOccurrence.setDate(today.getDate() + daysUntilNext);
-  nextOccurrence.setHours(0, 0, 0, 0);
-
-  const endDate = new Date(nextOccurrence);
-  endDate.setHours(23, 59, 59, 999);
+  const nextOccurrence = addDays(todayUTC, daysUntilNext);
 
   return {
     starts_at: nextOccurrence.toISOString(),
-    ends_at: endDate.toISOString()
+    ends_at: nextOccurrence.toISOString()
   };
 }
 

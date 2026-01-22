@@ -1,3 +1,5 @@
+import { createUTCDate } from './create';
+
 const monthMap: Record<string, number> = {
   january: 0,
   february: 1,
@@ -39,8 +41,7 @@ export function parseDateRange(
     throw new Error(`Invalid day: ${startDay}`);
   }
 
-  const startDate = new Date(baseYear, startMonth, startDay);
-  startDate.setHours(0, 0, 0, 0);
+  const startDate = createUTCDate(baseYear, startMonth, startDay);
 
   let endDate: Date;
   if (endPart) {
@@ -58,18 +59,16 @@ export function parseDateRange(
         throw new Error(`Invalid day: ${endDay}`);
       }
 
-      endDate = new Date(baseYear, endMonth, endDay);
+      endDate = createUTCDate(baseYear, endMonth, endDay);
     } else {
       const endDay = Number.parseInt(endPart, 10);
       if (Number.isNaN(endDay) || endDay < 1 || endDay > 31) {
         throw new Error(`Invalid end day: ${endPart}`);
       }
-      endDate = new Date(baseYear, startMonth, endDay);
+      endDate = createUTCDate(baseYear, startMonth, endDay);
     }
-    endDate.setHours(23, 59, 59, 999);
   } else {
     endDate = new Date(startDate);
-    endDate.setHours(23, 59, 59, 999);
   }
 
   return {

@@ -22,21 +22,22 @@ describe('parseRecurringEvent', () => {
       const startDate = new Date(result.starts_at);
       const endDate = new Date(result.ends_at);
 
-      expect(startDate.getDay()).toBe(6);
-      expect(startDate.getDate()).toBe(4);
-      expect(startDate.getMonth()).toBe(0);
-      expect(startDate.getFullYear()).toBe(2025);
-      expect(startDate.getHours()).toBe(0);
-      expect(startDate.getMinutes()).toBe(0);
-      expect(startDate.getSeconds()).toBe(0);
+      expect(startDate.getUTCDay()).toBe(6);
+      expect(startDate.getUTCDate()).toBe(4);
+      expect(startDate.getUTCMonth()).toBe(0);
+      expect(startDate.getUTCFullYear()).toBe(2025);
+      expect(startDate.getUTCHours()).toBe(0);
+      expect(startDate.getUTCMinutes()).toBe(0);
+      expect(startDate.getUTCSeconds()).toBe(0);
 
-      expect(endDate.getDay()).toBe(6);
-      expect(endDate.getDate()).toBe(4);
-      expect(endDate.getMonth()).toBe(0);
-      expect(endDate.getFullYear()).toBe(2025);
-      expect(endDate.getHours()).toBe(23);
-      expect(endDate.getMinutes()).toBe(59);
-      expect(endDate.getSeconds()).toBe(59);
+      expect(endDate.getUTCDay()).toBe(6);
+      expect(endDate.getUTCDate()).toBe(4);
+      expect(endDate.getUTCMonth()).toBe(0);
+      expect(endDate.getUTCFullYear()).toBe(2025);
+      expect(endDate.getUTCHours()).toBe(0);
+      expect(endDate.getUTCMinutes()).toBe(0);
+      expect(endDate.getUTCSeconds()).toBe(0);
+      expect(result.starts_at).toBe(result.ends_at);
     });
 
     it('should parse Every Sunday and return next Sunday', () => {
@@ -44,8 +45,8 @@ describe('parseRecurringEvent', () => {
       const result = parseRecurringEvent('Every Sunday');
       const startDate = new Date(result.starts_at);
 
-      expect(startDate.getDay()).toBe(0);
-      expect(startDate.getDate()).toBe(5);
+      expect(startDate.getUTCDay()).toBe(0);
+      expect(startDate.getUTCDate()).toBe(5);
     });
 
     it('should parse Every Monday and return next Monday', () => {
@@ -53,8 +54,8 @@ describe('parseRecurringEvent', () => {
       const result = parseRecurringEvent('Every Monday');
       const startDate = new Date(result.starts_at);
 
-      expect(startDate.getDay()).toBe(1);
-      expect(startDate.getDate()).toBe(6);
+      expect(startDate.getUTCDay()).toBe(1);
+      expect(startDate.getUTCDate()).toBe(6);
     });
 
     it('should parse Every Tuesday and return next Tuesday', () => {
@@ -62,8 +63,8 @@ describe('parseRecurringEvent', () => {
       const result = parseRecurringEvent('Every Tuesday');
       const startDate = new Date(result.starts_at);
 
-      expect(startDate.getDay()).toBe(2);
-      expect(startDate.getDate()).toBe(7);
+      expect(startDate.getUTCDay()).toBe(2);
+      expect(startDate.getUTCDate()).toBe(7);
     });
 
     it('should parse Every Wednesday and return next Wednesday', () => {
@@ -71,8 +72,8 @@ describe('parseRecurringEvent', () => {
       const result = parseRecurringEvent('Every Wednesday');
       const startDate = new Date(result.starts_at);
 
-      expect(startDate.getDay()).toBe(3);
-      expect(startDate.getDate()).toBe(8);
+      expect(startDate.getUTCDay()).toBe(3);
+      expect(startDate.getUTCDate()).toBe(8);
     });
 
     it('should parse Every Thursday and return next Thursday', () => {
@@ -80,8 +81,8 @@ describe('parseRecurringEvent', () => {
       const result = parseRecurringEvent('Every Thursday');
       const startDate = new Date(result.starts_at);
 
-      expect(startDate.getDay()).toBe(4);
-      expect(startDate.getDate()).toBe(2);
+      expect(startDate.getUTCDay()).toBe(4);
+      expect(startDate.getUTCDate()).toBe(2);
     });
 
     it('should parse Every Friday and return next Friday', () => {
@@ -89,8 +90,8 @@ describe('parseRecurringEvent', () => {
       const result = parseRecurringEvent('Every Friday');
       const startDate = new Date(result.starts_at);
 
-      expect(startDate.getDay()).toBe(5);
-      expect(startDate.getDate()).toBe(3);
+      expect(startDate.getUTCDay()).toBe(5);
+      expect(startDate.getUTCDate()).toBe(3);
     });
 
     it('should return next week if today is the target day', () => {
@@ -98,8 +99,8 @@ describe('parseRecurringEvent', () => {
       const result = parseRecurringEvent('Every Saturday');
       const startDate = new Date(result.starts_at);
 
-      expect(startDate.getDay()).toBe(6);
-      expect(startDate.getDate()).toBe(11);
+      expect(startDate.getUTCDay()).toBe(6);
+      expect(startDate.getUTCDate()).toBe(11);
     });
 
     it('should handle case insensitive day names', () => {
@@ -117,7 +118,7 @@ describe('parseRecurringEvent', () => {
       const result = parseRecurringEvent('Every Saturday:');
       const startDate = new Date(result.starts_at);
 
-      expect(startDate.getDay()).toBe(6);
+      expect(startDate.getUTCDay()).toBe(6);
     });
   });
 
@@ -158,7 +159,7 @@ describe('parseEventDate', () => {
       const result = parseEventDate('Every Saturday');
       const startDate = new Date(result.starts_at);
 
-      expect(startDate.getDay()).toBe(6);
+      expect(startDate.getUTCDay()).toBe(6);
     });
 
     it('should handle recurring event with colon', () => {
@@ -166,7 +167,7 @@ describe('parseEventDate', () => {
       const result = parseEventDate('Every Saturday:');
       const startDate = new Date(result.starts_at);
 
-      expect(startDate.getDay()).toBe(6);
+      expect(startDate.getUTCDay()).toBe(6);
     });
   });
 
@@ -177,15 +178,16 @@ describe('parseEventDate', () => {
       const startDate = new Date(result.starts_at);
       const endDate = new Date(result.ends_at);
 
-      expect(startDate.getFullYear()).toBe(baseYear);
-      expect(startDate.getMonth()).toBe(0);
-      expect(startDate.getDate()).toBe(15);
-      expect(startDate.getHours()).toBe(0);
+      expect(startDate.getUTCFullYear()).toBe(baseYear);
+      expect(startDate.getUTCMonth()).toBe(0);
+      expect(startDate.getUTCDate()).toBe(15);
+      expect(startDate.getUTCHours()).toBe(0);
 
-      expect(endDate.getFullYear()).toBe(baseYear);
-      expect(endDate.getMonth()).toBe(0);
-      expect(endDate.getDate()).toBe(15);
-      expect(endDate.getHours()).toBe(23);
+      expect(endDate.getUTCFullYear()).toBe(baseYear);
+      expect(endDate.getUTCMonth()).toBe(0);
+      expect(endDate.getUTCDate()).toBe(15);
+      expect(endDate.getUTCHours()).toBe(0);
+      expect(result.starts_at).toBe(result.ends_at);
     });
 
     it('should parse date range', () => {
@@ -194,8 +196,9 @@ describe('parseEventDate', () => {
       const startDate = new Date(result.starts_at);
       const endDate = new Date(result.ends_at);
 
-      expect(startDate.getDate()).toBe(15);
-      expect(endDate.getDate()).toBe(20);
+      expect(startDate.getUTCDate()).toBe(15);
+      expect(endDate.getUTCDate()).toBe(20);
+      expect(endDate.getUTCHours()).toBe(0);
     });
 
     it('should use current year as default baseYear', () => {
@@ -203,7 +206,7 @@ describe('parseEventDate', () => {
       const result = parseEventDate('January 15');
       const startDate = new Date(result.starts_at);
 
-      expect(startDate.getFullYear()).toBe(currentYear);
+      expect(startDate.getUTCFullYear()).toBe(currentYear);
     });
   });
 
@@ -213,7 +216,7 @@ describe('parseEventDate', () => {
       const result = parseEventDate('Every Saturday');
       const startDate = new Date(result.starts_at);
 
-      expect(startDate.getDay()).toBe(6);
+      expect(startDate.getUTCDay()).toBe(6);
     });
 
     it('should handle case insensitive recurring pattern', () => {
@@ -221,7 +224,7 @@ describe('parseEventDate', () => {
       const result = parseEventDate('every saturday');
       const startDate = new Date(result.starts_at);
 
-      expect(startDate.getDay()).toBe(6);
+      expect(startDate.getUTCDay()).toBe(6);
     });
   });
 });
