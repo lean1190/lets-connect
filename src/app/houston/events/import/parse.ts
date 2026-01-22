@@ -1,3 +1,4 @@
+import { UTCDate } from '@date-fns/utc';
 import { addDays } from 'date-fns';
 import { parseDateRange } from '@/lib/dates/parse';
 
@@ -25,9 +26,7 @@ export function parseRecurringEvent(dateRange: string): { starts_at: string; end
   }
 
   const now = new Date();
-  const todayUTC = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0)
-  );
+  const todayUTC = new UTCDate(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
   const currentDay = todayUTC.getUTCDay();
   let daysUntilNext = (targetDay - currentDay + 7) % 7;
   if (daysUntilNext === 0) {

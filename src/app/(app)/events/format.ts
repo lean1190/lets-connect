@@ -1,13 +1,14 @@
+import { UTCDate } from '@date-fns/utc';
 import { isSameDay, isSameYear } from 'date-fns';
 import { format } from 'date-fns/format';
 
 export function formatDate(dateStr: string): string {
-  return format(new Date(dateStr), 'MMM d, yyyy');
+  return format(new UTCDate(dateStr), 'MMM d, yyyy');
 }
 
 export function formatDateRange(startsAt: string, endsAt: string): string {
-  const startDate = new Date(startsAt);
-  const endDate = new Date(endsAt);
+  const startDate = new UTCDate(startsAt);
+  const endDate = new UTCDate(endsAt);
 
   if (isSameDay(startDate, endDate)) {
     return formatDate(startsAt);

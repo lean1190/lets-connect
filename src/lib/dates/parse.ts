@@ -1,4 +1,4 @@
-import { createUTCDate } from './create';
+import { UTCDate } from '@date-fns/utc';
 
 const monthMap: Record<string, number> = {
   january: 0,
@@ -41,9 +41,9 @@ export function parseDateRange(
     throw new Error(`Invalid day: ${startDay}`);
   }
 
-  const startDate = createUTCDate(baseYear, startMonth, startDay);
+  const startDate = new UTCDate(baseYear, startMonth, startDay);
 
-  let endDate: Date;
+  let endDate: UTCDate;
   if (endPart) {
     const endMatch = endPart.match(/^([a-z]+)\s+(-?\d+)$/i);
     if (endMatch) {
@@ -59,16 +59,16 @@ export function parseDateRange(
         throw new Error(`Invalid day: ${endDay}`);
       }
 
-      endDate = createUTCDate(baseYear, endMonth, endDay);
+      endDate = new UTCDate(baseYear, endMonth, endDay);
     } else {
       const endDay = Number.parseInt(endPart, 10);
       if (Number.isNaN(endDay) || endDay < 1 || endDay > 31) {
         throw new Error(`Invalid end day: ${endPart}`);
       }
-      endDate = createUTCDate(baseYear, startMonth, endDay);
+      endDate = new UTCDate(baseYear, startMonth, endDay);
     }
   } else {
-    endDate = new Date(startDate);
+    endDate = new UTCDate(startDate);
   }
 
   return {
