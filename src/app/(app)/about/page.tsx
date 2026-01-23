@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { CtaButton } from '@/components/ui/cta-button';
@@ -10,12 +11,21 @@ export default function AboutPage() {
           <div>
             <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-6">About</h2>
 
-            <div className="space-y-3 mb-4">
-              <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            <div className="space-y-3 mb-4 text-center">
+              <div className="flex justify-center mb-2">
+                <Image
+                  src="/logo.png"
+                  alt="Let's Connect Logo"
+                  width={100}
+                  height={100}
+                  className="w-25 h-25"
+                />
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
                 Let&apos;s connect
               </h3>
 
-              <p className="text-xs text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 A simple and effective way to stay in touch with your entrepreneurial circle.
               </p>
             </div>
