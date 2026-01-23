@@ -24,6 +24,7 @@
     "dependencies:check": "ncu",
     "dependencies:update": "ncu --interactive && npm install && npm run lint",
     "upgrade:next": "npx @next/codemod",
+    "skills": "SKILLS_NO_TELEMETRY=1 && npx skills add vercel-labs/agent-skills",
     "analyze": "next experimental-analyze",
     "prepare": "husky"
   },
