@@ -1,6 +1,6 @@
 'use client';
 
-import { IconEdit, IconExternalLink, IconFilter, IconList } from '@tabler/icons-react';
+import { IconEdit, IconFilter, IconLink, IconList } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useAction } from 'next-safe-action/hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -202,7 +202,7 @@ export function ContactsList({
                       </Link>
                       <Link href={contact.profileLink} target="_blank" rel="noopener noreferrer">
                         <Button size="icon" aria-label="Go to profile">
-                          <IconExternalLink size={18} />
+                          <IconLink size={18} />
                         </Button>
                       </Link>
                     </div>
