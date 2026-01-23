@@ -41,11 +41,23 @@ async function generateIcons() {
     }
 
     try {
-      await sharp(sourcePath)
+      const resizedLogo = await sharp(sourcePath)
         .resize(width, height, {
           fit: 'cover',
           position: 'center'
         })
+        .png()
+        .toBuffer();
+
+      await sharp({
+        create: {
+          width,
+          height,
+          channels: 4,
+          background: '1a1c24'
+        }
+      })
+        .composite([{ input: resizedLogo, gravity: 'center' }])
         .png()
         .toFile(outputPath);
 
