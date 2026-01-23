@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { CtaButton } from '@/components/ui/cta-button';
 import { getContacts } from '@/lib/contacts/get/get';
 import { getContactsListMode } from '@/lib/settings/get/get';
-import { ContactsList } from '../components/contacts-list';
-import PageWithNavigationLayout from '../components/page-with-navigation-layout';
+import { ContactsList } from '../components/contacts/contacts-list';
+import PageWithNavigationLayout from '../components/layouts/page-with-navigation-layout';
 
 export default async function ContactsPage() {
   const [contacts, settings] = await Promise.all([getContacts(), getContactsListMode()]);

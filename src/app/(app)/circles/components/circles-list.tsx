@@ -5,7 +5,7 @@ import { IconCircles } from '@tabler/icons-react';
 import { format } from 'date-fns';
 import Link from 'next/link';
 import { useState } from 'react';
-import { FavoriteButton } from '@/components/favorite-button';
+import { FavoriteButton } from '@/app/(app)/components/favorite-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';

@@ -3,7 +3,7 @@
 import { IconStar } from '@tabler/icons-react';
 import { useOptimisticAction } from 'next-safe-action/hooks';
 import { toggleFavorite } from '@/lib/favorites/actions/toggle';
-import { Button } from './ui/button';
+import { Button } from '../../../components/ui/button';
 
 type Props = {
   id: string;

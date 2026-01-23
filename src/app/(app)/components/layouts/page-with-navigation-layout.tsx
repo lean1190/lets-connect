@@ -1,5 +1,5 @@
-import AppHeader from './app-header';
-import AppNavigation from './app-navigation';
+import AppHeader from '../app-header';
+import AppNavigation from '../app-navigation';
 
 type Props = {
   title?: string;

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { CtaButton } from '@/components/ui/cta-button';
 import { getCircles } from '@/lib/circles/get/get';
 import { AppRoute } from '@/lib/constants/navigation';
-import PageWithNavigationLayout from '../components/page-with-navigation-layout';
+import PageWithNavigationLayout from '../components/layouts/page-with-navigation-layout';
 import { CirclesList } from './components/circles-list';
 
 export default async function CirclesPage() {

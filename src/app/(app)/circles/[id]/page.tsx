@@ -1,5 +1,5 @@
 import { getCircleById } from '@/lib/circles/get/by-id';
-import PageWithBackButtonLayout from '../../components/page-with-back-button-layout';
+import PageWithBackButtonLayout from '../../components/layouts/page-with-back-button-layout';
 import { EditCirclePageClient } from './page-client';
 
 export default async function EditCirclePage({ params }: { params: Promise<{ id: string }> }) {

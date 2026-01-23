@@ -4,7 +4,6 @@ import { IconEdit, IconFilter, IconLink, IconList } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useAction } from 'next-safe-action/hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ContactCard } from '@/components/contact-card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -16,8 +15,9 @@ import {
 } from '@/lib/contacts/date-grouping';
 import { searchContacts } from '@/lib/contacts/search';
 import type { ContactOutput } from '@/lib/contacts/types';
+import { ContactsListMode } from '@/lib/settings/types';
 import { updateSettingsAction } from '@/lib/settings/update/actions/update';
-import { ContactsListMode } from '../../../lib/settings/types';
+import { ContactCard } from './contact-card';
 
 type Props = {
   contacts: ContactOutput[];

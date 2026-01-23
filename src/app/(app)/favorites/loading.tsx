@@ -1,4 +1,4 @@
-import PageWithNavigationLayout from '../components/page-with-navigation-layout';
+import PageWithNavigationLayout from '../components/layouts/page-with-navigation-layout';
 
 export default function FavoritesLoading() {
   return (

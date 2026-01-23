@@ -1,4 +1,4 @@
-import BackButton from '../components/back-button';
+import BackButton from '../components/layouts/back-button';
 
 export default function ScanLayout({ children }: { children: React.ReactNode }) {
   return (

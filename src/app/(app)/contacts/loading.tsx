@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import PageWithNavigationLayout from '../components/page-with-navigation-layout';
+import PageWithNavigationLayout from '../components/layouts/page-with-navigation-layout';
 
 export default function ContactsLoading() {
   return (

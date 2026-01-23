@@ -1,7 +1,7 @@
 import { IconStar } from '@tabler/icons-react';
 import { getFavorites } from '@/lib/favorites/get';
-import PageWithNavigationLayout from '../components/page-with-navigation-layout';
-import FavoritesGallery from './favorites-gallery';
+import PageWithNavigationLayout from '../components/layouts/page-with-navigation-layout';
+import FavoritesGallery from './components/favorites-gallery';
 
 export default async function FavoritesPage() {
   const favorites = await getFavorites();
