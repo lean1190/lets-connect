@@ -1,3 +1,4 @@
+import { UTCDate } from '@date-fns/utc';
 import type { Event } from '@/lib/events/types';
 
 export function categorizeEvents(events: Event[]): {
@@ -6,20 +7,20 @@ export function categorizeEvents(events: Event[]): {
   nextMonth: Event[];
   upcoming: Event[];
 } {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const now = new UTCDate();
+  const today = new UTCDate(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
 
-  const endOfWeek = new Date(today);
-  endOfWeek.setDate(today.getDate() + 7);
+  const endOfWeek = new UTCDate(today);
+  endOfWeek.setUTCDate(today.getUTCDate() + 7);
 
-  const endOfThisMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  endOfThisMonth.setHours(23, 59, 59, 999);
+  const endOfThisMonth = new UTCDate(today.getUTCFullYear(), today.getUTCMonth() + 1, 0);
+  endOfThisMonth.setUTCHours(23, 59, 59, 999);
 
-  const startOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-  startOfNextMonth.setHours(0, 0, 0, 0);
+  const startOfNextMonth = new UTCDate(today.getUTCFullYear(), today.getUTCMonth() + 1, 1);
+  startOfNextMonth.setUTCHours(0, 0, 0, 0);
 
-  const endOfNextMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
-  endOfNextMonth.setHours(23, 59, 59, 999);
+  const endOfNextMonth = new UTCDate(today.getUTCFullYear(), today.getUTCMonth() + 2, 0);
+  endOfNextMonth.setUTCHours(23, 59, 59, 999);
 
   const thisWeek: Event[] = [];
   const thisMonth: Event[] = [];
@@ -27,8 +28,8 @@ export function categorizeEvents(events: Event[]): {
   const upcoming: Event[] = [];
 
   for (const event of events) {
-    const eventDate = new Date(event.starts_at);
-    eventDate.setHours(0, 0, 0, 0);
+    const eventDate = new UTCDate(event.starts_at);
+    eventDate.setUTCHours(0, 0, 0, 0);
 
     if (eventDate < today) continue;
 

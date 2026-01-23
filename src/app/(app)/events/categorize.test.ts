@@ -35,56 +35,72 @@ describe('categorizeEvents', () => {
   it('should return empty arrays when no events provided', () => {
     const result = categorizeEvents([]);
 
-    expect(result.thisWeek).toEqual([]);
-    expect(result.thisMonth).toEqual([]);
-    expect(result.nextMonth).toEqual([]);
-    expect(result.upcoming).toEqual([]);
+    expect(result).toStrictEqual({
+      thisWeek: [],
+      thisMonth: [],
+      nextMonth: [],
+      upcoming: []
+    });
   });
 
   it('should filter out past events', () => {
     const pastEvent = createEvent(subDays(FIXED_DATE, 1), 'Past Event');
     const result = categorizeEvents([pastEvent]);
 
-    expect(result.thisWeek).toEqual([]);
-    expect(result.thisMonth).toEqual([]);
-    expect(result.nextMonth).toEqual([]);
-    expect(result.upcoming).toEqual([]);
+    expect(result).toStrictEqual({
+      thisWeek: [],
+      thisMonth: [],
+      nextMonth: [],
+      upcoming: []
+    });
   });
 
   it('should categorize event happening today as thisWeek', () => {
     const event = createEvent(FIXED_DATE, 'Today Event');
     const result = categorizeEvents([event]);
 
-    expect(result.thisWeek).toHaveLength(1);
-    expect(result.thisWeek[0].name).toBe('Today Event');
-    expect(result.thisMonth).toEqual([]);
-    expect(result.nextMonth).toEqual([]);
-    expect(result.upcoming).toEqual([]);
+    expect(result).toStrictEqual({
+      thisWeek: [event],
+      thisMonth: [],
+      nextMonth: [],
+      upcoming: []
+    });
   });
 
   it('should categorize event within 7 days as thisWeek', () => {
     const event = createEvent(addDays(FIXED_DATE, 3), 'This Week Event');
     const result = categorizeEvents([event]);
 
-    expect(result.thisWeek).toHaveLength(1);
-    expect(result.thisWeek[0].name).toBe('This Week Event');
+    expect(result).toStrictEqual({
+      thisWeek: [event],
+      thisMonth: [],
+      nextMonth: [],
+      upcoming: []
+    });
   });
 
   it('should categorize event exactly 7 days from today as thisWeek', () => {
     const event = createEvent(addDays(FIXED_DATE, 7), 'Week Boundary Event');
     const result = categorizeEvents([event]);
 
-    expect(result.thisWeek).toHaveLength(1);
-    expect(result.thisWeek[0].name).toBe('Week Boundary Event');
+    expect(result).toStrictEqual({
+      thisWeek: [event],
+      thisMonth: [],
+      nextMonth: [],
+      upcoming: []
+    });
   });
 
   it('should categorize event after this week but within current month as thisMonth', () => {
     const event = createEvent(addDays(FIXED_DATE, 10), 'This Month Event');
     const result = categorizeEvents([event]);
 
-    expect(result.thisWeek).toEqual([]);
-    expect(result.thisMonth).toHaveLength(1);
-    expect(result.thisMonth[0].name).toBe('This Month Event');
+    expect(result).toStrictEqual({
+      thisWeek: [],
+      thisMonth: [event],
+      nextMonth: [],
+      upcoming: []
+    });
   });
 
   it('should categorize event on last day of current month as thisMonth', () => {
@@ -93,8 +109,12 @@ describe('categorizeEvents', () => {
     const event = createEvent(lastDayOfMonth, 'Last Day Event');
     const result = categorizeEvents([event]);
 
-    expect(result.thisMonth).toHaveLength(1);
-    expect(result.thisMonth[0].name).toBe('Last Day Event');
+    expect(result).toStrictEqual({
+      thisWeek: [],
+      thisMonth: [event],
+      nextMonth: [],
+      upcoming: []
+    });
   });
 
   it('should categorize event in next month as nextMonth', () => {
@@ -103,10 +123,12 @@ describe('categorizeEvents', () => {
     const event = createEvent(nextMonthDate, 'Next Month Event');
     const result = categorizeEvents([event]);
 
-    expect(result.thisWeek).toEqual([]);
-    expect(result.thisMonth).toEqual([]);
-    expect(result.nextMonth).toHaveLength(1);
-    expect(result.nextMonth[0].name).toBe('Next Month Event');
+    expect(result).toStrictEqual({
+      thisWeek: [],
+      thisMonth: [],
+      nextMonth: [event],
+      upcoming: []
+    });
   });
 
   it('should categorize event on last day of next month as nextMonth', () => {
@@ -115,8 +137,12 @@ describe('categorizeEvents', () => {
     const event = createEvent(lastDayOfNextMonth, 'Last Day Next Month Event');
     const result = categorizeEvents([event]);
 
-    expect(result.nextMonth).toHaveLength(1);
-    expect(result.nextMonth[0].name).toBe('Last Day Next Month Event');
+    expect(result).toStrictEqual({
+      thisWeek: [],
+      thisMonth: [],
+      nextMonth: [event],
+      upcoming: []
+    });
   });
 
   it('should categorize event beyond next month as upcoming', () => {
@@ -124,11 +150,12 @@ describe('categorizeEvents', () => {
     const event = createEvent(futureDate, 'Upcoming Event');
     const result = categorizeEvents([event]);
 
-    expect(result.thisWeek).toEqual([]);
-    expect(result.thisMonth).toEqual([]);
-    expect(result.nextMonth).toEqual([]);
-    expect(result.upcoming).toHaveLength(1);
-    expect(result.upcoming[0].name).toBe('Upcoming Event');
+    expect(result).toStrictEqual({
+      thisWeek: [],
+      thisMonth: [],
+      nextMonth: [],
+      upcoming: [event]
+    });
   });
 
   it('should sort events within each category by date', () => {
@@ -137,10 +164,12 @@ describe('categorizeEvents', () => {
     const event3 = createEvent(addDays(FIXED_DATE, 1), 'Event 3');
     const result = categorizeEvents([event1, event2, event3]);
 
-    expect(result.thisWeek).toHaveLength(3);
-    expect(result.thisWeek[0].name).toBe('Event 3');
-    expect(result.thisWeek[1].name).toBe('Event 2');
-    expect(result.thisWeek[2].name).toBe('Event 1');
+    expect(result).toStrictEqual({
+      thisWeek: [event3, event2, event1],
+      thisMonth: [],
+      nextMonth: [],
+      upcoming: []
+    });
   });
 
   it('should correctly categorize multiple events across all categories', () => {
@@ -158,14 +187,12 @@ describe('categorizeEvents', () => {
       pastEvent
     ]);
 
-    expect(result.thisWeek).toHaveLength(1);
-    expect(result.thisWeek[0].name).toBe('This Week');
-    expect(result.thisMonth).toHaveLength(1);
-    expect(result.thisMonth[0].name).toBe('This Month');
-    expect(result.nextMonth).toHaveLength(1);
-    expect(result.nextMonth[0].name).toBe('Next Month');
-    expect(result.upcoming).toHaveLength(1);
-    expect(result.upcoming[0].name).toBe('Upcoming');
+    expect(result).toStrictEqual({
+      thisWeek: [thisWeekEvent],
+      thisMonth: [thisMonthEvent],
+      nextMonth: [nextMonthEvent],
+      upcoming: [upcomingEvent]
+    });
   });
 
   it('should handle events at exact boundary between thisWeek and thisMonth', () => {
@@ -177,10 +204,12 @@ describe('categorizeEvents', () => {
 
     const result = categorizeEvents([event1, event2]);
 
-    expect(result.thisWeek).toHaveLength(1);
-    expect(result.thisWeek[0].name).toBe('Week Boundary');
-    expect(result.thisMonth).toHaveLength(1);
-    expect(result.thisMonth[0].name).toBe('After Week');
+    expect(result).toStrictEqual({
+      thisWeek: [event1],
+      thisMonth: [event2],
+      nextMonth: [],
+      upcoming: []
+    });
   });
 
   it('should handle events at exact boundary between thisMonth and nextMonth', () => {
@@ -194,10 +223,12 @@ describe('categorizeEvents', () => {
 
     const result = categorizeEvents([event1, event2]);
 
-    expect(result.thisMonth).toHaveLength(1);
-    expect(result.thisMonth[0].name).toBe('Last Day This Month');
-    expect(result.nextMonth).toHaveLength(1);
-    expect(result.nextMonth[0].name).toBe('First Day Next Month');
+    expect(result).toStrictEqual({
+      thisWeek: [],
+      thisMonth: [event1],
+      nextMonth: [event2],
+      upcoming: []
+    });
   });
 
   it('should handle events at exact boundary between nextMonth and upcoming', () => {
@@ -211,10 +242,12 @@ describe('categorizeEvents', () => {
 
     const result = categorizeEvents([event1, event2]);
 
-    expect(result.nextMonth).toHaveLength(1);
-    expect(result.nextMonth[0].name).toBe('Last Day Next Month');
-    expect(result.upcoming).toHaveLength(1);
-    expect(result.upcoming[0].name).toBe('After Next Month');
+    expect(result).toStrictEqual({
+      thisWeek: [],
+      thisMonth: [],
+      nextMonth: [event1],
+      upcoming: [event2]
+    });
   });
 
   it('should maintain event order when multiple events have same date', () => {
@@ -225,6 +258,115 @@ describe('categorizeEvents', () => {
 
     const result = categorizeEvents([event1, event2, event3]);
 
-    expect(result.thisWeek).toHaveLength(3);
+    expect(result).toStrictEqual({
+      thisWeek: [event1, event2, event3],
+      thisMonth: [],
+      nextMonth: [],
+      upcoming: []
+    });
+  });
+
+  describe('UTC timezone consistency', () => {
+    it('should not show event on tomorrow UTC as today when today is previous day', () => {
+      const todayUTC = new Date('2026-01-23T12:00:00.000Z');
+      vi.setSystemTime(todayUTC);
+
+      const tomorrowEvent = createEvent(new Date('2026-01-24T00:00:00.000Z'), 'Tomorrow Event');
+      const result = categorizeEvents([tomorrowEvent]);
+
+      expect(result).toStrictEqual({
+        thisWeek: [tomorrowEvent],
+        thisMonth: [],
+        nextMonth: [],
+        upcoming: []
+      });
+    });
+
+    it('should filter out past events based on UTC date, not local timezone', () => {
+      const todayUTC = new Date('2026-01-23T12:00:00.000Z');
+      vi.setSystemTime(todayUTC);
+
+      const yesterdayEvent = createEvent(new Date('2026-01-22T23:59:59.000Z'), 'Yesterday Event');
+      const result = categorizeEvents([yesterdayEvent]);
+
+      expect(result).toStrictEqual({
+        thisWeek: [],
+        thisMonth: [],
+        nextMonth: [],
+        upcoming: []
+      });
+    });
+
+    it('should correctly categorize event at UTC midnight on today', () => {
+      const todayUTC = new Date('2026-01-23T12:00:00.000Z');
+      vi.setSystemTime(todayUTC);
+
+      const todayEvent = createEvent(new Date('2026-01-23T00:00:00.000Z'), 'Today Event');
+      const result = categorizeEvents([todayEvent]);
+
+      expect(result).toStrictEqual({
+        thisWeek: [todayEvent],
+        thisMonth: [],
+        nextMonth: [],
+        upcoming: []
+      });
+    });
+
+    it('should correctly categorize event at UTC midnight on tomorrow', () => {
+      const todayUTC = new Date('2026-01-23T12:00:00.000Z');
+      vi.setSystemTime(todayUTC);
+
+      const tomorrowEvent = createEvent(new Date('2026-01-24T00:00:00.000Z'), 'Tomorrow Event');
+      const result = categorizeEvents([tomorrowEvent]);
+
+      expect(result).toStrictEqual({
+        thisWeek: [tomorrowEvent],
+        thisMonth: [],
+        nextMonth: [],
+        upcoming: []
+      });
+    });
+
+    it('should handle events consistently regardless of local timezone offset', () => {
+      const todayUTC = new Date('2026-01-23T00:00:00.000Z');
+      vi.setSystemTime(todayUTC);
+
+      const eventSameDay = createEvent(new Date('2026-01-23T00:00:00.000Z'), 'Same Day');
+      const eventNextDay = createEvent(new Date('2026-01-24T00:00:00.000Z'), 'Next Day');
+      const eventPreviousDay = createEvent(new Date('2026-01-22T00:00:00.000Z'), 'Previous Day');
+
+      const result = categorizeEvents([eventSameDay, eventNextDay, eventPreviousDay]);
+
+      expect(result).toStrictEqual({
+        thisWeek: [eventSameDay, eventNextDay],
+        thisMonth: [],
+        nextMonth: [],
+        upcoming: []
+      });
+    });
+
+    it('should correctly handle the specific bug scenario: event on 2026-01-24 when today is 2026-01-23', () => {
+      const todayUTC = new Date('2026-01-23T12:00:00.000Z');
+      vi.setSystemTime(todayUTC);
+
+      const event = {
+        id: 'bcc0a444-da77-4079-9cf4-4bedf5923f25',
+        name: 'Test Event',
+        description: null,
+        url: 'https://example.com',
+        starts_at: '2026-01-24T00:00:00.000Z',
+        ends_at: '2026-01-24T00:00:00.000Z',
+        created_at: '2026-01-23T00:00:00.000Z'
+      };
+
+      const result = categorizeEvents([event]);
+
+      expect(result).toStrictEqual({
+        thisWeek: [event],
+        thisMonth: [],
+        nextMonth: [],
+        upcoming: []
+      });
+    });
   });
 });
