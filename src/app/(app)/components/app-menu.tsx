@@ -80,20 +80,7 @@ export default function AppMenu({ user, settings }: Props) {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Image
-                  src="/logo/light.png"
-                  alt="Let's Connect Logo"
-                  width={32}
-                  height={32}
-                  className="dark:hidden"
-                />
-                <Image
-                  src="/logo/dark.png"
-                  alt="Let's Connect Logo"
-                  width={32}
-                  height={32}
-                  className="hidden dark:block"
-                />
+                <Image src="/logo.png" alt="Let's Connect Logo" width={32} height={32} />
               </div>
               <h2 className="text-lg font-semibold">Let&apos;s connect</h2>
             </div>

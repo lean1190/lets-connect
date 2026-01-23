@@ -20,6 +20,7 @@
     "supabase:types": "source .env.local && npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema public > src/lib/database/types.ts",
     "supabase:login": "npx supabase login",
     "generate:splash": "tsx scripts/generate-splash-images.ts",
+    "generate:icons": "tsx scripts/generate-icons.ts",
     "dependencies:check": "ncu",
     "dependencies:update": "ncu --interactive && npm install && npm run lint",
     "upgrade:next": "npx @next/codemod",

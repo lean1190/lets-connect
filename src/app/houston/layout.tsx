@@ -12,22 +12,7 @@ export default function HoustonLayout({ children }: { children: React.ReactNode 
             <div className="flex justify-between items-center py-2">
               <div className="flex items-center gap-1">
                 <Link href={'/'}>
-                  <Image
-                    src="/logo/light.png"
-                    alt="Logo"
-                    width={40}
-                    height={40}
-                    priority={false}
-                    className="dark:hidden"
-                  />
-                  <Image
-                    src="/logo/dark.png"
-                    alt="Logo"
-                    width={40}
-                    height={40}
-                    priority={false}
-                    className="hidden dark:block"
-                  />
+                  <Image src="/logo.png" alt="Logo" width={40} height={40} priority={false} />
                 </Link>
                 <div className="text-sm text-muted-foreground">Admin Dashboard</div>
               </div>

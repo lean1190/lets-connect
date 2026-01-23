@@ -39,7 +39,7 @@ export default async function SigninPage() {
               <div className="relative text-center">
                 <div className="flex justify-center">
                   <Image
-                    src="/logo/dark.png"
+                    src="/logo.png"
                     alt="Let's Connect Logo"
                     width={160}
                     height={160}
