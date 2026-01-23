@@ -1,8 +1,7 @@
 'use client';
 
 import { IconStar } from '@tabler/icons-react';
-import { useAction } from 'next-safe-action/hooks';
-import { useState } from 'react';
+import { useOptimisticAction } from 'next-safe-action/hooks';
 import { toggleFavorite } from '@/lib/favorites/actions/toggle';
 import { Button } from './ui/button';
 
@@ -13,21 +12,14 @@ type Props = {
 };
 
 export function FavoriteButton({ id, type, initialFavorite }: Props) {
-  const [isFavorite, setIsFavorite] = useState(initialFavorite);
-
-  const { execute, status } = useAction(toggleFavorite, {
-    onSuccess: ({ data }) => {
-      if (data) {
-        setIsFavorite(data.favorite);
-      }
-    }
+  const { execute, optimisticState, isPending } = useOptimisticAction(toggleFavorite, {
+    currentState: initialFavorite,
+    updateFn: (_state, input) => input.favorite
   });
 
   const handleToggle = () => {
-    execute({ id, type, favorite: !isFavorite });
+    execute({ id, type, favorite: !optimisticState });
   };
-
-  const isLoading = status === 'executing';
 
   return (
     <Button
@@ -35,15 +27,17 @@ export function FavoriteButton({ id, type, initialFavorite }: Props) {
       variant="ghost"
       size="icon"
       onClick={handleToggle}
-      disabled={isLoading}
+      disabled={isPending}
       className={`transition-all ${
-        isFavorite ? 'text-amber-500 hover:text-amber-600' : 'text-gray-400 hover:text-amber-500'
+        optimisticState
+          ? 'text-amber-500 hover:text-amber-600'
+          : 'text-gray-400 hover:text-amber-500'
       }`}
-      aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+      aria-label={optimisticState ? 'Remove from favorites' : 'Add to favorites'}
     >
       <IconStar
-        className={`w-5 h-5 transition-all ${isLoading ? 'animate-pulse' : ''}`}
-        fill={isFavorite ? 'currentColor' : 'none'}
+        className={`w-5 h-5 transition-all ${isPending ? 'animate-pulse' : ''}`}
+        fill={optimisticState ? 'currentColor' : 'none'}
         stroke={2}
       />
     </Button>
