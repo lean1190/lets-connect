@@ -14,48 +14,22 @@ import {
   filterContactsByDate,
   groupContactsByDate
 } from '@/lib/contacts/date-grouping';
+import { searchContacts } from '@/lib/contacts/search';
 import type { ContactOutput } from '@/lib/contacts/types';
 import { updateSettingsAction } from '@/lib/settings/update/actions/update';
 import { ContactsListMode } from '../../../lib/settings/types';
 
-type ContactsListProps = {
+type Props = {
   contacts: ContactOutput[];
   showCirclesCount?: boolean;
   initialListMode?: ContactsListMode;
 };
 
-function searchContacts(contacts: ContactOutput[], query: string): ContactOutput[] {
-  if (!query.trim()) {
-    return contacts;
-  }
-
-  const lowerQuery = query.toLowerCase().trim();
-
-  return contacts.filter((contact) => {
-    // Search in name
-    if (contact.name.toLowerCase().includes(lowerQuery)) {
-      return true;
-    }
-
-    // Search in reason
-    if (contact.reason.toLowerCase().includes(lowerQuery)) {
-      return true;
-    }
-
-    // Search in circle names
-    if (contact.circles?.some((circle) => circle.name.toLowerCase().includes(lowerQuery))) {
-      return true;
-    }
-
-    return false;
-  });
-}
-
 export function ContactsList({
   contacts,
   showCirclesCount = true,
   initialListMode = ContactsListMode.Card
-}: ContactsListProps) {
+}: Props) {
   const [filter, setFilter] = useState<DateFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -72,17 +46,9 @@ export function ContactsList({
     executeUpdateSettings({ contactsListMode: newMode });
   }, [isCompactView, executeUpdateSettings]);
 
-  const sortedContacts = useMemo(
-    () =>
-      [...contacts].sort((a, b) => {
-        return new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime();
-      }),
-    [contacts]
-  );
-
   const dateFilteredContacts = useMemo(
-    () => filterContactsByDate(sortedContacts, filter),
-    [filter, sortedContacts]
+    () => filterContactsByDate(contacts, filter),
+    [filter, contacts]
   );
   const filteredContacts = searchContacts(dateFilteredContacts, searchQuery);
   const groupedContacts = groupContactsByDate(filteredContacts);

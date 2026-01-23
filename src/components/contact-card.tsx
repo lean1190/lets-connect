@@ -6,20 +6,12 @@ import { Card, CardContent } from '@/components/ui/card';
 import { AppRoute } from '@/lib/constants/navigation';
 import type { ContactOutput } from '@/lib/contacts/types';
 
-type ContactCardProps = {
+type Props = {
   contact: ContactOutput;
   showCirclesCount?: boolean;
 };
 
-export function ContactCard({ contact, showCirclesCount = true }: ContactCardProps) {
-  const formatDate = (dateString: string) => {
-    try {
-      return format(new Date(dateString), 'MMM d, yyyy');
-    } catch {
-      return 'Unknown date';
-    }
-  };
-
+export function ContactCard({ contact, showCirclesCount = true }: Props) {
   return (
     <Card className="hover:border-white/30 transition-all relative">
       <div className="absolute top-4 right-4">
@@ -39,7 +31,7 @@ export function ContactCard({ contact, showCirclesCount = true }: ContactCardPro
               Connected on
             </div>
             <div className="text-lg font-semibold text-gray-900 dark:text-foreground">
-              {formatDate(contact.dateAdded)}
+              {format(new Date(contact.dateAdded), 'MMM d, yyyy')}
             </div>
           </div>
           {showCirclesCount && (
