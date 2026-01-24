@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -17,13 +17,12 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { createCircle } from '@/lib/circles/create/actions/create';
-import { getCircles } from '@/lib/circles/get/get';
 import type { Circle } from '@/lib/circles/types';
 import { updateContact } from '@/lib/contacts/update/actions/update';
 import { isExecuting } from '@/lib/server-actions/status';
 import { CircleButton } from '../components/circle-button';
 import { DeleteContactButton } from '../components/delete-contact-button';
+import { useAddCircles } from '../hooks/use-add-circles';
 
 const formSchema = z.object({
   profileLink: z.string().optional(),
@@ -47,20 +46,12 @@ type Props = {
 
 export function EditContactPageClient({ contactId, initialContact, initialCircles }: Props) {
   const router = useRouter();
-  const [allCircles, setAllCircles] = useState<Circle[]>(initialCircles);
-  const [showAddCircle, setShowAddCircle] = useState(false);
-  const [newCircleName, setNewCircleName] = useState('');
 
   const {
     execute: updateContactAction,
     status: updateStatus,
     result: updateResult
   } = useAction(updateContact);
-  const {
-    execute: createCircleAction,
-    status: createCircleStatus,
-    result: createCircleResult
-  } = useAction(createCircle);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -72,42 +63,22 @@ export function EditContactPageClient({ contactId, initialContact, initialCircle
     }
   });
 
+  const {
+    circles,
+    circleForm,
+    circleAction,
+    showAddCircle,
+    setShowAddCircle,
+    hideAddCircleForm,
+    saveNewCircle,
+    toggleCircle
+  } = useAddCircles({
+    initialCircles,
+    getSelectedCircleIds: () => form.getValues('circleIds') || [],
+    setSelectedCircleIds: (ids) => form.setValue('circleIds', ids)
+  });
+
   const selectedCircles = form.watch('circleIds') || [];
-
-  const toggleCircle = (circleId: string) => {
-    const currentCircles = form.getValues('circleIds') || [];
-    const newCircles = currentCircles.includes(circleId)
-      ? currentCircles.filter((cid: string) => cid !== circleId)
-      : [...currentCircles, circleId];
-    form.setValue('circleIds', newCircles);
-  };
-
-  const handleCreateCircle = async () => {
-    if (!newCircleName.trim()) {
-      return;
-    }
-
-    createCircleAction({ name: newCircleName.trim() });
-  };
-
-  useEffect(() => {
-    if (createCircleResult?.serverError) {
-      alert(`Error: ${createCircleResult.serverError}`);
-    } else if (createCircleResult?.data?.id) {
-      async function reloadCircles() {
-        const circles = await getCircles({});
-        setAllCircles(circles);
-        const newCircle = circles.find((c) => c.id === createCircleResult.data?.id);
-        if (newCircle) {
-          const currentCircles = form.getValues('circleIds') || [];
-          form.setValue('circleIds', [...currentCircles, newCircle.id]);
-        }
-      }
-      reloadCircles();
-      setNewCircleName('');
-      setShowAddCircle(false);
-    }
-  }, [createCircleResult, form]);
 
   const onSubmit = (values: FormValues) => {
     updateContactAction({
@@ -205,7 +176,7 @@ export function EditContactPageClient({ contactId, initialContact, initialCircle
             <div>
               <FormLabel>Circles</FormLabel>
               <div className="mt-2 flex flex-wrap gap-2 items-center">
-                {allCircles.map((circle) => (
+                {circles.map((circle) => (
                   <CircleButton
                     key={circle.id}
                     circle={circle}
@@ -214,44 +185,50 @@ export function EditContactPageClient({ contactId, initialContact, initialCircle
                   />
                 ))}
                 {showAddCircle ? (
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="text"
-                      placeholder="Circle name"
-                      value={newCircleName}
-                      onChange={(e) => setNewCircleName(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault();
-                          handleCreateCircle();
-                        } else if (e.key === 'Escape') {
-                          setShowAddCircle(false);
-                          setNewCircleName('');
+                  <Form {...circleForm}>
+                    <div className="flex items-center gap-2">
+                      <FormField
+                        control={circleForm.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem className="mb-0">
+                            <FormControl>
+                              <Input
+                                {...field}
+                                type="text"
+                                placeholder="Circle name"
+                                className="h-9 w-32 text-sm"
+                                autoFocus
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    saveNewCircle();
+                                  } else if (e.key === 'Escape') {
+                                    e.preventDefault();
+                                    hideAddCircleForm();
+                                  }
+                                }}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        onClick={saveNewCircle}
+                        disabled={
+                          isExecuting(circleAction.status) || !circleForm.watch('name')?.trim()
                         }
-                      }}
-                      className="h-9 w-32 text-sm"
-                      autoFocus
-                    />
-                    <Button
-                      type="button"
-                      size="sm"
-                      onClick={handleCreateCircle}
-                      disabled={isExecuting(createCircleStatus) || !newCircleName.trim()}
-                    >
-                      {isExecuting(createCircleStatus) ? '...' : 'Add'}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        setShowAddCircle(false);
-                        setNewCircleName('');
-                      }}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
+                      >
+                        {isExecuting(circleAction.status) ? '...' : 'Add'}
+                      </Button>
+                      <Button type="button" variant="outline" size="sm" onClick={hideAddCircleForm}>
+                        Cancel
+                      </Button>
+                    </div>
+                  </Form>
                 ) : (
                   <Button
                     type="button"

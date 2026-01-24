@@ -1,12 +1,9 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  useHookFormAction,
-  useHookFormOptimisticAction
-} from '@next-safe-action/adapter-react-hook-form/hooks';
+import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -18,14 +15,13 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { createCircle } from '@/lib/circles/create/actions/create';
-import { createCircleSchema } from '@/lib/circles/create/schema';
 import type { Circle } from '@/lib/circles/types';
 import { AppRoute } from '@/lib/constants/navigation';
 import { createContact } from '@/lib/contacts/create/actions/create';
 import { createContactSchema } from '@/lib/contacts/create/schema';
 import { isExecuting } from '@/lib/server-actions/status';
 import { CircleButton } from '../components/circle-button';
+import { useAddCircles } from '../hooks/use-add-circles';
 
 type Props = {
   profileLink: string;
@@ -34,7 +30,6 @@ type Props = {
 
 export function NewContactPageClient({ profileLink, initialCircles }: Props) {
   const router = useRouter();
-  const [showAddCircle, setShowAddCircle] = useState(false);
 
   const { form, action, handleSubmitWithAction } = useHookFormAction(
     createContact,
@@ -52,65 +47,21 @@ export function NewContactPageClient({ profileLink, initialCircles }: Props) {
   );
 
   const {
-    form: circleForm,
-    action: circleAction,
-    handleSubmitWithAction: handleCreateCircleSubmit
-  } = useHookFormOptimisticAction(createCircle, zodResolver(createCircleSchema), {
-    actionProps: {
-      currentState: { circles: initialCircles },
-      updateFn: (state, input) => {
-        const optimisticCircle: Circle = {
-          ...input,
-          id: `temp-${Date.now()}`,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          user_id: null,
-          color: input.color || null,
-          description: input.description || null,
-          icon: input.icon || null,
-          favorite: false
-        };
-
-        return { circles: [...state.circles, optimisticCircle] };
-      },
-      onSuccess: () => hideAddCircleForm()
-    },
-    formProps: {
-      defaultValues: {
-        name: '',
-        description: null,
-        color: null,
-        icon: null
-      }
-    }
+    circles,
+    circleForm,
+    circleAction,
+    showAddCircle,
+    setShowAddCircle,
+    hideAddCircleForm,
+    saveNewCircle,
+    toggleCircle
+  } = useAddCircles({
+    initialCircles,
+    getSelectedCircleIds: () => form.watch('circleIds') ?? [],
+    setSelectedCircleIds: (ids) => form.setValue('circleIds', ids)
   });
 
   const selectedCircles = form.watch('circleIds') ?? [];
-
-  const toggleCircle = (circleId: string) => {
-    const selectedCircleIds = selectedCircles;
-    const updatedSelectedCircles = selectedCircleIds.includes(circleId)
-      ? selectedCircleIds.filter((id) => id !== circleId)
-      : [...selectedCircleIds, circleId];
-
-    form.setValue('circleIds', updatedSelectedCircles);
-  };
-
-  const hideAddCircleForm = () => {
-    setShowAddCircle(false);
-    circleForm.reset();
-  };
-
-  const saveNewCircle = (e?: React.BaseSyntheticEvent) => {
-    setShowAddCircle(false);
-    handleCreateCircleSubmit(e);
-  };
-
-  useEffect(() => {
-    if (circleAction.result?.serverError) {
-      alert(`Error: ${circleAction.result.serverError}`);
-    }
-  }, [circleAction.result]);
 
   useEffect(() => {
     if (action.result?.serverError) {
@@ -193,7 +144,7 @@ export function NewContactPageClient({ profileLink, initialCircles }: Props) {
             <div>
               <FormLabel>Circles</FormLabel>
               <div className="mt-2 flex flex-wrap gap-2 items-center">
-                {circleAction.optimisticState.circles.map((circle) => (
+                {circles.map((circle) => (
                   <CircleButton
                     key={circle.id}
                     circle={circle}
