@@ -34,29 +34,28 @@ export async function getContacts(): Promise<Contact[]> {
 
       const circleIds =
         contactCircles?.map((cc) => cc.circle_id).filter((id): id is string => id !== null) || [];
+
       let circles: Circle[] = [];
 
       if (circleIds.length > 0) {
-        const { data: circleData } = await supabase
-          .from('circles')
-          .select('id, name, created_at')
-          .in('id', circleIds);
+        const { data: circleData } = await supabase.from('circles').select('*').in('id', circleIds);
 
         circles =
           circleData?.map((c) => ({
             id: c.id,
             name: c.name,
-            createdAt: c.created_at
+            created_at: c.created_at,
+            updated_at: c.updated_at,
+            user_id: c.user_id,
+            color: c.color,
+            description: c.description,
+            icon: c.icon,
+            favorite: c.favorite
           })) || [];
       }
 
       return {
-        id: contact.id,
-        name: contact.name,
-        profileLink: contact.url || '',
-        reason: contact.reason || '',
-        dateAdded: contact.created_at,
-        favorite: contact.favorite,
+        ...contact,
         circles
       };
     })

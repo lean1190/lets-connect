@@ -1,10 +1,7 @@
-export interface Circle {
-  id: string;
-  name: string;
-  createdAt: string;
+import type { Contact } from '@/lib/contacts/types';
+import type { Tables } from '../database/types';
+
+export type Circle = Tables<'circles'> & {
   contactCount?: number;
-  color?: string | null;
-  description?: string | null;
-  icon?: string | null;
-  favorite?: boolean;
-}
+  contacts?: Contact[];
+};

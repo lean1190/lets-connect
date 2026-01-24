@@ -31,7 +31,7 @@ export function ContactCard({ contact, showCirclesCount = true }: Props) {
               Connected on
             </div>
             <div className="text-lg font-semibold text-gray-900 dark:text-foreground">
-              {format(new Date(contact.dateAdded), 'MMM d, yyyy')}
+              {format(new Date(contact.created_at), 'MMM d, yyyy')}
             </div>
           </div>
           {showCirclesCount && (
@@ -52,7 +52,7 @@ export function ContactCard({ contact, showCirclesCount = true }: Props) {
             </Button>
           </Link>
           <Link
-            href={contact.profileLink}
+            href={contact.url ?? ''}
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1"

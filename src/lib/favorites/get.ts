@@ -40,12 +40,7 @@ export async function getFavorites(): Promise<FavoritesData> {
   ]);
 
   const contacts: FavoriteContact[] = (contactsResult.data || []).map((contact) => ({
-    id: contact.id,
-    name: contact.name,
-    profileLink: contact.url || '',
-    reason: contact.reason || '',
-    dateAdded: contact.created_at,
-    favorite: contact.favorite,
+    ...contact,
     type: 'contact' as const
   }));
 
@@ -58,22 +53,16 @@ export async function getFavorites(): Promise<FavoritesData> {
         .eq('user_id', user.id);
 
       return {
-        id: circle.id,
-        name: circle.name,
-        createdAt: circle.created_at,
+        ...circle,
         contactCount: count || 0,
-        color: circle.color || null,
-        description: circle.description || null,
-        icon: circle.icon || null,
-        favorite: circle.favorite ?? true,
         type: 'circle' as const
       };
     })
   );
 
   const all: FavoriteItem[] = [...contacts, ...circlesWithCounts].sort((a, b) => {
-    const dateA = 'dateAdded' in a ? a.dateAdded : a.createdAt;
-    const dateB = 'dateAdded' in b ? b.dateAdded : b.createdAt;
+    const dateA = (a as FavoriteContact | FavoriteCircle).created_at;
+    const dateB = (b as FavoriteContact | FavoriteCircle).created_at;
     return new Date(dateB).getTime() - new Date(dateA).getTime();
   });
 

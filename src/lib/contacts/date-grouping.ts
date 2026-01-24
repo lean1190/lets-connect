@@ -33,7 +33,7 @@ export function groupContactsByDate(contacts: Contact[]): ContactGroup[] {
   const groups: Map<string, Contact[]> = new Map();
 
   for (const contact of contacts) {
-    const date = new Date(contact.dateAdded);
+    const date = new Date(contact.created_at);
     const label = getDateGroupLabel(date);
 
     if (!groups.has(label)) {
@@ -68,7 +68,7 @@ export function filterContactsByDate(contacts: Contact[], filter: DateFilter): C
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
   return contacts.filter((contact) => {
-    const contactDate = new Date(contact.dateAdded);
+    const contactDate = new Date(contact.created_at);
     const contactDateOnly = new Date(
       contactDate.getFullYear(),
       contactDate.getMonth(),

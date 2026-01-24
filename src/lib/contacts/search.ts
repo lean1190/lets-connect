@@ -12,7 +12,7 @@ export function searchContacts(contacts: Contact[], query: string): Contact[] {
       return true;
     }
 
-    if (contact.reason.toLowerCase().includes(lowerQuery)) {
+    if (contact.reason?.toLowerCase().includes(lowerQuery)) {
       return true;
     }
 

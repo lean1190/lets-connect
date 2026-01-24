@@ -1,9 +1,11 @@
 'use server';
 
 import type { Circle } from '@/lib/circles/types';
+import type { Contact } from '@/lib/contacts/types';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
+import { handleDatabaseResponse } from '@/lib/database/handler/response-handler';
 
-export async function getContactById(id: string) {
+export async function getContactById(id: string): Promise<Contact | null> {
   const supabase = await createDatabaseServerClient();
   const {
     data: { user }
@@ -32,21 +34,12 @@ export async function getContactById(id: string) {
 
   const circleIds =
     contactCircles?.map((cc) => cc.circle_id).filter((id): id is string => id !== null) || [];
-  let circles: Circle[] = [];
 
-  if (circleIds.length > 0) {
-    const { data: circleData } = await supabase
-      .from('circles')
-      .select('id, name, created_at')
-      .in('id', circleIds);
-
-    circles =
-      circleData?.map((c) => ({
-        id: c.id,
-        name: c.name,
-        createdAt: c.created_at
-      })) || [];
-  }
+  const circles: Circle[] =
+    circleIds.length > 0
+      ? (handleDatabaseResponse(await supabase.from('circles').select('*').in('id', circleIds)) ??
+        [])
+      : [];
 
   return {
     ...contact,

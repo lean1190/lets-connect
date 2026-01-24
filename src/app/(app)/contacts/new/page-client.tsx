@@ -62,7 +62,13 @@ export function NewContactPageClient({ profileLink, initialCircles }: Props) {
         const optimisticCircle: Circle = {
           ...input,
           id: `temp-${Date.now()}`,
-          createdAt: new Date().toISOString()
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          user_id: null,
+          color: input.color || null,
+          description: input.description || null,
+          icon: input.icon || null,
+          favorite: false
         };
 
         return { circles: [...state.circles, optimisticCircle] };

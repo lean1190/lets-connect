@@ -1,11 +1,6 @@
 import type { Circle } from '@/lib/circles/types';
+import type { Tables } from '../database/types';
 
-export interface Contact {
-  id: string;
-  name: string;
-  profileLink: string;
-  reason: string;
-  dateAdded: string;
-  favorite: boolean;
+export type Contact = Tables<'contacts'> & {
   circles?: Circle[];
-}
+};

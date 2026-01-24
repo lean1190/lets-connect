@@ -31,13 +31,7 @@ export async function getCircleById(id: string): Promise<Circle | null> {
     .eq('user_id', user.id);
 
   return {
-    id: circle.id,
-    name: circle.name,
-    createdAt: circle.created_at,
-    contactCount: count || 0,
-    color: circle.color || null,
-    description: circle.description || null,
-    icon: circle.icon || null,
-    favorite: circle.favorite
+    ...circle,
+    contactCount: count || 0
   };
 }

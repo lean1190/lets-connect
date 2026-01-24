@@ -116,7 +116,7 @@ export function CirclesList({ circles }: CirclesListProps) {
                     Created on
                   </div>
                   <div className="text-lg font-semibold text-gray-900 dark:text-foreground">
-                    {formatDate(circle.createdAt)}
+                    {formatDate(circle.created_at)}
                   </div>
                 </div>
                 <div className="flex-1 bg-gray-50 dark:bg-muted rounded-lg p-3">

@@ -166,7 +166,7 @@ export function ContactsList({
                           <IconEdit size={18} />
                         </Button>
                       </Link>
-                      <Link href={contact.profileLink} target="_blank" rel="noopener noreferrer">
+                      <Link href={contact.url ?? ''} target="_blank" rel="noopener noreferrer">
                         <Button size="icon" aria-label="Go to profile">
                           <IconLink size={18} />
                         </Button>
