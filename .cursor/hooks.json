@@ -1,6 +1,7 @@
 {
   "version": 1,
   "hooks": {
-    "afterAgentResponse": [{ "command": "npm test" }]
+    "stop": [{ "command": ".cursor/hooks/test.sh" }],
+    "afterFileEdit": [{ "command": ".cursor/hooks/format.sh" }]
   }
 }
