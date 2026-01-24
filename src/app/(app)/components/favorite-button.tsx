@@ -17,7 +17,9 @@ export function FavoriteButton({ id, type, initialFavorite }: Props) {
     updateFn: (_state, input) => input.favorite
   });
 
-  const handleToggle = () => {
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     execute({ id, type, favorite: !optimisticState });
   };
 

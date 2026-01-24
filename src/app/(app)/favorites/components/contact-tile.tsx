@@ -1,6 +1,7 @@
-import { IconStar, IconUser } from '@tabler/icons-react';
+import { IconUser } from '@tabler/icons-react';
 import Link from 'next/link';
 import type { FavoriteContact } from '@/lib/favorites/get';
+import { FavoriteButton } from '../../components/favorite-button';
 
 export default function ContactTile({ contact }: { contact: FavoriteContact }) {
   return (
@@ -9,8 +10,8 @@ export default function ContactTile({ contact }: { contact: FavoriteContact }) {
       target="_blank"
       className="group relative overflow-hidden rounded-2xl bg-linear-to-br from-violet-500/10 via-purple-500/5 to-fuchsia-500/10 dark:from-violet-500/20 dark:via-purple-500/10 dark:to-fuchsia-500/20 border border-violet-200/50 dark:border-violet-500/20 p-5 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-violet-500/10 hover:border-violet-300 dark:hover:border-violet-500/40"
     >
-      <div className="absolute top-3 right-3">
-        <IconStar className="w-4 h-4 text-amber-400 fill-amber-400" />
+      <div className="absolute top-3 right-3 z-10">
+        <FavoriteButton id={contact.id} type="contact" initialFavorite={contact.favorite} />
       </div>
 
       <div className="flex items-start gap-4">

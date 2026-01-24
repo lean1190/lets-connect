@@ -65,6 +65,7 @@ export async function getFavorites(): Promise<FavoritesData> {
         color: circle.color || null,
         description: circle.description || null,
         icon: circle.icon || null,
+        favorite: circle.favorite ?? true,
         type: 'circle' as const
       };
     })

@@ -22,13 +22,13 @@ export default async function LandingPage() {
       <div className="relative z-10">
         {/* Navigation */}
         <nav className="container mx-auto px-6 py-8 flex justify-between items-center">
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
             <Image
               src="/logo.png"
               alt="Let's Connect Logo"
-              width={40}
-              height={40}
-              className="w-10 h-10"
+              width={36}
+              height={36}
+              className="w-9 h-9"
             />
             <div className="text-lg md:text-2xl font-bold">Let&apos;s Connect</div>
           </div>

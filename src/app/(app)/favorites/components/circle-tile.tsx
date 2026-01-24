@@ -1,7 +1,8 @@
-import { IconStar, IconUsers } from '@tabler/icons-react';
+import { IconUsers } from '@tabler/icons-react';
 import Link from 'next/link';
 import { AppRoute } from '@/lib/constants/navigation';
 import type { FavoriteCircle } from '@/lib/favorites/get';
+import { FavoriteButton } from '../../components/favorite-button';
 import { getIconComponent } from '../icons';
 
 export default function CircleTile({ circle }: { circle: FavoriteCircle }) {
@@ -12,8 +13,8 @@ export default function CircleTile({ circle }: { circle: FavoriteCircle }) {
       href={`${AppRoute.EditCircle}${circle.id}${AppRoute.Contacts}`}
       className="group relative overflow-hidden rounded-2xl bg-linear-to-br from-emerald-500/10 via-teal-500/5 to-cyan-500/10 dark:from-emerald-500/20 dark:via-teal-500/10 dark:to-cyan-500/20 border border-emerald-200/50 dark:border-emerald-500/20 p-5 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-emerald-500/10 hover:border-emerald-300 dark:hover:border-emerald-500/40"
     >
-      <div className="absolute top-3 right-3">
-        <IconStar className="w-4 h-4 text-amber-400 fill-amber-400" />
+      <div className="absolute top-3 right-3 z-10">
+        <FavoriteButton id={circle.id} type="circle" initialFavorite={circle.favorite ?? true} />
       </div>
 
       <div className="flex items-start gap-4">
