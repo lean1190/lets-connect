@@ -4,7 +4,13 @@ import { getUser } from '@/lib/auth/session/server';
 import type { Circle } from '@/lib/circles/types';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 
-export async function getCircles(): Promise<Circle[]> {
+export async function getCircles({
+  withCount = true,
+  orderAscending = false
+}: Partial<{
+  withCount: boolean;
+  orderAscending: boolean;
+}>): Promise<Circle[]> {
   const user = await getUser();
 
   if (!user) {
@@ -17,10 +23,14 @@ export async function getCircles(): Promise<Circle[]> {
     .from('circles')
     .select('*')
     .eq('user_id', user.id)
-    .order('created_at', { ascending: true });
+    .order('created_at', { ascending: orderAscending });
 
   if (error || !circles) {
     return [];
+  }
+
+  if (!withCount) {
+    return circles;
   }
 
   const circlesWithCounts: Circle[] = await Promise.all(

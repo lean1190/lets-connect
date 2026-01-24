@@ -95,7 +95,7 @@ export function EditContactPageClient({ contactId, initialContact, initialCircle
       alert(`Error: ${createCircleResult.serverError}`);
     } else if (createCircleResult?.data?.id) {
       async function reloadCircles() {
-        const circles = await getCircles();
+        const circles = await getCircles({});
         setAllCircles(circles);
         const newCircle = circles.find((c) => c.id === createCircleResult.data?.id);
         if (newCircle) {

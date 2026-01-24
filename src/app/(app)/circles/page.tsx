@@ -7,7 +7,7 @@ import PageWithNavigationLayout from '../components/layouts/page-with-navigation
 import { CirclesList } from './components/circles-list';
 
 export default async function CirclesPage() {
-  const circles = await getCircles();
+  const circles = await getCircles({});
 
   return (
     <PageWithNavigationLayout title="Circles">

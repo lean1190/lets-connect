@@ -7,7 +7,7 @@ export default async function NewContactPage({
   searchParams: Promise<{ profileLink?: string }>;
 }) {
   const { profileLink = '' } = await searchParams;
-  const circles = await getCircles();
+  const circles = await getCircles({ withCount: false, orderAscending: true });
 
   return <NewContactPageClient profileLink={profileLink} initialCircles={circles} />;
 }
