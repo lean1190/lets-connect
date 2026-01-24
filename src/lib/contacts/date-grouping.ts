@@ -1,10 +1,10 @@
-import type { ContactOutput } from '@/lib/contacts/types';
+import type { Contact } from '@/lib/contacts/types';
 
 export type DateFilter = 'all' | 'today' | 'last3days' | 'lastWeek' | 'lastMonth';
 
 export interface ContactGroup {
   label: string;
-  contacts: ContactOutput[];
+  contacts: Contact[];
 }
 
 export function getDateGroupLabel(date: Date): string {
@@ -29,8 +29,8 @@ export function getDateGroupLabel(date: Date): string {
   return 'Older';
 }
 
-export function groupContactsByDate(contacts: ContactOutput[]): ContactGroup[] {
-  const groups: Map<string, ContactOutput[]> = new Map();
+export function groupContactsByDate(contacts: Contact[]): ContactGroup[] {
+  const groups: Map<string, Contact[]> = new Map();
 
   for (const contact of contacts) {
     const date = new Date(contact.dateAdded);
@@ -59,10 +59,7 @@ export function groupContactsByDate(contacts: ContactOutput[]): ContactGroup[] {
     });
 }
 
-export function filterContactsByDate(
-  contacts: ContactOutput[],
-  filter: DateFilter
-): ContactOutput[] {
+export function filterContactsByDate(contacts: Contact[], filter: DateFilter): Contact[] {
   if (filter === 'all') {
     return contacts;
   }

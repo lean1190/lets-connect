@@ -1,20 +1,10 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
+import { AppRoute } from '@/lib/constants/navigation';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { actionClient } from '@/lib/server-actions/client';
-
-const createCircleSchema = z.object({
-  name: z.string().min(1, 'Circle name is required').max(120, 'Name can be 120 characters long'),
-  description: z
-    .string()
-    .max(1000, 'Description can be 1000 characters long')
-    .optional()
-    .nullable(),
-  color: z.string().optional().nullable(),
-  icon: z.string().optional().nullable()
-});
+import { createCircleSchema } from '../schema';
 
 export const createCircle = actionClient
   .inputSchema(createCircleSchema)
@@ -46,6 +36,6 @@ export const createCircle = actionClient
       throw new Error(`Failed to create circle: ${error.message}`);
     }
 
-    revalidatePath('/circles');
+    revalidatePath(AppRoute.Circles);
     return { id };
   });

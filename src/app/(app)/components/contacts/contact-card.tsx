@@ -4,10 +4,10 @@ import { FavoriteButton } from '@/app/(app)/components/favorite-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { AppRoute } from '@/lib/constants/navigation';
-import type { ContactOutput } from '@/lib/contacts/types';
+import type { Contact } from '@/lib/contacts/types';
 
 type Props = {
-  contact: ContactOutput;
+  contact: Contact;
   showCirclesCount?: boolean;
 };
 

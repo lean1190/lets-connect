@@ -19,7 +19,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { createCircle } from '@/lib/circles/create/actions/create';
 import { getCircles } from '@/lib/circles/get/get';
-import type { CircleOutput } from '@/lib/circles/types';
+import type { Circle } from '@/lib/circles/types';
 import { updateContact } from '@/lib/contacts/update/actions/update';
 import { isExecuting } from '@/lib/server-actions/status';
 import { CircleButton } from '../components/circle-button';
@@ -42,12 +42,12 @@ type Props = {
     reason: string | null;
     circles?: Array<{ id: string }>;
   } | null;
-  initialCircles: CircleOutput[];
+  initialCircles: Circle[];
 };
 
 export function EditContactPageClient({ contactId, initialContact, initialCircles }: Props) {
   const router = useRouter();
-  const [allCircles, setAllCircles] = useState<CircleOutput[]>(initialCircles);
+  const [allCircles, setAllCircles] = useState<Circle[]>(initialCircles);
   const [showAddCircle, setShowAddCircle] = useState(false);
   const [newCircleName, setNewCircleName] = useState('');
 

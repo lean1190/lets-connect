@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { createCircle } from '@/lib/circles/create/actions/create';
+import { AppRoute } from '@/lib/constants/navigation';
 import { isExecuting } from '@/lib/server-actions/status';
 
 const formSchema = z.object({
@@ -57,7 +58,7 @@ export default function NewCirclePage() {
     if (result?.serverError) {
       alert(`Error: ${result.serverError}`);
     } else if (result?.data) {
-      router.push('/circles');
+      router.replace(AppRoute.Circles);
     }
   }, [result, router]);
 

@@ -1,7 +1,7 @@
-import type { CircleOutput } from '@/lib/circles/types';
+import type { Circle } from '@/lib/circles/types';
 
 type Props = {
-  circle: CircleOutput;
+  circle: Circle;
   isSelected: boolean;
   onClick: () => void;
 };

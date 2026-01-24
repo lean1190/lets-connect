@@ -1,11 +1,11 @@
 'use server';
 
-import type { CircleOutput } from '@/lib/circles/types';
-import type { ContactOutput } from '@/lib/contacts/types';
+import type { Circle } from '@/lib/circles/types';
+import type { Contact } from '@/lib/contacts/types';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 
-export type FavoriteContact = ContactOutput & { type: 'contact' };
-export type FavoriteCircle = CircleOutput & { type: 'circle' };
+export type FavoriteContact = Contact & { type: 'contact' };
+export type FavoriteCircle = Circle & { type: 'circle' };
 export type FavoriteItem = FavoriteContact | FavoriteCircle;
 
 export type FavoritesData = {

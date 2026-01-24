@@ -1,10 +1,10 @@
 'use server';
 
-import type { CircleOutput } from '@/lib/circles/types';
-import type { ContactOutput } from '@/lib/contacts/types';
+import type { Circle } from '@/lib/circles/types';
+import type { Contact } from '@/lib/contacts/types';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 
-export async function getContacts(): Promise<ContactOutput[]> {
+export async function getContacts(): Promise<Contact[]> {
   const supabase = await createDatabaseServerClient();
   const {
     data: { user }
@@ -24,7 +24,7 @@ export async function getContacts(): Promise<ContactOutput[]> {
     return [];
   }
 
-  const contactsWithCircles: ContactOutput[] = await Promise.all(
+  const contactsWithCircles: Contact[] = await Promise.all(
     contacts.map(async (contact) => {
       const { data: contactCircles } = await supabase
         .from('contacts_circles')
@@ -34,7 +34,7 @@ export async function getContacts(): Promise<ContactOutput[]> {
 
       const circleIds =
         contactCircles?.map((cc) => cc.circle_id).filter((id): id is string => id !== null) || [];
-      let circles: CircleOutput[] = [];
+      let circles: Circle[] = [];
 
       if (circleIds.length > 0) {
         const { data: circleData } = await supabase

@@ -9,11 +9,11 @@ import { FavoriteButton } from '@/app/(app)/components/favorite-button';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import type { CircleOutput } from '@/lib/circles/types';
+import type { Circle } from '@/lib/circles/types';
 import { AppRoute } from '@/lib/constants/navigation';
 
 type CirclesListProps = {
-  circles: CircleOutput[];
+  circles: Circle[];
 };
 
 function getIconComponent(iconName: string | null | undefined) {
@@ -24,7 +24,7 @@ function getIconComponent(iconName: string | null | undefined) {
   return IconComponent || IconCircles;
 }
 
-function searchCircles(circles: CircleOutput[], query: string): CircleOutput[] {
+function searchCircles(circles: Circle[], query: string): Circle[] {
   if (!query.trim()) {
     return circles;
   }

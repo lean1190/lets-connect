@@ -1,6 +1,6 @@
 'use server';
 
-import type { CircleOutput } from '@/lib/circles/types';
+import type { Circle } from '@/lib/circles/types';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 
 export async function getContactById(id: string) {
@@ -32,7 +32,7 @@ export async function getContactById(id: string) {
 
   const circleIds =
     contactCircles?.map((cc) => cc.circle_id).filter((id): id is string => id !== null) || [];
-  let circles: CircleOutput[] = [];
+  let circles: Circle[] = [];
 
   if (circleIds.length > 0) {
     const { data: circleData } = await supabase

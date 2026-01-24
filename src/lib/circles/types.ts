@@ -1,4 +1,4 @@
-export interface CircleOutput {
+export interface Circle {
   id: string;
   name: string;
   createdAt: string;

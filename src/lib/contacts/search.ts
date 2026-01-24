@@ -1,6 +1,6 @@
-import type { ContactOutput } from './types';
+import type { Contact } from './types';
 
-export function searchContacts(contacts: ContactOutput[], query: string): ContactOutput[] {
+export function searchContacts(contacts: Contact[], query: string): Contact[] {
   if (!query.trim()) {
     return contacts;
   }

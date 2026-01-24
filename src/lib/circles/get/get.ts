@@ -1,29 +1,29 @@
 'use server';
 
-import type { CircleOutput } from '@/lib/circles/types';
+import { getUser } from '@/lib/auth/session/server';
+import type { Circle } from '@/lib/circles/types';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 
-export async function getCircles(): Promise<CircleOutput[]> {
-  const supabase = await createDatabaseServerClient();
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
+export async function getCircles(): Promise<Circle[]> {
+  const user = await getUser();
 
   if (!user) {
     return [];
   }
 
+  const supabase = await createDatabaseServerClient();
+
   const { data: circles, error } = await supabase
     .from('circles')
     .select('*')
     .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: true });
 
   if (error || !circles) {
     return [];
   }
 
-  const circlesWithCounts: CircleOutput[] = await Promise.all(
+  const circlesWithCounts: Circle[] = await Promise.all(
     circles.map(async (circle) => {
       const { count } = await supabase
         .from('contacts_circles')

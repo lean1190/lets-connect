@@ -14,13 +14,13 @@ import {
   groupContactsByDate
 } from '@/lib/contacts/date-grouping';
 import { searchContacts } from '@/lib/contacts/search';
-import type { ContactOutput } from '@/lib/contacts/types';
+import type { Contact } from '@/lib/contacts/types';
 import { ContactsListMode } from '@/lib/settings/types';
 import { updateSettingsAction } from '@/lib/settings/update/actions/update';
 import { ContactCard } from './contact-card';
 
 type Props = {
-  contacts: ContactOutput[];
+  contacts: Contact[];
   showCirclesCount?: boolean;
   initialListMode?: ContactsListMode;
 };
