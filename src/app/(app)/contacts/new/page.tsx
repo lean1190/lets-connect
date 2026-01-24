@@ -1,11 +1,10 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
 import { Suspense, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -21,17 +20,9 @@ import { createCircle } from '@/lib/circles/create/actions/create';
 import { getCircles } from '@/lib/circles/get/get';
 import type { CircleOutput } from '@/lib/circles/types';
 import { createContact } from '@/lib/contacts/create/actions/create';
+import { createContactSchema } from '@/lib/contacts/create/schema';
 import { isExecuting } from '@/lib/server-actions/status';
 import { CircleButton } from '../components/circle-button';
-
-const formSchema = z.object({
-  profileLink: z.string().min(1, 'Profile link is required'),
-  name: z.string().min(1, 'Name is required').trim(),
-  reason: z.string().min(1, 'Reason to contact is required').trim(),
-  circleIds: z.array(z.string()).optional()
-});
-
-type FormValues = z.infer<typeof formSchema>;
 
 function NewContactForm() {
   const router = useRouter();
@@ -42,22 +33,26 @@ function NewContactForm() {
   const [showAddCircle, setShowAddCircle] = useState(false);
   const [newCircleName, setNewCircleName] = useState('');
 
-  const { execute: createContactAction, status, result } = useAction(createContact);
+  const { form, action, handleSubmitWithAction } = useHookFormAction(
+    createContact,
+    zodResolver(createContactSchema),
+    {
+      formProps: {
+        defaultValues: {
+          profileLink: profileLinkFromQr,
+          name: '',
+          reason: '',
+          circleIds: []
+        }
+      }
+    }
+  );
+
   const {
     execute: createCircleAction,
     status: createCircleStatus,
     result: createCircleResult
   } = useAction(createCircle);
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      profileLink: profileLinkFromQr,
-      name: '',
-      reason: '',
-      circleIds: []
-    }
-  });
 
   const selectedCircles = form.watch('circleIds') || [];
 
@@ -112,28 +107,19 @@ function NewContactForm() {
     }
   }, [createCircleResult, form]);
 
-  const onSubmit = (values: FormValues) => {
-    createContactAction({
-      name: values.name,
-      profileLink: values.profileLink || '',
-      reason: values.reason,
-      circleIds: values.circleIds && values.circleIds.length > 0 ? values.circleIds : undefined
-    });
-  };
-
   useEffect(() => {
-    if (result?.serverError) {
-      alert(`Error: ${result.serverError}`);
-    } else if (result?.data) {
+    if (action.result?.serverError) {
+      alert(`Error: ${action.result.serverError}`);
+    } else if (action.result?.data) {
       router.push('/contacts');
     }
-  }, [result, router]);
+  }, [action.result, router]);
 
   return (
     <Card>
       <CardContent className="pt-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmitWithAction} className="space-y-6">
             <FormField
               control={form.control}
               name="profileLink"
@@ -265,8 +251,8 @@ function NewContactForm() {
               <Button type="button" variant="outline" onClick={() => router.back()}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isExecuting(status)}>
-                {isExecuting(status) ? 'Saving...' : 'Save Contact'}
+              <Button type="submit" disabled={isExecuting(action.status)}>
+                {isExecuting(action.status) ? 'Saving...' : 'Save Contact'}
               </Button>
             </div>
           </form>
