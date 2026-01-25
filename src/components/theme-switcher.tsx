@@ -4,38 +4,41 @@ import { IconMoon, IconSun } from '@tabler/icons-react';
 import { Button } from '@/components/ui/button';
 import { Theme } from '@/lib/settings/types';
 import { useTheme } from './theme-provider';
+import { Card, CardContent } from './ui/card';
 
 export function ThemeSwitcher() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-sm font-medium text-foreground">Theme</p>
-        <p className="text-xs text-muted-foreground mt-1">App style</p>
-      </div>
-      <div className="flex gap-2">
-        <Button
-          type="button"
-          variant={theme === Theme.Light ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setTheme(Theme.Light)}
-          className="flex items-center gap-2"
-        >
-          <IconSun className="w-4 h-4" />
-          <span>Light</span>
-        </Button>
-        <Button
-          type="button"
-          variant={theme === Theme.Dark ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setTheme(Theme.Dark)}
-          className="flex items-center gap-2"
-        >
-          <IconMoon className="w-4 h-4" />
-          <span>Dark</span>
-        </Button>
-      </div>
-    </div>
+    <Card>
+      <CardContent className="pt-6 flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium text-foreground">Theme</p>
+          <p className="text-xs text-muted-foreground mt-1">App style</p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            type="button"
+            variant={theme === Theme.Light ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setTheme(Theme.Light)}
+            className="flex items-center gap-2"
+          >
+            <IconSun className="w-4 h-4" />
+            <span>Light</span>
+          </Button>
+          <Button
+            type="button"
+            variant={theme === Theme.Dark ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setTheme(Theme.Dark)}
+            className="flex items-center gap-2"
+          >
+            <IconMoon className="w-4 h-4" />
+            <span>Dark</span>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

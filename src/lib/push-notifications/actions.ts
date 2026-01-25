@@ -1,10 +1,13 @@
 'use server';
 
-import type { User } from '@supabase/supabase-js';
 import webpush from 'web-push';
 import { checkAuthenticatedOrThrow } from '@/lib/auth/errors/authentication';
 import { getUser } from '@/lib/auth/session/server';
 import { getSettings } from '../settings/get/get';
+import { createSubscription } from './database/create';
+import { deleteSubscription } from './database/delete';
+import type { PushSubscription } from './database/get';
+import { getUserSubscriptionByEndpoint, getUserSubscriptions } from './database/get';
 
 if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
   console.warn(
@@ -18,7 +21,7 @@ if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY)
   );
 }
 
-type PushSubscription = {
+type PushSubscriptionInput = {
   endpoint: string;
   keys: {
     p256dh: string;
@@ -26,34 +29,28 @@ type PushSubscription = {
   };
 };
 
-const subscriptions = new Map<string, PushSubscription>();
-
-export async function subscribeUser(sub: PushSubscription) {
-  const user = await getUser();
-  checkAuthenticatedOrThrow(user);
-  const authenticatedUser = user as User;
-
-  subscriptions.set(authenticatedUser.id, sub);
-
+export async function subscribeUser(sub: PushSubscriptionInput) {
+  await createSubscription(sub);
   return { success: true };
 }
 
-export async function unsubscribeUser() {
-  const user = await getUser();
-  checkAuthenticatedOrThrow(user);
-  const authenticatedUser = user as User;
-
-  subscriptions.delete(authenticatedUser.id);
-
+export async function unsubscribeUser(endpoint: string) {
+  await deleteSubscription(endpoint);
   return { success: true };
 }
 
-export async function sendNotification(message: string) {
+export async function sendNotification(message: string, endpoint?: string) {
   const user = await getUser();
   checkAuthenticatedOrThrow(user);
-  const authenticatedUser = user as User;
 
-  const subscription = subscriptions.get(authenticatedUser.id);
+  let subscription: PushSubscription | null;
+
+  if (endpoint) {
+    subscription = await getUserSubscriptionByEndpoint(endpoint);
+  } else {
+    const subscriptions = await getUserSubscriptions();
+    subscription = subscriptions[0] ?? null;
+  }
 
   if (!subscription) {
     throw new Error('No subscription available');
@@ -61,7 +58,13 @@ export async function sendNotification(message: string) {
 
   try {
     await webpush.sendNotification(
-      subscription,
+      {
+        endpoint: subscription.endpoint,
+        keys: {
+          p256dh: subscription.p256dh,
+          auth: subscription.auth
+        }
+      },
       JSON.stringify({
         title: "Let's Connect",
         body: message,

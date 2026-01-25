@@ -49,9 +49,13 @@ export function PushNotificationManager({ settings }: Props) {
   }
 
   async function unsubscribeFromPush() {
-    await subscription?.unsubscribe();
+    if (!subscription) {
+      return;
+    }
+
+    await subscription.unsubscribe();
+    await unsubscribeUser(subscription.endpoint);
     setSubscription(null);
-    await unsubscribeUser();
   }
 
   async function testNotification() {
@@ -74,50 +78,43 @@ export function PushNotificationManager({ settings }: Props) {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Push Notifications</CardTitle>
-        <CardDescription>
-          Subscribe to receive push notifications from Let&apos;s Connect
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {subscription ? (
-          <>
-            <p className="text-sm text-muted-foreground">
-              You are subscribed to push notifications.
+      <CardContent className="pt-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-foreground">Push notifications</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              {subscription
+                ? 'You are subscribed to push notifications.'
+                : 'Subscribe to receive in-phone notifications'}
             </p>
-            <div className="flex gap-2">
-              <Button onClick={unsubscribeFromPush} variant="outline">
-                Unsubscribe
-              </Button>
-            </div>
-            {settings.is_admin ? (
-              <div className="space-y-2">
-                <Input
-                  type="text"
-                  placeholder="Enter notification message"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && message.trim()) {
-                      testNotification();
-                    }
-                  }}
-                />
-                <Button onClick={testNotification} disabled={!message.trim()}>
-                  Send Test Notification
-                </Button>
-              </div>
-            ) : null}
-          </>
-        ) : (
-          <>
-            <p className="text-sm text-muted-foreground">
-              You are not subscribed to push notifications.
-            </p>
-            <Button onClick={subscribeToPush}>Subscribe</Button>
-          </>
-        )}
+          </div>
+          {subscription ? (
+            <Button onClick={unsubscribeFromPush} variant="outline">
+              Disable
+            </Button>
+          ) : (
+            <Button onClick={subscribeToPush}>Enable</Button>
+          )}
+        </div>
+        {settings.is_admin && subscription ? (
+          <div className="space-y-2 mt-8">
+            <p>Test notifications</p>
+            <Input
+              type="text"
+              placeholder="Enter notification message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && message.trim()) {
+                  testNotification();
+                }
+              }}
+            />
+            <Button onClick={testNotification} disabled={!message.trim()}>
+              Send Test Notification
+            </Button>
+          </div>
+        ) : null}
       </CardContent>
     </Card>
   );
