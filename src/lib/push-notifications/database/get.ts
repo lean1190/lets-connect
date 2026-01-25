@@ -5,6 +5,7 @@ import { checkAuthenticatedOrThrow } from '@/lib/auth/errors/authentication';
 import { getUser } from '@/lib/auth/session/server';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 import type { Tables } from '@/lib/database/types';
+import { isAdmin } from '@/lib/settings/get/get';
 
 export type PushSubscription = Tables<'push_subscriptions'>;
 
@@ -51,4 +52,35 @@ export async function getUserSubscriptionByEndpoint(
   }
 
   return data;
+}
+
+export async function getSubscriptionsByUserId(userId: string): Promise<PushSubscription[]> {
+  const supabase = await createDatabaseServerClient();
+
+  const { data, error } = await supabase
+    .from('push_subscriptions')
+    .select('*')
+    .eq('user_id', userId);
+
+  if (error) {
+    throw new Error(`Failed to get subscriptions: ${error.message}`);
+  }
+
+  return data ?? [];
+}
+
+export async function getAllSubscriptions(): Promise<PushSubscription[]> {
+  if (!(await isAdmin())) {
+    throw new Error('Only admins can get all subscriptions');
+  }
+
+  const supabase = await createDatabaseServerClient();
+
+  const { data, error } = await supabase.from('push_subscriptions').select('*');
+
+  if (error) {
+    throw new Error(`Failed to get all subscriptions: ${error.message}`);
+  }
+
+  return data ?? [];
 }

@@ -1,12 +1,12 @@
 'use server';
 
-import { getAllUsers } from '@/lib/auth/get/users';
+import { getAllUsersCount } from '@/lib/auth/get/users';
 import { getCirclesCount } from '@/lib/circles/get/count';
 import { getContactsCount } from '@/lib/contacts/get/count';
 
 export async function getStats() {
   return {
-    usersCount: (await getAllUsers()).length || 0,
+    usersCount: await getAllUsersCount(),
     contactsCount: await getContactsCount(),
     circlesCount: await getCirclesCount()
   };

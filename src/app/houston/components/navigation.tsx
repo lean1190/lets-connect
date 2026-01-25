@@ -12,7 +12,8 @@ export default function Navigation() {
 
   const navItems = [
     { href: '/houston', label: 'Dashboard' },
-    { href: '/houston/stats', label: 'Stats' }
+    { href: '/houston/stats', label: 'Stats' },
+    { href: '/houston/notifications', label: 'Notifications' }
   ];
 
   const eventsItems = [

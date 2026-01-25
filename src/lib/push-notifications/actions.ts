@@ -1,5 +1,6 @@
 'use server';
 
+import type { User } from '@supabase/supabase-js';
 import webpush from 'web-push';
 import { checkAuthenticatedOrThrow } from '@/lib/auth/errors/authentication';
 import { getUser } from '@/lib/auth/session/server';
@@ -7,7 +8,14 @@ import { isAdmin } from '../settings/get/get';
 import { createSubscription } from './database/create';
 import { deleteSubscription } from './database/delete';
 import type { PushSubscription } from './database/get';
-import { getUserSubscriptionByEndpoint, getUserSubscriptions } from './database/get';
+import {
+  getAllSubscriptions,
+  getSubscriptionsByUserId,
+  getUserSubscriptionByEndpoint,
+  getUserSubscriptions
+} from './database/get';
+
+const defaultTitle = "Let's Connect";
 
 if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) {
   console.warn(
@@ -37,23 +45,11 @@ export async function unsubscribeUser(endpoint: string) {
   return deleteSubscription(endpoint);
 }
 
-export async function sendNotification(message: string, endpoint?: string) {
-  const user = await getUser();
-  checkAuthenticatedOrThrow(user);
-
-  let subscription: PushSubscription | null;
-
-  if (endpoint) {
-    subscription = await getUserSubscriptionByEndpoint(endpoint);
-  } else {
-    const subscriptions = await getUserSubscriptions();
-    subscription = subscriptions[0] ?? null;
-  }
-
-  if (!subscription) {
-    throw new Error('No subscription available');
-  }
-
+async function sendToSubscription(
+  subscription: PushSubscription,
+  message: string,
+  title: string = defaultTitle
+) {
   try {
     await webpush.sendNotification(
       {
@@ -64,21 +60,78 @@ export async function sendNotification(message: string, endpoint?: string) {
         }
       },
       JSON.stringify({
-        title: "Let's Connect",
+        title,
         body: message,
         icon: '/web-app-manifest-192x192.png'
       })
     );
   } catch (error) {
-    console.error('Error sending push notification:', error);
-    throw new Error('Failed to send notification');
+    console.error(`Error sending notification to ${subscription.endpoint}:`, error);
+    throw error;
   }
 }
 
-export async function sendTestNotification(message: string) {
+export async function sendNotification(
+  message: string,
+  options?: {
+    title: string;
+    endpoint?: string;
+    userId?: string;
+    toAllUsers?: boolean;
+  }
+) {
+  const user = await getUser();
+  checkAuthenticatedOrThrow(user);
+  const authenticatedUser = user as User;
+
+  const { title, endpoint, userId, toAllUsers } = options ?? {
+    title: defaultTitle
+  };
+
+  let subscriptions: PushSubscription[] = [];
+
+  if (toAllUsers) {
+    if (!(await isAdmin())) {
+      throw new Error('Only admins can send notifications to all users');
+    }
+    subscriptions = await getAllSubscriptions();
+  } else if (userId) {
+    if (!(await isAdmin()) && userId !== authenticatedUser.id) {
+      throw new Error('You can only send notifications to yourself');
+    }
+    subscriptions = await getSubscriptionsByUserId(userId);
+  } else if (endpoint) {
+    const subscription = await getUserSubscriptionByEndpoint(endpoint);
+    subscriptions = subscription ? [subscription] : [];
+  } else {
+    subscriptions = await getUserSubscriptions();
+  }
+
+  if (subscriptions.length === 0) {
+    throw new Error('No subscriptions available');
+  }
+
+  const results = await Promise.allSettled(
+    subscriptions.map((subscription) => sendToSubscription(subscription, message, title))
+  );
+
+  const failed = results.filter((result) => result.status === 'rejected').length;
+
+  if (failed > 0) {
+    console.warn(`Failed to send ${failed} out of ${subscriptions.length} notifications`);
+  }
+
+  return {
+    sent: subscriptions.length - failed,
+    failed,
+    total: subscriptions.length
+  };
+}
+
+export async function sendTestNotification(message: string, title: string = defaultTitle) {
   if (!(await isAdmin())) {
     throw new Error('You are allowed in this realm');
   }
 
-  return sendNotification(message);
+  return sendNotification(message, { title });
 }

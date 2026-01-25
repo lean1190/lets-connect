@@ -9,3 +9,7 @@ export async function getAllUsers() {
 
   return users;
 }
+
+export async function getAllUsersCount() {
+  return (await getAllUsers()).length ?? 0;
+}
