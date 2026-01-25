@@ -13,7 +13,7 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-function applyTheme(newTheme: Theme) {
+function applyThemeInDom(newTheme: Theme) {
   const root = document.documentElement;
   if (newTheme === Theme.Dark) {
     root.classList.add('dark');
@@ -27,27 +27,25 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const { execute: executeUpdateSettings } = useAction(updateSettingsAction);
 
   useEffect(() => {
-    // Get theme from database
     async function loadTheme() {
       try {
         const settings = await getTheme();
         const initialTheme = (settings.theme as Theme) ?? Theme.Light;
         setThemeState(initialTheme);
-        applyTheme(initialTheme);
       } catch (error) {
         console.error('Error loading theme:', error);
-        // Fallback to light theme
         setThemeState(Theme.Light);
-        applyTheme(Theme.Light);
       }
     }
     loadTheme();
   }, []);
 
+  useEffect(() => {
+    applyThemeInDom(theme);
+  }, [theme]);
+
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
-    applyTheme(newTheme);
-    // Save to database
     executeUpdateSettings({ theme: newTheme });
   };
 
