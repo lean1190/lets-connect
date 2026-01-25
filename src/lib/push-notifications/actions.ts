@@ -3,7 +3,7 @@
 import webpush from 'web-push';
 import { checkAuthenticatedOrThrow } from '@/lib/auth/errors/authentication';
 import { getUser } from '@/lib/auth/session/server';
-import { getSettings } from '../settings/get/get';
+import { isAdmin } from '../settings/get/get';
 import { createSubscription } from './database/create';
 import { deleteSubscription } from './database/delete';
 import type { PushSubscription } from './database/get';
@@ -79,9 +79,7 @@ export async function sendNotification(message: string, endpoint?: string) {
 }
 
 export async function sendTestNotification(message: string) {
-  const settings = await getSettings();
-
-  if (!settings.is_admin) {
+  if (!(await isAdmin())) {
     throw new Error('You are allowed in this realm');
   }
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import AdminOnly from '@/components/admin-only';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,13 +11,8 @@ import {
   unsubscribeUser
 } from '@/lib/push-notifications/actions';
 import { urlBase64ToUint8Array } from '@/lib/push-notifications/utils';
-import type { Settings } from '@/lib/settings/types';
 
-type Props = {
-  settings: Settings;
-};
-
-export function PushNotificationManager({ settings }: Props) {
+export function PushNotificationManager() {
   const [isSupported, setIsSupported] = useState(false);
   const [subscription, setSubscription] = useState<PushSubscription | null>(null);
   const [message, setMessage] = useState('');
@@ -59,7 +55,7 @@ export function PushNotificationManager({ settings }: Props) {
   }
 
   async function testNotification() {
-    if (subscription && settings.is_admin) {
+    if (subscription) {
       await sendTestNotification(message);
       setMessage('');
     }
@@ -77,45 +73,47 @@ export function PushNotificationManager({ settings }: Props) {
   }
 
   return (
-    <Card>
-      <CardContent className="pt-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-foreground">Push notifications</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              {subscription
-                ? 'You are subscribed to push notifications.'
-                : 'Subscribe to receive in-phone notifications'}
-            </p>
+    <AdminOnly>
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-foreground">Push notifications</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {subscription
+                  ? 'You are subscribed to push notifications.'
+                  : 'Subscribe to receive in-phone notifications'}
+              </p>
+            </div>
+            {subscription ? (
+              <Button onClick={unsubscribeFromPush} variant="outline">
+                Disable
+              </Button>
+            ) : (
+              <Button onClick={subscribeToPush}>Enable</Button>
+            )}
           </div>
           {subscription ? (
-            <Button onClick={unsubscribeFromPush} variant="outline">
-              Disable
-            </Button>
-          ) : (
-            <Button onClick={subscribeToPush}>Enable</Button>
-          )}
-        </div>
-        {settings.is_admin && subscription ? (
-          <div className="space-y-2 mt-8">
-            <p>Test notifications</p>
-            <Input
-              type="text"
-              placeholder="Enter notification message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && message.trim()) {
-                  testNotification();
-                }
-              }}
-            />
-            <Button onClick={testNotification} disabled={!message.trim()}>
-              Send Test Notification
-            </Button>
-          </div>
-        ) : null}
-      </CardContent>
-    </Card>
+            <div className="space-y-2 mt-8">
+              <p>Test notifications</p>
+              <Input
+                type="text"
+                placeholder="Enter notification message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && message.trim()) {
+                    testNotification();
+                  }
+                }}
+              />
+              <Button onClick={testNotification} disabled={!message.trim()}>
+                Send Test Notification
+              </Button>
+            </div>
+          ) : null}
+        </CardContent>
+      </Card>
+    </AdminOnly>
   );
 }

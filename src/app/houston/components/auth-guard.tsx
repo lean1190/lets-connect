@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { isSignedIn } from '@/lib/auth/session/server';
 import { AppRoute } from '@/lib/constants/navigation';
-import { getSettings } from '@/lib/settings/get/get';
+import { isAdmin } from '@/lib/settings/get/get';
 
 type Props = {
   children: React.ReactNode;
@@ -14,9 +14,7 @@ export default async function AuthGuard({ children }: Props) {
     redirect(AppRoute.Signin);
   }
 
-  const settings = await getSettings();
-
-  if (!settings.is_admin) {
+  if (!(await isAdmin())) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">

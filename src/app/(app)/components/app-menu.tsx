@@ -12,6 +12,7 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import AdminOnly from '@/components/admin-only';
 import { Button } from '@/components/ui/button';
 import type { NullableUser } from '@/lib/auth/session/types';
 import { signOut } from '@/lib/auth/signout';
@@ -22,7 +23,7 @@ import { cn } from '@/lib/utils';
 
 type Props = {
   user: NullableUser;
-  settings: Settings;
+  settings: Pick<Settings, 'profile_image_url'>;
 };
 
 export default function AppMenu({ user, settings }: Props) {
@@ -144,7 +145,7 @@ export default function AppMenu({ user, settings }: Props) {
                 <IconInfoCircle className="h-5 w-5" />
                 About
               </Link>
-              {settings.is_admin && (
+              <AdminOnly>
                 <Link
                   href="/houston"
                   onClick={() => setOpen(false)}
@@ -153,7 +154,7 @@ export default function AppMenu({ user, settings }: Props) {
                   <IconDashboard className="h-5 w-5" />
                   Houston
                 </Link>
-              )}
+              </AdminOnly>
             </div>
 
             {/* Share & Sign Out */}

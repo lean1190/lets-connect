@@ -95,3 +95,22 @@ export async function getContactsListMode() {
       (settings.contacts_list_mode as ContactsListMode) ?? defaultSettings.contacts_list_mode
   } as Settings;
 }
+
+export async function isAdmin() {
+  const supabase = await createDatabaseServerClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return false;
+  }
+
+  const { data: settings } = await supabase
+    .from('settings')
+    .select('is_admin')
+    .eq('user_id', user.id)
+    .single();
+
+  return !!settings?.is_admin;
+}
