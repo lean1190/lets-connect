@@ -54,7 +54,7 @@ async function generateIcons() {
           width,
           height,
           channels: 4,
-          background: '1a1c24'
+          background: '#1a1c24'
         }
       })
         .composite([{ input: resizedLogo, gravity: 'center' }])

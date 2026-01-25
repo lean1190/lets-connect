@@ -11,11 +11,9 @@ const projectRoot = join(__dirname, '..');
 const publicDir = join(projectRoot, 'public');
 const splashDir = publicDir;
 
-// Source image dimensions
-const sourceImage = 'launch-2048x2732.png';
+const sourceImage = 'splash.png';
 const sourcePath = join(splashDir, sourceImage);
 
-// Target dimensions from the startupImage array
 const targetDimensions = [
   { width: 640, height: 1136, filename: 'launch-640x1136.png' }, // iPhone 5/SE
   { width: 750, height: 1334, filename: 'launch-750x1334.png' }, // iPhone 6/7/8
@@ -29,18 +27,16 @@ const targetDimensions = [
   { width: 1290, height: 2796, filename: 'launch-1290x2796.png' }, // iPhone 14/15 Pro Max
   { width: 1320, height: 2868, filename: 'launch-1320x2868.png' }, // iPhone 16 Pro Max
   { width: 1536, height: 2048, filename: 'launch-1536x2048.png' }, // iPad Mini/Air
-  { width: 1668, height: 2224, filename: 'launch-1668x2224.png' } // iPad Pro 10.5"
-  // 2048x2732 is the source, so we skip it
+  { width: 1668, height: 2224, filename: 'launch-1668x2224.png' }, // iPad Pro 10.5"
+  { width: 2048, height: 2732, filename: 'launch-2048x2732.png' } // iPad Pro 12.9" (3rd gen and later)
 ];
 
 async function generateSplashImages() {
-  // Ensure splash directory exists
   if (!existsSync(splashDir)) {
     mkdirSync(splashDir, { recursive: true });
     console.log(`Created directory: ${splashDir}`);
   }
 
-  // Check if source image exists
   if (!existsSync(sourcePath)) {
     console.error(`Error: Source image not found at ${sourcePath}`);
     console.error('Please ensure the source image exists before running this script.');
@@ -50,7 +46,6 @@ async function generateSplashImages() {
   console.log(`Source image: ${sourcePath}`);
   console.log(`Generating ${targetDimensions.length} splash images...\n`);
 
-  // Process each target dimension
   for (const { width, height, filename } of targetDimensions) {
     const outputPath = join(splashDir, filename);
 

@@ -31,19 +31,19 @@ export default async function SigninPage() {
         {/* Centered content */}
         <div className="flex-1 flex items-center justify-center p-8">
           <div className="max-w-md w-full">
-            <div className="relative bg-white/8 backdrop-blur-2xl rounded-3xl p-8 pt-2 border border-white/20 shadow-2xl shadow-black/20 overflow-hidden">
+            <div className="relative bg-white/8 backdrop-blur-2xl rounded-3xl p-8 border border-white/20 shadow-2xl shadow-black/20 overflow-hidden">
               {/* Liquid glass shine effect */}
               <div className="absolute inset-0 bg-linear-to-br from-white/10 via-transparent to-transparent pointer-events-none"></div>
               <div className="absolute top-0 left-0 right-0 h-px bg-linear-to-r from-transparent via-white/30 to-transparent"></div>
 
               <div className="relative text-center">
-                <div className="flex justify-center">
+                <div className="flex justify-center mb-4">
                   <Image
                     src="/logo.png"
                     alt="Let's Connect Logo"
-                    width={160}
-                    height={160}
-                    className="w-40 h-40"
+                    width={100}
+                    height={100}
+                    className="w-25 h-25"
                     quality={100}
                     priority
                   />
