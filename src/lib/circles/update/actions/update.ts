@@ -60,5 +60,4 @@ export const updateCircle = actionClient
 
     revalidatePath('/circles');
     revalidatePath(`/circles/${parsedInput.id}`);
-    return { success: true };
   });

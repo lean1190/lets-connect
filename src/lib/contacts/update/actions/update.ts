@@ -70,5 +70,4 @@ export const updateContact = actionClient
 
     revalidatePath('/');
     revalidatePath(`/contacts/${parsedInput.id}`);
-    return { success: true };
   });

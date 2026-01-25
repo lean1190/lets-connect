@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { AppRoute } from '@/lib/constants/navigation';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { actionClient } from '@/lib/server-actions/client';
 
@@ -35,9 +36,6 @@ export const toggleFavorite = actionClient
       throw new Error(`Failed to update favorite: ${error.message}`);
     }
 
-    revalidatePath('/favorites');
+    revalidatePath(AppRoute.Favorites);
     revalidatePath(`/${table}`);
-    revalidatePath(`/${table}/${parsedInput.id}`);
-
-    return { success: true, favorite: parsedInput.favorite };
   });

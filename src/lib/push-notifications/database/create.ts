@@ -39,6 +39,4 @@ export async function createSubscription(sub: PushSubscriptionInput) {
   if (error) {
     throw new Error(`Failed to create subscription: ${error.message}`);
   }
-
-  return { success: true };
 }

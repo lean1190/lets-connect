@@ -32,5 +32,4 @@ export const deleteCircle = actionClient
     }
 
     revalidatePath('/circles');
-    return { success: true };
   });

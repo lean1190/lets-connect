@@ -21,6 +21,4 @@ export async function deleteSubscription(endpoint: string) {
   if (error) {
     throw new Error(`Failed to delete subscription: ${error.message}`);
   }
-
-  return { success: true };
 }

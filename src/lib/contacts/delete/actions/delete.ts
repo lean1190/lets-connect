@@ -32,5 +32,4 @@ export const deleteContact = actionClient
     }
 
     revalidatePath('/');
-    return { success: true };
   });

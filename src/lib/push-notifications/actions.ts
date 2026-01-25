@@ -30,13 +30,11 @@ type PushSubscriptionInput = {
 };
 
 export async function subscribeUser(sub: PushSubscriptionInput) {
-  await createSubscription(sub);
-  return { success: true };
+  return createSubscription(sub);
 }
 
 export async function unsubscribeUser(endpoint: string) {
-  await deleteSubscription(endpoint);
-  return { success: true };
+  return deleteSubscription(endpoint);
 }
 
 export async function sendNotification(message: string, endpoint?: string) {
@@ -71,10 +69,9 @@ export async function sendNotification(message: string, endpoint?: string) {
         icon: '/web-app-manifest-192x192.png'
       })
     );
-    return { success: true };
   } catch (error) {
     console.error('Error sending push notification:', error);
-    return { success: false, error: 'Failed to send notification' };
+    throw new Error('Failed to send notification');
   }
 }
 
