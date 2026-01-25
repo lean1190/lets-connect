@@ -53,12 +53,6 @@ export async function sendNotification(message: string) {
   checkAuthenticatedOrThrow(user);
   const authenticatedUser = user as User;
 
-  const settings = await getSettings();
-
-  if (!settings.is_admin) {
-    throw new Error('You are allowed in this realm');
-  }
-
   const subscription = subscriptions.get(authenticatedUser.id);
 
   if (!subscription) {
@@ -79,4 +73,14 @@ export async function sendNotification(message: string) {
     console.error('Error sending push notification:', error);
     return { success: false, error: 'Failed to send notification' };
   }
+}
+
+export async function sendTestNotification(message: string) {
+  const settings = await getSettings();
+
+  if (!settings.is_admin) {
+    throw new Error('You are allowed in this realm');
+  }
+
+  return sendNotification(message);
 }

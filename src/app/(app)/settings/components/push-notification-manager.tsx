@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { sendNotification, subscribeUser, unsubscribeUser } from '@/lib/push-notifications/actions';
+import {
+  sendTestNotification,
+  subscribeUser,
+  unsubscribeUser
+} from '@/lib/push-notifications/actions';
 import { urlBase64ToUint8Array } from '@/lib/push-notifications/utils';
 import type { Settings } from '@/lib/settings/types';
 
@@ -50,9 +54,9 @@ export function PushNotificationManager({ settings }: Props) {
     await unsubscribeUser();
   }
 
-  async function sendTestNotification() {
+  async function testNotification() {
     if (subscription && settings.is_admin) {
-      await sendNotification(message);
+      await sendTestNotification(message);
       setMessage('');
     }
   }
@@ -96,11 +100,11 @@ export function PushNotificationManager({ settings }: Props) {
                   onChange={(e) => setMessage(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && message.trim()) {
-                      sendTestNotification();
+                      testNotification();
                     }
                   }}
                 />
-                <Button onClick={sendTestNotification} disabled={!message.trim()}>
+                <Button onClick={testNotification} disabled={!message.trim()}>
                   Send Test Notification
                 </Button>
               </div>
