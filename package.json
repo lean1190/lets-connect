@@ -53,6 +53,7 @@
     "react-hook-form": "7.71.1",
     "recharts": "3.6.0",
     "tailwind-merge": "3.4.0",
+    "web-push": "3.6.7",
     "zod": "4.3.5"
   },
   "devDependencies": {
@@ -63,6 +64,7 @@
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/web-push": "3.6.4",
     "@vitejs/plugin-react": "5.1.2",
     "@vitest/coverage-v8": "4.0.17",
     "babel-plugin-react-compiler": "1.0.0",
