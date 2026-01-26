@@ -90,16 +90,12 @@ export function ImportEventsPageClient({ initialUrl }: Props) {
   const { execute: importEventsAction, status: importStatus } = useAction(importEvents, {
     onSuccess: ({ data }) => {
       if (data) {
-        alert(`Import completed! Inserted: ${data.inserted}, Skipped: ${data.skipped}`);
-        if (data.skippedEvents.length > 0) {
-          data.skippedEvents.forEach((skipped) => {
-            console.warn(`Skipped: "${skipped.name}" - ${skipped.reason}`);
-          });
-        }
+        alert(`Import completed! Inserted: ${data.inserted}`);
         if (data.errors.length > 0) {
           console.error('Import errors:', data.errors);
         }
         setParsedEvents([]);
+        setDryRunResults(new Map());
         setUrl('');
       }
     }
@@ -114,11 +110,14 @@ export function ImportEventsPageClient({ initialUrl }: Props) {
   };
 
   const handleImport = () => {
-    if (parsedEvents.length === 0) {
+    const eventsToImport = parsedEvents.filter(
+      (_, index) => dryRunResults.get(index)?.status === 'import'
+    );
+    if (eventsToImport.length === 0) {
       alert('No events to import');
       return;
     }
-    importEventsAction({ events: parsedEvents });
+    importEventsAction({ events: eventsToImport });
   };
 
   const updateEvent = (index: number, field: keyof ParsedEvent, value: string) => {

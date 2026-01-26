@@ -92,36 +92,15 @@ export const dryRunImportEvents = actionClient
     return { results };
   });
 
-type SkippedEvent = {
-  name: string;
-  reason: string;
-};
-
 export const importEvents = actionClient
   .inputSchema(importEventsSchema)
   .action(async ({ parsedInput }) => {
     const supabase = await createDatabaseServerClient();
     let inserted = 0;
-    const skippedEvents: SkippedEvent[] = [];
     const errors: string[] = [];
 
     for (const event of parsedInput.events) {
       try {
-        const { data: existing } = await supabase
-          .from('events')
-          .select('id')
-          .eq('name', event.name)
-          .eq('starts_at', event.starts_at)
-          .single();
-
-        if (existing) {
-          skippedEvents.push({
-            name: event.name,
-            reason: `Event already exists with same name and start date (${event.starts_at})`
-          });
-          continue;
-        }
-
         const id = crypto.randomUUID();
 
         const eventData: EventInsert = {
@@ -147,5 +126,5 @@ export const importEvents = actionClient
 
     revalidatePath('/houston/events');
 
-    return { inserted, skipped: skippedEvents.length, skippedEvents, errors };
+    return { inserted, errors };
   });
