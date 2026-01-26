@@ -446,5 +446,50 @@ describe('fetchEventsFromUrl', () => {
 
       expect(result?.data?.events[0].url).toBe('/event');
     });
+
+    it('should parse event name wrapped in bold tag inside link', async () => {
+      const html = `
+        <div style="padding-bottom:13px;padding-left:15px;padding-right:15px;padding-top:13px;">
+          <p>
+            <span><b>January 29:</b></span>
+            <span>&nbsp;</span>
+            <span><a href="https://www.factorial.io/en/events/ux-roundtable-hamburg"><b>UX Roundtable</b></a></span>
+            <span> (German) — Explore how to unify UX across multi-touchpoint platforms</span>
+          </p>
+        </div>
+      `;
+
+      mockFetch.mockResolvedValueOnce(createMockResponse(html));
+
+      const result = await fetchEventsFromUrl({ url: 'https://example.com/newsletter' });
+
+      expect(result?.data?.events).toHaveLength(1);
+      expect(result?.data?.events[0]).toEqual({
+        dateRange: 'January 29',
+        name: 'UX Roundtable',
+        description: 'Explore how to unify UX across multi-touchpoint platforms',
+        url: 'https://www.factorial.io/en/events/ux-roundtable-hamburg'
+      });
+    });
+
+    it('should parse event name wrapped in strong tag inside link', async () => {
+      const html = `
+        <div style="padding-bottom:13px;padding-left:15px;padding-right:15px;padding-top:13px;">
+          <p>
+            <span><b>January 29:</b></span>
+            <span>&nbsp;</span>
+            <span><a href="https://example.com/event"><strong>Bold Event Name</strong></a></span>
+            <span> (English) — Event with strong tag in name</span>
+          </p>
+        </div>
+      `;
+
+      mockFetch.mockResolvedValueOnce(createMockResponse(html));
+
+      const result = await fetchEventsFromUrl({ url: 'https://example.com/newsletter' });
+
+      expect(result?.data?.events).toHaveLength(1);
+      expect(result?.data?.events[0].name).toBe('Bold Event Name');
+    });
   });
 });

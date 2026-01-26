@@ -51,8 +51,9 @@ export const fetchEventsFromUrl = actionClient
       if (!isValidDatePattern(dateRange)) continue;
 
       // Extract event name and URL from <a> tag: <span><a href="...">Event Name</a></span>
+      // Event name may be wrapped in <b> or <strong> tags, so we capture inner HTML and clean it
       const linkMatch = divContent.match(
-        /<span[^>]*>\s*<a[^>]+href=["']([^"']+)["'][^>]*>([^<]+?)<\/a>\s*<\/span>/i
+        /<span[^>]*>\s*<a[^>]+href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>\s*<\/span>/i
       );
       if (!linkMatch?.[2]) continue;
 
