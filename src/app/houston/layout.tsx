@@ -10,15 +10,10 @@ export default function HoustonLayout({ children }: { children: React.ReactNode 
         <div className="bg-card border-b border-border shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-2">
-              <div className="flex items-center gap-2">
-                <Link href={'/'}>
-                  <Image src="/logo.png" alt="Logo" width={30} height={30} priority={false} />
-                </Link>
-                <div className="text-sm text-muted-foreground">Admin Dashboard</div>
-              </div>
-              <div className="flex items-center gap-6">
-                <Navigation />
-              </div>
+              <Navigation />
+              <Link href="/">
+                <Image src="/logo.png" alt="Logo" width={30} height={30} priority={false} />
+              </Link>
             </div>
           </div>
         </div>
