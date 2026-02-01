@@ -1,17 +1,9 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { actionClient } from '@/lib/server-actions/client';
-
-const updateCircleSchema = z.object({
-  id: z.uuid(),
-  name: z.string().min(1).max(120).optional(),
-  description: z.string().max(1000).optional().nullable(),
-  color: z.string().optional().nullable(),
-  icon: z.string().optional().nullable()
-});
+import { updateCircleSchema } from '../schema';
 
 export const updateCircle = actionClient
   .inputSchema(updateCircleSchema)
@@ -25,28 +17,13 @@ export const updateCircle = actionClient
       throw new Error('Not authenticated');
     }
 
-    const updateData: {
-      name?: string;
-      color?: string | null;
-      description?: string | null;
-      icon?: string | null;
-      updated_at: string;
-    } = {
-      updated_at: new Date().toISOString()
+    const updateData = {
+      name: parsedInput.name,
+      updated_at: new Date().toISOString(),
+      ...(parsedInput.color !== undefined ? { color: parsedInput.color } : {}),
+      ...(parsedInput.description !== undefined ? { description: parsedInput.description } : {}),
+      ...(parsedInput.icon !== undefined ? { icon: parsedInput.icon } : {})
     };
-
-    if (parsedInput.name !== undefined) {
-      updateData.name = parsedInput.name;
-    }
-    if (parsedInput.color !== undefined) {
-      updateData.color = parsedInput.color;
-    }
-    if (parsedInput.description !== undefined) {
-      updateData.description = parsedInput.description;
-    }
-    if (parsedInput.icon !== undefined) {
-      updateData.icon = parsedInput.icon;
-    }
 
     const { error } = await supabase
       .from('circles')

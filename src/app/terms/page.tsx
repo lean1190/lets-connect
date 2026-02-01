@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { AppRoute } from '@/lib/constants/navigation';
 
 export default function TermsPage() {
   return (
@@ -152,7 +153,7 @@ export default function TermsPage() {
             <p className="text-gray-700 dark:text-muted-foreground mb-6">
               Your privacy is important to us. Please review our{' '}
               <Link
-                href="/privacy"
+                href={AppRoute.Privacy}
                 className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
               >
                 Privacy Policy

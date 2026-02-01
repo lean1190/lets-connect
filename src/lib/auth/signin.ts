@@ -19,7 +19,11 @@ export async function signInWithLinkedIn() {
   redirectToLinkedInSigninPage(oAuthResponse);
 }
 
-function redirectToLinkedInSigninPage({ data }: OAuthResponse) {
+function redirectToLinkedInSigninPage({ data, error }: OAuthResponse) {
+  if (error) {
+    throw new Error('Auth error', error);
+  }
+
   if (data.url) {
     redirect(data.url);
   }

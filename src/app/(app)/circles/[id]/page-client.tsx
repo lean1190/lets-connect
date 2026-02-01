@@ -1,11 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
 import { useRouter } from 'next/navigation';
-import { useAction } from 'next-safe-action/hooks';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { IconPicker } from '@/components/icon-picker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -19,17 +16,10 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { updateCircle } from '@/lib/circles/update/actions/update';
+import { updateCircleSchema } from '@/lib/circles/update/schema';
+import { AppRoute } from '@/lib/constants/navigation';
 import { isExecuting } from '@/lib/server-actions/status';
 import { DeleteCircleButton } from '../components/delete-circle-button';
-
-const formSchema = z.object({
-  name: z.string().min(1, 'Circle name is required').trim(),
-  color: z.string().optional().nullable(),
-  description: z.string().optional().nullable(),
-  icon: z.string().optional().nullable()
-});
-
-type FormValues = z.infer<typeof formSchema>;
 
 type Props = {
   circleId: string;
@@ -43,39 +33,26 @@ type Props = {
 
 export function EditCirclePageClient({ circleId, initialCircle }: Props) {
   const router = useRouter();
-  const {
-    execute: updateCircleAction,
-    status: updateStatus,
-    result: updateResult
-  } = useAction(updateCircle);
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: initialCircle?.name || '',
-      color: initialCircle?.color || null,
-      description: initialCircle?.description || null,
-      icon: initialCircle?.icon || null
+  const { form, action, handleSubmitWithAction } = useHookFormAction(
+    updateCircle,
+    zodResolver(updateCircleSchema),
+    {
+      formProps: {
+        defaultValues: {
+          id: circleId,
+          name: initialCircle?.name ?? '',
+          color: initialCircle?.color ?? null,
+          description: initialCircle?.description ?? null,
+          icon: initialCircle?.icon ?? null
+        }
+      },
+      actionProps: {
+        onSuccess: () => router.replace(AppRoute.Circles),
+        onError: ({ error }) => alert(`Error: ${error}`)
+      }
     }
-  });
-
-  const onSubmit = (values: FormValues) => {
-    updateCircleAction({
-      id: circleId,
-      name: values.name,
-      color: values.color || null,
-      description: values.description || null,
-      icon: values.icon || null
-    });
-  };
-
-  useEffect(() => {
-    if (updateResult?.serverError) {
-      alert(`Error: ${updateResult.serverError}`);
-    } else if (updateResult?.data) {
-      router.push('/circles');
-    }
-  }, [updateResult, router]);
+  );
 
   if (!initialCircle) {
     return (
@@ -93,7 +70,7 @@ export function EditCirclePageClient({ circleId, initialCircle }: Props) {
     <Card>
       <CardContent className="pt-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmitWithAction} className="space-y-6">
             <FormField
               control={form.control}
               name="name"
@@ -176,13 +153,16 @@ export function EditCirclePageClient({ circleId, initialCircle }: Props) {
             </div>
 
             <div className="flex items-center justify-between">
-              <DeleteCircleButton circleId={circleId} circleName={form.watch('name')} />
+              <DeleteCircleButton
+                circleId={circleId}
+                circleName={form.watch('name') ?? initialCircle.name ?? ''}
+              />
               <div className="flex gap-4 items-center">
                 <Button type="button" variant="outline" onClick={() => router.back()}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isExecuting(updateStatus)}>
-                  {isExecuting(updateStatus) ? 'Saving...' : 'Save'}
+                <Button type="submit" disabled={isExecuting(action.status)}>
+                  {isExecuting(action.status) ? 'Saving...' : 'Save'}
                 </Button>
               </div>
             </div>

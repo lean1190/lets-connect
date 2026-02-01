@@ -1,11 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
 import { useRouter } from 'next/navigation';
-import { useAction } from 'next-safe-action/hooks';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -18,20 +15,13 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import type { Circle } from '@/lib/circles/types';
+import { AppRoute } from '@/lib/constants/navigation';
 import { updateContact } from '@/lib/contacts/update/actions/update';
+import { updateContactSchema } from '@/lib/contacts/update/schema';
 import { isExecuting } from '@/lib/server-actions/status';
 import { CircleButton } from '../components/circle-button';
 import { DeleteContactButton } from '../components/delete-contact-button';
 import { useAddCircles } from '../hooks/use-add-circles';
-
-const formSchema = z.object({
-  profileLink: z.string().optional(),
-  name: z.string().min(1, 'Name is required').trim(),
-  reason: z.string().trim().optional(),
-  circleIds: z.array(z.string()).optional()
-});
-
-type FormValues = z.infer<typeof formSchema>;
 
 type Props = {
   contactId: string;
@@ -47,21 +37,25 @@ type Props = {
 export function EditContactPageClient({ contactId, initialContact, initialCircles }: Props) {
   const router = useRouter();
 
-  const {
-    execute: updateContactAction,
-    status: updateStatus,
-    result: updateResult
-  } = useAction(updateContact);
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      profileLink: initialContact?.url || '',
-      name: initialContact?.name || '',
-      reason: initialContact?.reason || '',
-      circleIds: initialContact?.circles?.map((c) => c.id) || []
+  const { form, action, handleSubmitWithAction } = useHookFormAction(
+    updateContact,
+    zodResolver(updateContactSchema),
+    {
+      formProps: {
+        defaultValues: {
+          id: contactId,
+          profileLink: initialContact?.url || undefined,
+          name: initialContact?.name ?? '',
+          reason: initialContact?.reason || undefined,
+          circleIds: initialContact?.circles?.map((c) => c.id) ?? []
+        }
+      },
+      actionProps: {
+        onSuccess: () => router.replace(AppRoute.Contacts),
+        onError: ({ error }) => alert(`Error: ${error}`)
+      }
     }
-  });
+  );
 
   const {
     circles,
@@ -74,29 +68,11 @@ export function EditContactPageClient({ contactId, initialContact, initialCircle
     toggleCircle
   } = useAddCircles({
     initialCircles,
-    getSelectedCircleIds: () => form.getValues('circleIds') || [],
+    getSelectedCircleIds: () => form.getValues('circleIds') ?? [],
     setSelectedCircleIds: (ids) => form.setValue('circleIds', ids)
   });
 
-  const selectedCircles = form.watch('circleIds') || [];
-
-  const onSubmit = (values: FormValues) => {
-    updateContactAction({
-      id: contactId,
-      name: values.name,
-      profileLink: values.profileLink || '',
-      reason: values.reason || '',
-      circleIds: values.circleIds && values.circleIds.length > 0 ? values.circleIds : undefined
-    });
-  };
-
-  useEffect(() => {
-    if (updateResult?.serverError) {
-      alert(`Error: ${updateResult.serverError}`);
-    } else if (updateResult?.data) {
-      router.push('/contacts');
-    }
-  }, [updateResult, router]);
+  const selectedCircles = form.watch('circleIds') ?? [];
 
   if (!initialContact) {
     return (
@@ -114,7 +90,7 @@ export function EditContactPageClient({ contactId, initialContact, initialCircle
     <Card>
       <CardContent className="pt-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmitWithAction} className="space-y-6">
             <FormField
               control={form.control}
               name="name"
@@ -244,13 +220,16 @@ export function EditContactPageClient({ contactId, initialContact, initialCircle
             </div>
 
             <div className="flex items-center justify-between">
-              <DeleteContactButton contactId={contactId} contactName={form.watch('name')} />
+              <DeleteContactButton
+                contactId={contactId}
+                contactName={form.watch('name') ?? initialContact.name ?? ''}
+              />
               <div className="flex gap-4 items-center">
                 <Button type="button" variant="outline" onClick={() => router.back()}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isExecuting(updateStatus)}>
-                  {isExecuting(updateStatus) ? 'Saving...' : 'Save'}
+                <Button type="submit" disabled={isExecuting(action.status)}>
+                  {isExecuting(action.status) ? 'Saving...' : 'Save'}
                 </Button>
               </div>
             </div>

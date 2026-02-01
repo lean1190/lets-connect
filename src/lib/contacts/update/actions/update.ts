@@ -1,17 +1,9 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { actionClient } from '@/lib/server-actions/client';
-
-const updateContactSchema = z.object({
-  id: z.uuid(),
-  name: z.string().min(1).max(120).optional(),
-  profileLink: z.url().max(500).optional(),
-  reason: z.string().min(1).max(2000).optional(),
-  circleIds: z.array(z.uuid()).optional()
-});
+import { updateContactSchema } from '../schema';
 
 export const updateContact = actionClient
   .inputSchema(updateContactSchema)

@@ -187,10 +187,16 @@ export default async function LandingPage() {
               © {new Date().getFullYear()} Let&apos;s Connect. All rights reserved.
             </div>
             <div className="flex gap-6">
-              <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
+              <Link
+                href={AppRoute.Privacy}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
                 Privacy
               </Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
+              <Link
+                href={AppRoute.Terms}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
                 Terms
               </Link>
             </div>

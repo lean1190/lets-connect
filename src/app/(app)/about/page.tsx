@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { CtaButton } from '@/components/ui/cta-button';
+import { AppRoute } from '@/lib/constants/navigation';
 
 export default function AboutPage() {
   return (
@@ -59,11 +60,11 @@ export default function AboutPage() {
       </Card>
 
       <div className="text-xs flex justify-center gap-2 items-center">
-        <Link href="/terms" className="text-blue-400 hover:underline dark:text-blue-400">
+        <Link href={AppRoute.Terms} className="text-blue-400 hover:underline dark:text-blue-400">
           Terms and Conditions
         </Link>
         <span>•</span>
-        <Link href="/privacy" className="text-blue-400 hover:underline dark:text-blue-400">
+        <Link href={AppRoute.Privacy} className="text-blue-400 hover:underline dark:text-blue-400">
           Privacy Policy
         </Link>
       </div>

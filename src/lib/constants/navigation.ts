@@ -13,7 +13,9 @@ export enum AppRoute {
   Favorites = '/favorites',
   Settings = '/settings',
   About = '/about',
-  Events = '/events'
+  Events = '/events',
+  Privacy = '/privacy',
+  Terms = '/terms'
 }
 
 export const alwaysAllowedRoutes = [AppRoute.Landing, AppRoute.Signin];

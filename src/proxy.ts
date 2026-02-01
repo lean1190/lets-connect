@@ -11,7 +11,6 @@ export const config = {
     /*
      * Match all request paths except for the ones starting with:
      * - signin (signin page)
-     * - houston (admin panel page)
      * - auth callback urls (oauth process)
      * - terms (terms & conditions page)
      * - privacy (privacy policy page)
@@ -22,7 +21,7 @@ export const config = {
      * - favicon.ico (favicon file)
      * - images (any image)
      */
-    '/((?!signin|houston|auth|terms|privacy|manifest|sw.js|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
+    '/((?!signin|auth|terms|privacy|manifest|sw.js|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
   ],
   missing: [
     { type: 'header', key: 'next-router-prefetch' },
