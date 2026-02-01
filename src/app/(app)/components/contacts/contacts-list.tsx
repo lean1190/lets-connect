@@ -1,6 +1,6 @@
 'use client';
 
-import { IconEdit, IconFilter, IconLink, IconList } from '@tabler/icons-react';
+import { IconEdit, IconFilter, IconLink, IconList, IconStar } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useAction } from 'next-safe-action/hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -155,8 +155,18 @@ export function ContactsList({
                   className="border-b last:border-b-0 bg-white dark:bg-gray-900/50 hover:bg-accent/50 transition-colors"
                 >
                   <td className="px-4 py-2">
-                    <span className="text-sm font-medium text-gray-900 dark:text-foreground">
-                      {contact.name}
+                    <span className="flex items-center gap-2">
+                      {contact.favorite ? (
+                        <IconStar
+                          size={16}
+                          className="shrink-0 text-yellow-500"
+                          fill="currentColor"
+                          aria-hidden
+                        />
+                      ) : null}
+                      <span className="text-sm font-medium text-gray-900 dark:text-foreground">
+                        {contact.name}
+                      </span>
                     </span>
                   </td>
                   <td className="px-4 py-2">
