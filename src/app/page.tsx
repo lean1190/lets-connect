@@ -3,13 +3,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { CtaButton } from '@/components/ui/cta-button';
-import { isSignedIn } from '@/lib/auth/session/server';
 import { githubUrl } from '@/lib/constants/links';
 import { AppRoute } from '@/lib/constants/navigation';
 
 export default async function LandingPage() {
-  const isIn = await isSignedIn();
-  const redirectTo = isIn ? AppRoute.Contacts : AppRoute.Signin;
+  const redirectTo = AppRoute.Contacts;
 
   return (
     <div className="min-h-dvh text-white bg-[#0e0f13] relative overflow-hidden">
@@ -43,7 +41,7 @@ export default async function LandingPage() {
               <IconBrandGithub className="w-6 h-6" />
             </Link>
             <Link href={redirectTo}>
-              <Button variant="glass">{isIn ? 'Go to app' : 'Sign in'}</Button>
+              <Button variant="glass">{'Go to app'}</Button>
             </Link>
           </div>
         </nav>
