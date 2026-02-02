@@ -1,16 +1,19 @@
 import { IconCamera, IconQrcode } from '@tabler/icons-react';
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { getUser } from '@/lib/auth/session/server';
 import { AppRoute } from '@/lib/constants/navigation';
 import { getSettings } from '@/lib/settings/get/get';
 import AppMenu from './app-menu';
+import BackButton from './layouts/back-button';
 
 type Props = {
   title?: string;
+  showBackButton?: boolean;
 };
 
-export default async function AppHeader({ title }: Props) {
+export default async function AppHeader({ title, showBackButton = false }: Props) {
   const user = await getUser();
   const settings = await getSettings();
 
@@ -19,7 +22,9 @@ export default async function AppHeader({ title }: Props) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center gap-2">
-            <AppMenu user={user} settings={settings} />
+            <Suspense fallback={null}>
+              {showBackButton ? <BackButton /> : <AppMenu user={user} settings={settings} />}
+            </Suspense>
             {title ? <h1 className="text-lg font-medium text-foreground">{title}</h1> : null}
           </div>
           <div className="flex items-center gap-2">
