@@ -1,11 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
 import { useRouter } from 'next/navigation';
-import { useAction } from 'next-safe-action/hooks';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { IconPicker } from '@/components/icon-picker';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -19,54 +16,37 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { createCircle } from '@/lib/circles/create/actions/create';
+import { createCircleSchema } from '@/lib/circles/create/schema';
 import { AppRoute } from '@/lib/constants/navigation';
 import { isExecuting } from '@/lib/server-actions/status';
 
-const formSchema = z.object({
-  name: z.string().min(1, 'Circle name is required').trim(),
-  color: z.string().optional().nullable(),
-  description: z.string().optional().nullable(),
-  icon: z.string().optional().nullable()
-});
-
-type FormValues = z.infer<typeof formSchema>;
-
 export default function NewCirclePageClient() {
   const router = useRouter();
-  const { execute: createCircleAction, status, result } = useAction(createCircle);
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      color: null,
-      description: null,
-      icon: null
+  const { form, action, handleSubmitWithAction } = useHookFormAction(
+    createCircle,
+    zodResolver(createCircleSchema),
+    {
+      formProps: {
+        defaultValues: {
+          name: '',
+          color: null,
+          description: null,
+          icon: null
+        }
+      },
+      actionProps: {
+        onSuccess: () => router.replace(AppRoute.Circles),
+        onError: ({ error }) => alert(`Error: ${error}`)
+      }
     }
-  });
-
-  const onSubmit = (values: FormValues) => {
-    createCircleAction({
-      name: values.name,
-      color: values.color || null,
-      description: values.description || null,
-      icon: values.icon || null
-    });
-  };
-
-  useEffect(() => {
-    if (result?.serverError) {
-      alert(`Error: ${result.serverError}`);
-    } else if (result?.data) {
-      router.replace(AppRoute.Circles);
-    }
-  }, [result, router]);
+  );
 
   return (
     <Card>
       <CardContent className="pt-6">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={handleSubmitWithAction} className="space-y-6">
             <FormField
               control={form.control}
               name="name"
@@ -153,8 +133,8 @@ export default function NewCirclePageClient() {
               <Button type="button" variant="outline" onClick={() => router.back()}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isExecuting(status)}>
-                {isExecuting(status) ? 'Creating...' : 'Create Circle'}
+              <Button type="submit" disabled={isExecuting(action.status)}>
+                {isExecuting(action.status) ? 'Creating...' : 'Create Circle'}
               </Button>
             </div>
           </form>

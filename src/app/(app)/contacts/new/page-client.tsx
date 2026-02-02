@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -42,6 +41,10 @@ export function NewContactPageClient({ profileLink, initialCircles }: Props) {
           reason: '',
           circleIds: []
         }
+      },
+      actionProps: {
+        onSuccess: () => router.replace(AppRoute.Contacts),
+        onError: ({ error }) => alert(`Error: ${error}`)
       }
     }
   );
@@ -62,16 +65,6 @@ export function NewContactPageClient({ profileLink, initialCircles }: Props) {
   });
 
   const selectedCircles = form.watch('circleIds') ?? [];
-
-  useEffect(() => {
-    if (action.result?.serverError) {
-      return alert(`Error: ${action.result.serverError}`);
-    }
-
-    if (action.result?.data) {
-      router.replace(AppRoute.Contacts);
-    }
-  }, [action.result, router]);
 
   return (
     <Card>

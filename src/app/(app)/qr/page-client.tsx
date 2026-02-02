@@ -1,11 +1,11 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
 import { IconLink } from '@tabler/icons-react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -19,21 +19,19 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { updateSettingsAction } from '@/lib/settings/update/actions/update';
+import { updateSettingsSchema } from '@/lib/settings/update/schema';
 
 const QRCodeSVG = dynamic(() => import('qrcode.react').then((mod) => mod.QRCodeSVG), {
   ssr: false
 }) as React.ComponentType<{ value: string; size?: number }>;
 
-const formSchema = z.object({
+const qrFormSchema = updateSettingsSchema.pick({ qrLink: true }).extend({
   qrLink: z
-    .string()
-    .refine((val) => !val || z.url().safeParse(val).success, {
-      message: 'Please enter a valid URL'
-    })
+    .union([z.url(), z.literal('')])
     .optional()
+    .nullable()
+    .transform((v) => (v === '' || v == null ? null : v))
 });
-
-type FormValues = z.infer<typeof formSchema>;
 
 type Props = {
   initialQrLink: string | null;
@@ -42,25 +40,29 @@ type Props = {
 export function MyQRPageClient({ initialQrLink }: Props) {
   const [isEditing, setIsEditing] = useState(false);
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      qrLink: initialQrLink || ''
+  const { form, action, handleSubmitWithAction } = useHookFormAction(
+    updateSettingsAction,
+    zodResolver(qrFormSchema),
+    {
+      formProps: {
+        defaultValues: {
+          qrLink: initialQrLink ?? ''
+        }
+      },
+      actionProps: {
+        onSuccess: () => cancelEditing(),
+        onError: ({ error }) => alert(`Error: ${error}`)
+      }
     }
-  });
-
-  const onSubmit = async (values: FormValues) => {
-    await updateSettingsAction({ qrLink: values.qrLink || null });
-    setIsEditing(false);
-  };
+  );
 
   const startEditing = () => {
-    form.reset({ qrLink: initialQrLink || '' });
+    form.reset({ qrLink: initialQrLink ?? '' });
     setIsEditing(true);
   };
 
   const cancelEditing = () => {
-    form.reset({ qrLink: initialQrLink || '' });
+    form.reset({ qrLink: initialQrLink ?? '' });
     setIsEditing(false);
   };
 
@@ -88,7 +90,7 @@ export function MyQRPageClient({ initialQrLink }: Props) {
         <Card>
           <CardContent className="pt-6">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={handleSubmitWithAction} className="space-y-4">
                 <FormField
                   control={form.control}
                   name="qrLink"
@@ -102,6 +104,7 @@ export function MyQRPageClient({ initialQrLink }: Props) {
                           placeholder="https://linkedin.com/in/yourprofile"
                           className="mt-1"
                           autoFocus
+                          value={field.value ?? ''}
                         />
                       </FormControl>
                       <FormMessage />
@@ -112,7 +115,9 @@ export function MyQRPageClient({ initialQrLink }: Props) {
                   <Button type="button" variant="outline" onClick={cancelEditing}>
                     Cancel
                   </Button>
-                  <Button type="submit">Save link</Button>
+                  <Button type="submit" disabled={action.status === 'executing'}>
+                    Save link
+                  </Button>
                 </div>
               </form>
             </Form>
