@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { FavoritesData } from '@/lib/favorites/get';
+import { FavoriteType } from '@/lib/favorites/types';
 import CircleTile from './circle-tile';
 import ContactTile from './contact-tile';
 
@@ -64,7 +65,7 @@ export default function FavoritesGallery({ favorites }: Props) {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {filteredItems.map((item) =>
-          item.type === 'contact' ? (
+          item.type === FavoriteType.Contact ? (
             <ContactTile key={`contact-${item.id}`} contact={item} />
           ) : (
             <CircleTile key={`circle-${item.id}`} circle={item} />

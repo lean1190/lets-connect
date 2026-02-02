@@ -3,11 +3,12 @@
 import { IconStar } from '@tabler/icons-react';
 import { useOptimisticAction } from 'next-safe-action/hooks';
 import { toggleFavorite } from '@/lib/favorites/actions/toggle';
+import type { FavoriteType } from '@/lib/favorites/types';
 import { Button } from '../../../components/ui/button';
 
 type Props = {
   id: string;
-  type: 'contact' | 'circle';
+  type: FavoriteType;
   initialFavorite: boolean;
 };
 

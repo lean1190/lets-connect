@@ -14,6 +14,8 @@ export enum AppRoute {
   Settings = '/settings',
   About = '/about',
   Events = '/events',
+  Houston = '/houston',
+  HoustonEvents = '/houston/events',
   Privacy = '/privacy',
   Terms = '/terms'
 }

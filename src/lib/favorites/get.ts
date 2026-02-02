@@ -3,9 +3,10 @@
 import type { Circle } from '@/lib/circles/types';
 import type { Contact } from '@/lib/contacts/types';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
+import { FavoriteType } from './types';
 
-export type FavoriteContact = Contact & { type: 'contact' };
-export type FavoriteCircle = Circle & { type: 'circle' };
+export type FavoriteContact = Contact & { type: FavoriteType.Contact };
+export type FavoriteCircle = Circle & { type: FavoriteType.Circle };
 export type FavoriteItem = FavoriteContact | FavoriteCircle;
 
 export type FavoritesData = {
@@ -41,7 +42,7 @@ export async function getFavorites(): Promise<FavoritesData> {
 
   const contacts: FavoriteContact[] = (contactsResult.data || []).map((contact) => ({
     ...contact,
-    type: 'contact' as const
+    type: FavoriteType.Contact
   }));
 
   const circlesWithCounts: FavoriteCircle[] = await Promise.all(
@@ -55,7 +56,7 @@ export async function getFavorites(): Promise<FavoritesData> {
       return {
         ...circle,
         contactCount: count || 0,
-        type: 'circle' as const
+        type: FavoriteType.Circle
       };
     })
   );

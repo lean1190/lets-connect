@@ -5,10 +5,16 @@ import { z } from 'zod';
 import { AppRoute } from '@/lib/constants/navigation';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { actionClient } from '@/lib/server-actions/client';
+import { FavoriteType } from '../types';
+
+const FAVORITE_TYPE_ROUTE: Record<FavoriteType, string> = {
+  [FavoriteType.Contact]: AppRoute.Contacts,
+  [FavoriteType.Circle]: AppRoute.Circles
+};
 
 const toggleFavoriteSchema = z.object({
   id: z.uuid(),
-  type: z.enum(['contact', 'circle']),
+  type: z.nativeEnum(FavoriteType),
   favorite: z.boolean()
 });
 
@@ -24,10 +30,8 @@ export const toggleFavorite = actionClient
       throw new Error('Not authenticated');
     }
 
-    const table = parsedInput.type === 'contact' ? 'contacts' : 'circles';
-
     const { error } = await supabase
-      .from(table)
+      .from(parsedInput.type)
       .update({ favorite: parsedInput.favorite })
       .eq('id', parsedInput.id)
       .eq('user_id', user.id);
@@ -37,5 +41,5 @@ export const toggleFavorite = actionClient
     }
 
     revalidatePath(AppRoute.Favorites);
-    revalidatePath(`/${table}`);
+    revalidatePath(FAVORITE_TYPE_ROUTE[parsedInput.type]);
   });

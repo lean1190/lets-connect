@@ -11,6 +11,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import type { Circle } from '@/lib/circles/types';
 import { AppRoute } from '@/lib/constants/navigation';
+import { FavoriteType } from '@/lib/favorites/types';
 
 type CirclesListProps = {
   circles: Circle[];
@@ -78,7 +79,7 @@ export function CirclesList({ circles }: CirclesListProps) {
             <div className="absolute top-4 right-4">
               <FavoriteButton
                 id={circle.id}
-                type="circle"
+                type={FavoriteType.Circle}
                 initialFavorite={circle.favorite ?? false}
               />
             </div>

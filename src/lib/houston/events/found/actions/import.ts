@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { AppRoute } from '@/lib/constants/navigation';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 import type { TablesInsert } from '@/lib/database/types';
 import { actionClient } from '@/lib/server-actions/client';
@@ -124,7 +125,7 @@ export const importEvents = actionClient
       }
     }
 
-    revalidatePath('/houston/events');
+    revalidatePath(AppRoute.HoustonEvents);
 
     return { inserted, errors };
   });

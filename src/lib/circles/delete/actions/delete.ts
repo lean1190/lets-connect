@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { AppRoute } from '@/lib/constants/navigation';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { actionClient } from '@/lib/server-actions/client';
 
@@ -31,5 +32,5 @@ export const deleteCircle = actionClient
       throw new Error(`Failed to delete circle: ${error.message}`);
     }
 
-    revalidatePath('/circles');
+    revalidatePath(AppRoute.Circles);
   });

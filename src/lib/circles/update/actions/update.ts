@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { AppRoute } from '@/lib/constants/navigation';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { actionClient } from '@/lib/server-actions/client';
 import { updateCircleSchema } from '../schema';
@@ -35,6 +36,6 @@ export const updateCircle = actionClient
       throw new Error(`Failed to update circle: ${error.message}`);
     }
 
-    revalidatePath('/circles');
-    revalidatePath(`/circles/${parsedInput.id}`);
+    revalidatePath(AppRoute.Circles);
+    revalidatePath(`${AppRoute.Circles}/${parsedInput.id}`);
   });

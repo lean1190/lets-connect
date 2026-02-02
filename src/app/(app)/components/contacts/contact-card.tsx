@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { AppRoute } from '@/lib/constants/navigation';
 import type { Contact } from '@/lib/contacts/types';
+import { FavoriteType } from '@/lib/favorites/types';
 
 type Props = {
   contact: Contact;
@@ -15,7 +16,11 @@ export function ContactCard({ contact, showCirclesCount = true }: Props) {
   return (
     <Card className="hover:border-white/30 transition-all relative">
       <div className="absolute top-4 right-4">
-        <FavoriteButton id={contact.id} type="contact" initialFavorite={contact.favorite} />
+        <FavoriteButton
+          id={contact.id}
+          type={FavoriteType.Contact}
+          initialFavorite={contact.favorite}
+        />
       </div>
       <CardContent className="p-6">
         <div className="mb-4 pr-10">

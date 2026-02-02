@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import { AppRoute } from '@/lib/constants/navigation';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 import { actionClient } from '@/lib/server-actions/client';
 import { updateContactSchema } from '../schema';
@@ -60,6 +61,5 @@ export const updateContact = actionClient
       }
     }
 
-    revalidatePath('/');
-    revalidatePath(`/contacts/${parsedInput.id}`);
+    revalidatePath(AppRoute.Contacts);
   });
