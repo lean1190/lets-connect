@@ -4,13 +4,13 @@ import { CtaButton } from '@/components/ui/cta-button';
 import { getContacts } from '@/lib/contacts/get/get';
 import { getContactsListMode } from '@/lib/settings/get/get';
 import { ContactsList } from '../components/contacts/contacts-list';
-import PageWithNavigationLayout from '../components/layouts/page-with-navigation-layout';
+import PageLayout from '../components/layouts/page-layout';
 
 export default async function ContactsPage() {
   const [contacts, settings] = await Promise.all([getContacts(), getContactsListMode()]);
 
   return (
-    <PageWithNavigationLayout title="Contacts">
+    <PageLayout title="Contacts">
       {contacts.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
           <IconUser
@@ -30,6 +30,6 @@ export default async function ContactsPage() {
       ) : (
         <ContactsList contacts={contacts} initialListMode={settings.contacts_list_mode} />
       )}
-    </PageWithNavigationLayout>
+    </PageLayout>
   );
 }

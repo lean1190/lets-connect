@@ -1,6 +1,7 @@
-import { IconMenu2 } from '@tabler/icons-react';
-import { Button } from '@/components/ui/button';
-import BackButton from './back-button';
+import BackButton from './buttons/back-button';
+import PlainMenuButton from './buttons/plain-menu-button';
+import QrButton from './buttons/qr-button';
+import ScanButton from './buttons/scan-button';
 
 type Props = {
   title?: string;
@@ -18,13 +19,7 @@ export default function LoadingPageLayout({ title, showBackButton = false, child
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
-              {showBackButton ? (
-                <BackButton />
-              ) : (
-                <Button variant="ghost" size="icon">
-                  <IconMenu2 size={20} className="h-5 w-5" />
-                </Button>
-              )}
+              {showBackButton ? <BackButton /> : <PlainMenuButton />}
               {title ? (
                 <h1 className="text-lg font-medium text-foreground">{title}</h1>
               ) : (
@@ -32,8 +27,8 @@ export default function LoadingPageLayout({ title, showBackButton = false, child
               )}
             </div>
             <div className="flex items-center gap-2">
-              <div className="h-9 w-9 rounded bg-muted animate-pulse" />
-              <div className="h-9 w-20 rounded bg-muted animate-pulse" />
+              <QrButton />
+              <ScanButton />
             </div>
           </div>
         </div>

@@ -84,7 +84,7 @@ export default function ScanPage() {
 
   if (hasPermission === false) {
     return (
-      <div className="h-dvh min-h-dvh bg-black flex items-center justify-center p-8">
+      <div className="h-dvh min-h-dvh flex items-center justify-center p-8">
         <div className="text-center text-white">
           <p className="text-lg mb-4">Camera permission is required to scan QR codes.</p>
           <p className="text-sm text-gray-400 mb-8">

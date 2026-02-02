@@ -3,6 +3,7 @@ import { getCircleById } from '@/lib/circles/get/by-id';
 import { getContactsInCircle } from '@/lib/circles/get/contacts';
 import { getContactsListMode } from '@/lib/settings/get/get';
 import { ContactsList } from '../../../components/contacts/contacts-list';
+import PageLayout from '../../../components/layouts/page-layout';
 
 export default async function CircleContactsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -14,14 +15,16 @@ export default async function CircleContactsPage({ params }: { params: Promise<{
 
   if (!circle) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
-        <p>Circle not found</p>
-      </div>
+      <PageLayout title="Circle people" showBackButton>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24">
+          <p>Circle not found</p>
+        </div>
+      </PageLayout>
     );
   }
 
   return (
-    <>
+    <PageLayout title="Circle people" showBackButton>
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-foreground">{circle.name}</h1>
       </div>
@@ -46,6 +49,6 @@ export default async function CircleContactsPage({ params }: { params: Promise<{
           initialListMode={settings.contacts_list_mode}
         />
       )}
-    </>
+    </PageLayout>
   );
 }

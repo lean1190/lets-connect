@@ -1,8 +1,8 @@
-import PageWithNavigationLayout from '../components/layouts/page-with-navigation-layout';
+import LoadingPageLayout from '../components/layouts/loading-page-layout';
 
 export default function FavoritesLoading() {
   return (
-    <PageWithNavigationLayout title="Favorites">
+    <LoadingPageLayout title="Favorites">
       <div className="space-y-6">
         <div className="flex items-center gap-2 overflow-x-auto pb-2 -mx-1 px-1">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -36,6 +36,6 @@ export default function FavoritesLoading() {
           ))}
         </div>
       </div>
-    </PageWithNavigationLayout>
+    </LoadingPageLayout>
   );
 }

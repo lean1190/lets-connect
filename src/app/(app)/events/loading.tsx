@@ -1,8 +1,9 @@
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
+import LoadingPageLayout from '../components/layouts/loading-page-layout';
 
 export default function EventsLoading() {
   return (
-    <>
+    <LoadingPageLayout title="Events">
       <div className="relative w-full h-48 md:h-64 rounded-lg overflow-hidden mb-6 bg-gray-200 dark:bg-muted animate-pulse" />
 
       <div className="space-y-8">
@@ -36,6 +37,6 @@ export default function EventsLoading() {
           </div>
         ))}
       </div>
-    </>
+    </LoadingPageLayout>
   );
 }

@@ -1,8 +1,9 @@
 import { Card, CardContent } from '@/components/ui/card';
+import LoadingPageLayout from '../../../components/layouts/loading-page-layout';
 
 export default function CircleContactsLoading() {
   return (
-    <>
+    <LoadingPageLayout title="Circle people" showBackButton>
       <div className="mb-6">
         <div className="h-8 w-48 bg-gray-200 dark:bg-muted rounded animate-pulse" />
       </div>
@@ -22,6 +23,6 @@ export default function CircleContactsLoading() {
           </Card>
         ))}
       </div>
-    </>
+    </LoadingPageLayout>
   );
 }

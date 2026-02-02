@@ -3,14 +3,14 @@ import Link from 'next/link';
 import { CtaButton } from '@/components/ui/cta-button';
 import { getCircles } from '@/lib/circles/get/get';
 import { AppRoute } from '@/lib/constants/navigation';
-import PageWithNavigationLayout from '../components/layouts/page-with-navigation-layout';
+import PageLayout from '../components/layouts/page-layout';
 import { CirclesList } from './components/circles-list';
 
 export default async function CirclesPage() {
   const circles = await getCircles({});
 
   return (
-    <PageWithNavigationLayout title="Circles">
+    <PageLayout title="Circles">
       {circles.length === 0 ? (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
           <IconCircles
@@ -30,6 +30,6 @@ export default async function CirclesPage() {
       ) : (
         <CirclesList circles={circles} />
       )}
-    </PageWithNavigationLayout>
+    </PageLayout>
   );
 }

@@ -1,6 +1,6 @@
 import { IconStar } from '@tabler/icons-react';
 import { getFavorites } from '@/lib/favorites/get';
-import PageWithNavigationLayout from '../components/layouts/page-with-navigation-layout';
+import PageLayout from '../components/layouts/page-layout';
 import FavoritesGallery from './components/favorites-gallery';
 
 export default async function FavoritesPage() {
@@ -8,7 +8,7 @@ export default async function FavoritesPage() {
   const isEmpty = favorites.all.length === 0;
 
   return (
-    <PageWithNavigationLayout title="Favorites">
+    <PageLayout title="Favorites">
       {isEmpty ? (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
           <div className="relative mb-6">
@@ -29,6 +29,6 @@ export default async function FavoritesPage() {
       ) : (
         <FavoritesGallery favorites={favorites} />
       )}
-    </PageWithNavigationLayout>
+    </PageLayout>
   );
 }

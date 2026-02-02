@@ -1,4 +1,5 @@
 import { getEvents } from '@/lib/events/get';
+import PageLayout from '../components/layouts/page-layout';
 import { categorizeEvents } from './categorize';
 import { EventSection } from './components/event-section';
 import { EventsEmptyState } from './components/events-empty-state';
@@ -12,7 +13,7 @@ export default async function EventsPage() {
     thisWeek.length > 0 || thisMonth.length > 0 || nextMonth.length > 0 || upcoming.length > 0;
 
   return (
-    <>
+    <PageLayout title="Events">
       <EventsHero />
 
       <div className="space-y-16">
@@ -27,6 +28,6 @@ export default async function EventsPage() {
           </>
         )}
       </div>
-    </>
+    </PageLayout>
   );
 }

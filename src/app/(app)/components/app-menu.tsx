@@ -4,7 +4,6 @@ import {
   IconCalendar,
   IconDashboard,
   IconInfoCircle,
-  IconMenu2,
   IconSettings,
   IconShare,
   IconX
@@ -20,6 +19,7 @@ import { AppRoute } from '@/lib/constants/navigation';
 import { extractLinkedInEmail, extractLinkedInName } from '@/lib/linkedin/user/extract';
 import type { Settings } from '@/lib/settings/types';
 import { cn } from '@/lib/utils';
+import MenuButton from './layouts/buttons/menu-button';
 
 type Props = {
   user: NullableUser;
@@ -55,11 +55,7 @@ export default function AppMenu({ user, settings }: Props) {
 
   return (
     <>
-      <Button variant="ghost" size="icon" onClick={() => setOpen(true)}>
-        <IconMenu2 size={20} className="h-5 w-5" />
-        <span className="sr-only">Open menu</span>
-      </Button>
-
+      <MenuButton onClick={() => setOpen(true)} />
       {/* Overlay */}
       {open && (
         <div
@@ -68,7 +64,6 @@ export default function AppMenu({ user, settings }: Props) {
           aria-hidden="true"
         />
       )}
-
       {/* Off-canvas menu */}
       <div
         className={cn(

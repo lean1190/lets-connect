@@ -1,9 +1,9 @@
 import { Card, CardContent } from '@/components/ui/card';
-import PageWithNavigationLayout from '../components/layouts/page-with-navigation-layout';
+import LoadingPageLayout from '../components/layouts/loading-page-layout';
 
 export default function ContactsLoading() {
   return (
-    <PageWithNavigationLayout title="Contacts">
+    <LoadingPageLayout title="Contacts">
       <div className="space-y-4">
         {Array.from({ length: 3 }).map((_, i) => (
           <Card key={i} className="hover:border-white/30 transition-all">
@@ -24,6 +24,6 @@ export default function ContactsLoading() {
           </Card>
         ))}
       </div>
-    </PageWithNavigationLayout>
+    </LoadingPageLayout>
   );
 }

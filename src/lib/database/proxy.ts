@@ -43,9 +43,9 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims;
   const requestedUrl = request.nextUrl.pathname as AppRoute;
   const isAllowed = alwaysAllowedRoutes.includes(requestedUrl);
-  const isSignin = request.nextUrl.pathname.startsWith(AppRoute.Signin);
+  const isSigninRoute = request.nextUrl.pathname.startsWith(AppRoute.Signin);
 
-  if (!user && !isAllowed && !isSignin) {
+  if (!user && !isAllowed && !isSigninRoute) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
     url.pathname = AppRoute.Signin;

@@ -1,12 +1,10 @@
-import { IconCamera, IconQrcode } from '@tabler/icons-react';
-import Link from 'next/link';
 import { Suspense } from 'react';
-import { Button } from '@/components/ui/button';
 import { getUser } from '@/lib/auth/session/server';
-import { AppRoute } from '@/lib/constants/navigation';
 import { getSettings } from '@/lib/settings/get/get';
 import AppMenu from './app-menu';
-import BackButton from './layouts/back-button';
+import BackButton from './layouts/buttons/back-button';
+import QrButton from './layouts/buttons/qr-button';
+import ScanButton from './layouts/buttons/scan-button';
 
 type Props = {
   title?: string;
@@ -28,17 +26,8 @@ export default async function AppHeader({ title, showBackButton = false }: Props
             {title ? <h1 className="text-lg font-medium text-foreground">{title}</h1> : null}
           </div>
           <div className="flex items-center gap-2">
-            <Link href={AppRoute.MyQr}>
-              <Button variant="outline" className="px-4 py-2 text-sm font-semibold">
-                <IconQrcode />
-              </Button>
-            </Link>
-            <Link href={AppRoute.Scan}>
-              <Button variant="default" aria-label="Scan QR">
-                <IconCamera className="w-5 h-5" />
-                Scan
-              </Button>
-            </Link>
+            <QrButton />
+            <ScanButton />
           </div>
         </div>
       </div>

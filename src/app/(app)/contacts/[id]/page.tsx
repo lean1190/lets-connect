@@ -1,5 +1,6 @@
 import { getCircles } from '@/lib/circles/get/get';
 import { getContactById } from '@/lib/contacts/get/by-id';
+import PageLayout from '../../components/layouts/page-layout';
 import { EditContactPageClient } from './page-client';
 
 export default async function EditContactPage({ params }: { params: Promise<{ id: string }> }) {
@@ -9,5 +10,9 @@ export default async function EditContactPage({ params }: { params: Promise<{ id
     getCircles({ withCount: false, orderAscending: true })
   ]);
 
-  return <EditContactPageClient contactId={id} initialContact={contact} initialCircles={circles} />;
+  return (
+    <PageLayout title="Edit contact" showBackButton>
+      <EditContactPageClient contactId={id} initialContact={contact} initialCircles={circles} />
+    </PageLayout>
+  );
 }

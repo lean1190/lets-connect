@@ -1,9 +1,9 @@
 import { Card, CardContent } from '@/components/ui/card';
-import PageWithBackButtonLayout from '../../components/layouts/page-with-back-button-layout';
+import LoadingPageLayout from '../../components/layouts/loading-page-layout';
 
 export default function EditCircleLoading() {
   return (
-    <PageWithBackButtonLayout title="Edit circle">
+    <LoadingPageLayout title="Edit circle" showBackButton>
       <Card>
         <CardContent className="pt-6">
           <div className="space-y-6">
@@ -35,6 +35,6 @@ export default function EditCircleLoading() {
           </div>
         </CardContent>
       </Card>
-    </PageWithBackButtonLayout>
+    </LoadingPageLayout>
   );
 }

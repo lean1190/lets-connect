@@ -1,5 +1,5 @@
 import { getCircleById } from '@/lib/circles/get/by-id';
-import PageWithBackButtonLayout from '../../components/layouts/page-with-back-button-layout';
+import PageLayout from '../../components/layouts/page-layout';
 import { EditCirclePageClient } from './page-client';
 
 export default async function EditCirclePage({ params }: { params: Promise<{ id: string }> }) {
@@ -7,7 +7,7 @@ export default async function EditCirclePage({ params }: { params: Promise<{ id:
   const circle = await getCircleById(id);
 
   return (
-    <PageWithBackButtonLayout title="Edit circle">
+    <PageLayout title="Edit circle" showBackButton>
       <EditCirclePageClient
         circleId={id}
         initialCircle={
@@ -21,6 +21,6 @@ export default async function EditCirclePage({ params }: { params: Promise<{ id:
             : null
         }
       />
-    </PageWithBackButtonLayout>
+    </PageLayout>
   );
 }
