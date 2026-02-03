@@ -131,25 +131,13 @@
   }
 }
 
-@keyframes confetti-burst {
-  0% {
-    transform: translateY(0) translateX(0) rotate(0deg) scale(1);
-    opacity: 1;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: appropriate usage */
+    animation-duration: 0ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: appropriate usage */
+    transition-duration: 0ms !important;
   }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-100vh) translateX(var(--random-x, 0)) rotate(720deg) scale(0);
-    opacity: 0;
-  }
-}
-
-.confetti-piece {
-  width: 12px;
-  height: 12px;
-  position: absolute;
-  bottom: 0;
-  animation: confetti-burst ease-out forwards;
-  border-radius: 2px;
 }
