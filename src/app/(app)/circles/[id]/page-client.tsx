@@ -17,7 +17,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { updateCircle } from '@/lib/circles/update/actions/update';
 import { updateCircleSchema } from '@/lib/circles/update/schema';
-import { AppRoute } from '@/lib/constants/navigation';
 import { isExecuting } from '@/lib/server-actions/status';
 import { DeleteCircleButton } from '../components/delete-circle-button';
 
@@ -48,7 +47,7 @@ export function EditCirclePageClient({ circleId, initialCircle }: Props) {
         }
       },
       actionProps: {
-        onSuccess: () => router.replace(AppRoute.Circles),
+        onSuccess: () => router.back(),
         onError: ({ error }) => alert(`Error: ${error}`)
       }
     }

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -13,6 +13,7 @@ import {
   DialogTitle
 } from '@/components/ui/dialog';
 import { deleteCircle } from '@/lib/circles/delete/actions/delete';
+import { AppRoute } from '@/lib/constants/navigation';
 
 export function DeleteCircleButton({
   circleId,
@@ -21,21 +22,14 @@ export function DeleteCircleButton({
   circleId: string;
   circleName: string;
 }) {
-  const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { execute, status, result } = useAction(deleteCircle);
+  const [open, setOpen] = useState(false);
 
-  const handleDelete = () => {
-    execute({ id: circleId });
-  };
-
-  useEffect(() => {
-    if (result?.serverError) {
-      alert(`Error: ${result.serverError}`);
-    } else if (result?.data) {
-      router.push('/circles');
-    }
-  }, [result, router]);
+  const { execute, status } = useAction(deleteCircle, {
+    onSuccess: () => router.push(AppRoute.Circles),
+    onError: ({ error }) =>
+      alert(`Error: ${error.serverError ?? error.thrownError?.message ?? 'Something went wrong'}`)
+  });
 
   return (
     <>
@@ -61,7 +55,11 @@ export function DeleteCircleButton({
             <Button variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleDelete} disabled={status === 'executing'}>
+            <Button
+              variant="destructive"
+              onClick={() => execute({ id: circleId })}
+              disabled={status === 'executing'}
+            >
               {status === 'executing' ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>

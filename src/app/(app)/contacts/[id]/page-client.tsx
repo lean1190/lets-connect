@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import type { Circle } from '@/lib/circles/types';
-import { AppRoute } from '@/lib/constants/navigation';
 import { updateContact } from '@/lib/contacts/update/actions/update';
 import { updateContactSchema } from '@/lib/contacts/update/schema';
 import { isExecuting } from '@/lib/server-actions/status';
@@ -51,7 +50,7 @@ export function EditContactPageClient({ contactId, initialContact, initialCircle
         }
       },
       actionProps: {
-        onSuccess: () => router.replace(AppRoute.Contacts),
+        onSuccess: () => router.back(),
         onError: ({ error }) => alert(`Error: ${error}`)
       }
     }

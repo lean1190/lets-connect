@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useAction } from 'next-safe-action/hooks';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -12,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
+import { AppRoute } from '@/lib/constants/navigation';
 import { deleteContact } from '@/lib/contacts/delete/actions/delete';
 
 export function DeleteContactButton({
@@ -21,21 +22,14 @@ export function DeleteContactButton({
   contactId: string;
   contactName: string;
 }) {
-  const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { execute, status, result } = useAction(deleteContact);
+  const [open, setOpen] = useState(false);
 
-  const handleDelete = () => {
-    execute({ id: contactId });
-  };
-
-  useEffect(() => {
-    if (result?.serverError) {
-      alert(`Error: ${result.serverError}`);
-    } else if (result?.data) {
-      router.push('/contacts');
-    }
-  }, [result, router]);
+  const { execute, status } = useAction(deleteContact, {
+    onSuccess: () => router.push(AppRoute.Contacts),
+    onError: ({ error }) =>
+      alert(`Error: ${error.serverError ?? error.thrownError?.message ?? 'Something went wrong'}`)
+  });
 
   return (
     <>
@@ -62,7 +56,11 @@ export function DeleteContactButton({
             <Button variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleDelete} disabled={status === 'executing'}>
+            <Button
+              variant="destructive"
+              onClick={() => execute({ id: contactId })}
+              disabled={status === 'executing'}
+            >
               {status === 'executing' ? 'Deleting...' : 'Delete'}
             </Button>
           </DialogFooter>

@@ -13,6 +13,7 @@ import {
   XAxis,
   YAxis
 } from 'recharts';
+import { AppRoute } from '@/lib/constants/navigation';
 
 type Period = 'this-month' | 'last-3-months' | 'last-6-months' | 'last-12-months';
 
@@ -47,7 +48,7 @@ export function StatsCharts({ data, period }: Props) {
   const handlePeriodChange = (newPeriod: Period) => {
     const params = new URLSearchParams();
     params.set('period', newPeriod);
-    router.push(`/houston/stats?${params.toString()}`);
+    router.push(`${AppRoute.Houston}/stats?${params.toString()}`);
   };
 
   const chartData = data.map((point) => ({
