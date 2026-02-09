@@ -1,5 +1,5 @@
 import { addDays, addMonths, subDays } from 'date-fns';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { Event } from '@/lib/events/types';
 import { categorizeEvents } from './categorize';
 
@@ -19,18 +19,8 @@ function createEvent(startsAt: Date, name: string): Event {
   };
 }
 
-function setupFakeTimers() {
-  vi.useFakeTimers();
-  vi.setSystemTime(FIXED_DATE);
-}
-
-function cleanupFakeTimers() {
-  vi.useRealTimers();
-}
-
 describe('categorizeEvents', () => {
-  beforeEach(() => setupFakeTimers());
-  afterEach(() => cleanupFakeTimers());
+  beforeEach(() => vi.useFakeTimers({ now: FIXED_DATE }));
 
   it('should return empty arrays when no events provided', () => {
     const result = categorizeEvents([]);
@@ -213,10 +203,8 @@ describe('categorizeEvents', () => {
   });
 
   it('should handle events at exact boundary between thisMonth and nextMonth', () => {
-    const lastDayOfMonth = new Date(FIXED_DATE.getFullYear(), FIXED_DATE.getMonth() + 1, 0);
-    lastDayOfMonth.setHours(0, 0, 0, 0);
-    const firstDayOfNextMonth = new Date(FIXED_DATE.getFullYear(), FIXED_DATE.getMonth() + 1, 1);
-    firstDayOfNextMonth.setHours(0, 0, 0, 0);
+    const lastDayOfMonth = new Date(Date.UTC(2025, 0, 31, 0, 0, 0, 0));
+    const firstDayOfNextMonth = new Date(Date.UTC(2025, 1, 1, 0, 0, 0, 0));
 
     const event1 = createEvent(lastDayOfMonth, 'Last Day This Month');
     const event2 = createEvent(firstDayOfNextMonth, 'First Day Next Month');
@@ -232,10 +220,8 @@ describe('categorizeEvents', () => {
   });
 
   it('should handle events at exact boundary between nextMonth and upcoming', () => {
-    const lastDayOfNextMonth = new Date(FIXED_DATE.getFullYear(), FIXED_DATE.getMonth() + 2, 0);
-    lastDayOfNextMonth.setHours(0, 0, 0, 0);
-    const firstDayAfterNextMonth = new Date(FIXED_DATE.getFullYear(), FIXED_DATE.getMonth() + 2, 1);
-    firstDayAfterNextMonth.setHours(0, 0, 0, 0);
+    const lastDayOfNextMonth = new Date(Date.UTC(2025, 1, 28, 0, 0, 0, 0));
+    const firstDayAfterNextMonth = new Date(Date.UTC(2025, 2, 1, 0, 0, 0, 0));
 
     const event1 = createEvent(lastDayOfNextMonth, 'Last Day Next Month');
     const event2 = createEvent(firstDayAfterNextMonth, 'After Next Month');

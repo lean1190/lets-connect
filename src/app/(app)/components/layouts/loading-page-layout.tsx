@@ -1,3 +1,4 @@
+import AppNavigation from '../app-navigation';
 import BackButton from './buttons/back-button';
 import PlainMenuButton from './buttons/plain-menu-button';
 import QrButton from './buttons/qr-button';
@@ -34,11 +35,7 @@ export default function LoadingPageLayout({ title, showBackButton = false, child
         </div>
       </div>
       <main className="pb-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
-      <div className="fixed bottom-0 left-0 right-0 z-50 pb-safe" aria-hidden>
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 pb-4">
-          <div className="h-14 rounded-2xl bg-muted/80 animate-pulse" />
-        </div>
-      </div>
+      <AppNavigation />
     </div>
   );
 }

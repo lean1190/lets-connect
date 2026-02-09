@@ -2,22 +2,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { parseEventDate, parseRecurringEvent } from './parse';
 
 describe('parseRecurringEvent', () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  const setToday = (year: number, month: number, day: number) => {
-    const date = new Date(year, month, day);
-    vi.setSystemTime(date);
+  const setTodayUTC = (year: number, month: number, day: number) => {
+    vi.setSystemTime(new Date(Date.UTC(year, month, day, 0, 0, 0, 0)));
   };
+
+  beforeEach(() => vi.useFakeTimers());
 
   describe('successful parsing', () => {
     it('should parse Every Saturday and return next Saturday', () => {
-      setToday(2025, 0, 1);
+      setTodayUTC(2025, 0, 1);
       const result = parseRecurringEvent('Every Saturday');
       const startDate = new Date(result.starts_at);
       const endDate = new Date(result.ends_at);
@@ -41,7 +34,7 @@ describe('parseRecurringEvent', () => {
     });
 
     it('should parse Every Sunday and return next Sunday', () => {
-      setToday(2025, 0, 1);
+      setTodayUTC(2025, 0, 1);
       const result = parseRecurringEvent('Every Sunday');
       const startDate = new Date(result.starts_at);
 
@@ -50,7 +43,7 @@ describe('parseRecurringEvent', () => {
     });
 
     it('should parse Every Monday and return next Monday', () => {
-      setToday(2025, 0, 1);
+      setTodayUTC(2025, 0, 1);
       const result = parseRecurringEvent('Every Monday');
       const startDate = new Date(result.starts_at);
 
@@ -59,7 +52,7 @@ describe('parseRecurringEvent', () => {
     });
 
     it('should parse Every Tuesday and return next Tuesday', () => {
-      setToday(2025, 0, 1);
+      setTodayUTC(2025, 0, 1);
       const result = parseRecurringEvent('Every Tuesday');
       const startDate = new Date(result.starts_at);
 
@@ -68,7 +61,7 @@ describe('parseRecurringEvent', () => {
     });
 
     it('should parse Every Wednesday and return next Wednesday', () => {
-      setToday(2025, 0, 1);
+      setTodayUTC(2025, 0, 1);
       const result = parseRecurringEvent('Every Wednesday');
       const startDate = new Date(result.starts_at);
 
@@ -77,7 +70,7 @@ describe('parseRecurringEvent', () => {
     });
 
     it('should parse Every Thursday and return next Thursday', () => {
-      setToday(2025, 0, 1);
+      setTodayUTC(2025, 0, 1);
       const result = parseRecurringEvent('Every Thursday');
       const startDate = new Date(result.starts_at);
 
@@ -86,7 +79,7 @@ describe('parseRecurringEvent', () => {
     });
 
     it('should parse Every Friday and return next Friday', () => {
-      setToday(2025, 0, 1);
+      setTodayUTC(2025, 0, 1);
       const result = parseRecurringEvent('Every Friday');
       const startDate = new Date(result.starts_at);
 
@@ -95,7 +88,7 @@ describe('parseRecurringEvent', () => {
     });
 
     it('should return next week if today is the target day', () => {
-      setToday(2025, 0, 4);
+      setTodayUTC(2025, 0, 4);
       const result = parseRecurringEvent('Every Saturday');
       const startDate = new Date(result.starts_at);
 
@@ -104,7 +97,7 @@ describe('parseRecurringEvent', () => {
     });
 
     it('should handle case insensitive day names', () => {
-      setToday(2025, 0, 1);
+      setTodayUTC(2025, 0, 1);
       const result1 = parseRecurringEvent('Every SATURDAY');
       const result2 = parseRecurringEvent('Every saturday');
       const result3 = parseRecurringEvent('Every Saturday');
@@ -114,7 +107,7 @@ describe('parseRecurringEvent', () => {
     });
 
     it('should handle colon after day name', () => {
-      setToday(2025, 0, 1);
+      setTodayUTC(2025, 0, 1);
       const result = parseRecurringEvent('Every Saturday:');
       const startDate = new Date(result.starts_at);
 
@@ -148,14 +141,13 @@ describe('parseEventDate', () => {
     vi.useRealTimers();
   });
 
-  const setToday = (year: number, month: number, day: number) => {
-    const date = new Date(year, month, day);
-    vi.setSystemTime(date);
+  const setTodayUTC = (year: number, month: number, day: number) => {
+    vi.setSystemTime(new Date(Date.UTC(year, month, day, 0, 0, 0, 0)));
   };
 
   describe('recurring events', () => {
     it('should parse recurring event and return next occurrence', () => {
-      setToday(2025, 0, 1);
+      setTodayUTC(2025, 0, 1);
       const result = parseEventDate('Every Saturday');
       const startDate = new Date(result.starts_at);
 
@@ -163,7 +155,7 @@ describe('parseEventDate', () => {
     });
 
     it('should handle recurring event with colon', () => {
-      setToday(2025, 0, 1);
+      setTodayUTC(2025, 0, 1);
       const result = parseEventDate('Every Saturday:');
       const startDate = new Date(result.starts_at);
 
@@ -212,7 +204,7 @@ describe('parseEventDate', () => {
 
   describe('edge cases', () => {
     it('should prioritize recurring pattern over date pattern', () => {
-      setToday(2025, 0, 1);
+      setTodayUTC(2025, 0, 1);
       const result = parseEventDate('Every Saturday');
       const startDate = new Date(result.starts_at);
 
@@ -220,7 +212,7 @@ describe('parseEventDate', () => {
     });
 
     it('should handle case insensitive recurring pattern', () => {
-      setToday(2025, 0, 1);
+      setTodayUTC(2025, 0, 1);
       const result = parseEventDate('every saturday');
       const startDate = new Date(result.starts_at);
 

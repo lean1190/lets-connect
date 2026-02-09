@@ -12,10 +12,6 @@ export default function AboutPage() {
         <Card className="mb-10">
           <CardContent className="pt-6">
             <div>
-              <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-6">
-                About
-              </h2>
-
               <div className="space-y-3 mb-4 text-center">
                 <div className="flex justify-center mb-2">
                   <Image
