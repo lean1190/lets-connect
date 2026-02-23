@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { parseEventDate, parseRecurringEvent } from './parse';
+import { parseEventDate, parseHtmlToEvents, parseRecurringEvent } from './parse';
 
 describe('parseRecurringEvent', () => {
   const setTodayUTC = (year: number, month: number, day: number) => {
@@ -218,5 +218,66 @@ describe('parseEventDate', () => {
 
       expect(startDate.getUTCDay()).toBe(6);
     });
+  });
+});
+
+describe('parseHtmlToEvents', () => {
+  it('should parse legacy format event', () => {
+    const html = `
+      <div style="padding-bottom:13px;padding-left:15px;padding-right:15px;padding-top:13px;">
+        <p>
+          <span><b>January 15:</b></span>
+          <span>&nbsp;</span>
+          <span><a href="https://example.com/event">Legacy Event</a></span>
+          <span> (English) — Legacy description</span>
+        </p>
+      </div>
+    `;
+    const events = parseHtmlToEvents(html);
+    expect(events).toHaveLength(1);
+    expect(events[0].name).toBe('Legacy Event');
+    expect(events[0].dateRange).toBe('January 15');
+  });
+
+  it('should parse new format event', () => {
+    const html = `<p>March 10 <a href="https://luma.com/ev">New Event</a>(English) — New description.</p>`;
+    const events = parseHtmlToEvents(html);
+    expect(events).toHaveLength(1);
+    expect(events[0].name).toBe('New Event');
+    expect(events[0].dateRange).toBe('March 10');
+  });
+
+  it('should parse new format when date is in tag and closing tag appears before link', () => {
+    const html = `<p><strong>March 10</strong> <a href="https://luma.com/ev">New Event</a>(English) — New description.</p>`;
+    const events = parseHtmlToEvents(html);
+    expect(events).toHaveLength(1);
+    expect(events[0].name).toBe('New Event');
+    expect(events[0].dateRange).toBe('March 10');
+  });
+
+  it('should parse new format with date in b tag and br before link (newsletter markup)', () => {
+    const html = `<p style="color:#000000;"><b>March 10</b><br><a class="link" href="https://www.eventbrite.de/e/impact-academy-tickets-1981849348752" target="_blank">Impact Academy: Understanding the Startup Funding Landscape</a> (German) — Navigate Hamburg's full funding landscape.</p>`;
+    const events = parseHtmlToEvents(html);
+    expect(events).toHaveLength(1);
+    expect(events[0].name).toBe('Impact Academy: Understanding the Startup Funding Landscape');
+    expect(events[0].dateRange).toBe('March 10');
+  });
+
+  it('should merge legacy and new format without duplicating', () => {
+    const html = `
+      <div style="padding-bottom:13px;padding-left:15px;padding-right:15px;padding-top:13px;">
+        <p>
+          <span><b>January 15:</b></span>
+          <span>&nbsp;</span>
+          <span><a href="https://example.com/event">Tech Conference</a></span>
+          <span> (English) — Legacy format event</span>
+        </p>
+      </div>
+      <p>March 10 <a href="https://luma.com/new">New Format Event</a>(English) — Only in new format.</p>
+    `;
+    const events = parseHtmlToEvents(html);
+    expect(events).toHaveLength(2);
+    const names = events.map((e) => e.name).sort();
+    expect(names).toEqual(['New Format Event', 'Tech Conference']);
   });
 });

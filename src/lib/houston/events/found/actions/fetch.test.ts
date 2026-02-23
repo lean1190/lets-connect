@@ -492,4 +492,108 @@ describe('fetchEventsFromUrl', () => {
       expect(result?.data?.events[0].name).toBe('Bold Event Name');
     });
   });
+
+  describe('new format (post-structure change)', () => {
+    it('should parse a single event in new format', async () => {
+      const html = `
+        <p>March 10 <a href="https://www.eventbrite.de/e/impact-academy-tickets-123">Impact Academy: Understanding the Startup Funding Landscape</a>(German) — Navigate Hamburg's full funding landscape at this free workshop.</p>
+      `;
+
+      mockFetch.mockResolvedValueOnce(createMockResponse(html));
+
+      const result = await fetchEventsFromUrl({ url: 'https://example.com/newsletter' });
+
+      expect(result?.data?.events).toHaveLength(1);
+      expect(result?.data?.events[0]).toEqual({
+        dateRange: 'March 10',
+        name: 'Impact Academy: Understanding the Startup Funding Landscape',
+        description: "Navigate Hamburg's full funding landscape at this free workshop.",
+        url: 'https://www.eventbrite.de/e/impact-academy-tickets-123'
+      });
+    });
+
+    it('should parse multiple events in new format', async () => {
+      const html = `
+        <p>March 10 <a href="https://luma.com/event1">Event One</a>(English) — First event description.</p>
+        <p>March 18 <a href="https://luma.com/event2">Event Two</a>(German) — Second event description.</p>
+      `;
+
+      mockFetch.mockResolvedValueOnce(createMockResponse(html));
+
+      const result = await fetchEventsFromUrl({ url: 'https://example.com/newsletter' });
+
+      expect(result?.data?.events).toHaveLength(2);
+      expect(result?.data?.events[0].name).toBe('Event One');
+      expect(result?.data?.events[0].dateRange).toBe('March 10');
+      expect(result?.data?.events[1].name).toBe('Event Two');
+      expect(result?.data?.events[1].dateRange).toBe('March 18');
+    });
+
+    it('should parse new format with date range', async () => {
+      const html = `
+        <p>February 25-26 <a href="https://www.eventbrite.de/e/zal-innovation-days">ZAL Innovation Days 2026</a>(English/German) — Explore the future of aviation.</p>
+      `;
+
+      mockFetch.mockResolvedValueOnce(createMockResponse(html));
+
+      const result = await fetchEventsFromUrl({ url: 'https://example.com/newsletter' });
+
+      expect(result?.data?.events).toHaveLength(1);
+      expect(result?.data?.events[0].dateRange).toBe('February 25-26');
+      expect(result?.data?.events[0].name).toBe('ZAL Innovation Days 2026');
+    });
+
+    it('should parse recurring event in new format', async () => {
+      const html = `
+        <p>Every Saturday <a href="https://luma.com/yd4u93kh">Founders Running Club</a>(English) — Energize your weekend with fellow entrepreneurs.</p>
+      `;
+
+      mockFetch.mockResolvedValueOnce(createMockResponse(html));
+
+      const result = await fetchEventsFromUrl({ url: 'https://example.com/newsletter' });
+
+      expect(result?.data?.events).toHaveLength(1);
+      expect(result?.data?.events[0]).toEqual({
+        dateRange: 'Every Saturday',
+        name: 'Founders Running Club',
+        description: 'Energize your weekend with fellow entrepreneurs.',
+        url: 'https://luma.com/yd4u93kh'
+      });
+    });
+
+    it('should exclude foundhamburg.com URLs in new format', async () => {
+      const html = `
+        <p>March 10 <a href="https://www.foundhamburg.com/p/something">Internal Event</a>(English) — Event description.</p>
+      `;
+
+      mockFetch.mockResolvedValueOnce(createMockResponse(html));
+
+      const result = await fetchEventsFromUrl({ url: 'https://example.com/newsletter' });
+
+      expect(result?.data?.events).toHaveLength(1);
+      expect(result?.data?.events[0].url).toBeUndefined();
+    });
+
+    it('should merge legacy and new format without duplicating same event', async () => {
+      const html = `
+        <div style="padding-bottom:13px;padding-left:15px;padding-right:15px;padding-top:13px;">
+          <p>
+            <span><b>January 15:</b></span>
+            <span>&nbsp;</span>
+            <span><a href="https://example.com/event">Tech Conference</a></span>
+            <span> (English) — Legacy format event</span>
+          </p>
+        </div>
+        <p>March 10 <a href="https://luma.com/new">New Format Event</a>(English) — Only in new format.</p>
+      `;
+
+      mockFetch.mockResolvedValueOnce(createMockResponse(html));
+
+      const result = await fetchEventsFromUrl({ url: 'https://example.com/newsletter' });
+
+      expect(result?.data?.events).toHaveLength(2);
+      expect(result?.data?.events[0].name).toBe('Tech Conference');
+      expect(result?.data?.events[1].name).toBe('New Format Event');
+    });
+  });
 });

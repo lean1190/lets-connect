@@ -113,6 +113,33 @@ export type Database = {
           }
         ];
       };
+      event_imports: {
+        Row: {
+          created_at: string;
+          errors: Json;
+          id: string;
+          import_from: string;
+          imported: Json;
+          skipped: Json;
+        };
+        Insert: {
+          created_at?: string;
+          errors?: Json;
+          id?: string;
+          import_from: string;
+          imported?: Json;
+          skipped?: Json;
+        };
+        Update: {
+          created_at?: string;
+          errors?: Json;
+          id?: string;
+          import_from?: string;
+          imported?: Json;
+          skipped?: Json;
+        };
+        Relationships: [];
+      };
       events: {
         Row: {
           created_at: string;
