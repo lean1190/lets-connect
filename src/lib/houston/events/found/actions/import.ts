@@ -6,6 +6,7 @@ import { AppRoute } from '@/lib/constants/navigation';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 import type { TablesInsert } from '@/lib/database/types';
 import { actionClient } from '@/lib/server-actions/client';
+import { dryRunEvent } from '../../dry-run';
 
 type EventInsert = TablesInsert<'events'>;
 
@@ -36,58 +37,8 @@ export const dryRunImportEvents = actionClient
     const results: EventDryRunResult[] = [];
 
     for (let i = 0; i < parsedInput.events.length; i++) {
-      const event = parsedInput.events[i];
-
-      const urlValidation = z.url().safeParse(event.url);
-      if (event.url && !urlValidation.success) {
-        results.push({
-          index: i,
-          status: 'invalid',
-          reason: 'Invalid URL format'
-        });
-        continue;
-      }
-
-      const startsAt = new Date(event.starts_at);
-      const endsAt = new Date(event.ends_at);
-      if (Number.isNaN(startsAt.getTime()) || Number.isNaN(endsAt.getTime())) {
-        results.push({
-          index: i,
-          status: 'invalid',
-          reason: 'Invalid date format'
-        });
-        continue;
-      }
-
-      if (endsAt < startsAt) {
-        results.push({
-          index: i,
-          status: 'invalid',
-          reason: 'End date is before start date'
-        });
-        continue;
-      }
-
-      const { data: existing } = await supabase
-        .from('events')
-        .select('id')
-        .eq('name', event.name)
-        .eq('starts_at', event.starts_at)
-        .single();
-
-      if (existing) {
-        results.push({
-          index: i,
-          status: 'skip',
-          reason: 'Event already exists with same name and start date'
-        });
-        continue;
-      }
-
-      results.push({
-        index: i,
-        status: 'import'
-      });
+      const { status, reason } = await dryRunEvent(supabase, parsedInput.events[i]);
+      results.push({ index: i, status, reason });
     }
 
     return { results };

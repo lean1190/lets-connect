@@ -1,56 +1,35 @@
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
-import { z } from 'zod';
 import { AppRoute } from '@/lib/constants/navigation';
 import { createPrivilegedClient } from '@/lib/database/client/server';
-import type { TablesInsert } from '@/lib/database/types';
+import { handleDatabaseResponse } from '@/lib/database/handler/response-handler';
+import type { Tables, TablesInsert } from '@/lib/database/types';
 import { fetchEventsFromUrlCore } from '@/lib/houston/events/found/actions/fetch';
 import { getLatestArchiveUrl } from '@/lib/houston/events/found/get-latest-url';
 import { parseEventDate } from '@/lib/houston/events/parse';
+import { dryRunEvent } from '../dry-run';
+import type { ParsedEvent } from '../types';
 
 type EventInsert = TablesInsert<'events'>;
-type EventImportRow = TablesInsert<'event_imports'>;
+type EventImportInsert = TablesInsert<'event_imports'>;
+type EventImportRow = Tables<'event_imports'>;
 
-type ParsedEvent = {
-  name: string;
-  description: string;
-  url?: string;
-  starts_at: string;
-  ends_at: string;
-};
-
-type DryRunStatus = 'import' | 'skip' | 'invalid';
-
-async function dryRunEvent(
-  supabase: Awaited<ReturnType<typeof createPrivilegedClient>>,
-  event: ParsedEvent
-): Promise<{ status: DryRunStatus; reason?: string }> {
-  const urlValidation = z.url().safeParse(event.url);
-  if (event.url && !urlValidation.success) {
-    return Promise.resolve({ status: 'invalid', reason: 'Invalid URL format' });
-  }
-
-  const startsAt = new Date(event.starts_at);
-  const endsAt = new Date(event.ends_at);
-  if (Number.isNaN(startsAt.getTime()) || Number.isNaN(endsAt.getTime())) {
-    return Promise.resolve({ status: 'invalid', reason: 'Invalid date format' });
-  }
-  if (endsAt < startsAt) {
-    return Promise.resolve({ status: 'invalid', reason: 'End date is before start date' });
-  }
-
-  const { data: existing } = await supabase
-    .from('events')
-    .select('id')
-    .eq('name', event.name)
-    .eq('starts_at', event.starts_at)
-    .single();
-
-  return existing
-    ? { status: 'skip' as const, reason: 'Event already exists with same name and start date' }
-    : { status: 'import' as const };
+async function getLatestImport(supabase: SupabaseClient) {
+  return handleDatabaseResponse(
+    await supabase
+      .from('event_imports')
+      .select()
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single()
+  ) as EventImportRow;
 }
 
-export async function runScheduledImport(): Promise<{ ok: boolean; error?: string }> {
+export async function runScheduledImport(): Promise<{
+  success: boolean;
+  row: EventImportRow;
+  alreadyImported?: true;
+}> {
   const supabase = await createPrivilegedClient();
 
   let importFrom = '';
@@ -63,27 +42,34 @@ export async function runScheduledImport(): Promise<{ ok: boolean; error?: strin
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     errors.push(`Failed to get latest URL: ${message}`);
-    await supabase.from('event_imports').insert({
+
+    const insert = {
       import_from: 'https://www.foundhamburg.com/',
       imported: [],
       skipped: [],
       errors
-    } as EventImportRow);
-    return { ok: false, error: message };
+    } as EventImportInsert;
+
+    const { data: inserted } = await supabase
+      .from('event_imports')
+      .insert(insert)
+      .select()
+      .single();
+
+    const row = inserted ?? (await getLatestImport(supabase));
+
+    if (!row) throw new Error('Failed to record import');
+
+    return { success: false, row };
   }
 
-  const { data: latestImport } = await supabase
-    .from('event_imports')
-    .select('import_from, errors')
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .single();
+  const latestImport = await getLatestImport(supabase);
 
   const sameUrl = latestImport?.import_from === importFrom;
   const hadErrors =
     Array.isArray(latestImport?.errors) && (latestImport?.errors as string[]).length > 0;
-  if (sameUrl && !hadErrors) {
-    return { ok: true };
+  if (sameUrl && !hadErrors && latestImport) {
+    return { success: true, alreadyImported: true, row: latestImport };
   }
 
   let rawEvents: Awaited<ReturnType<typeof fetchEventsFromUrlCore>>;
@@ -92,25 +78,43 @@ export async function runScheduledImport(): Promise<{ ok: boolean; error?: strin
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     errors.push(`Failed to fetch events: ${message}`);
-    await supabase.from('event_imports').insert({
-      import_from: importFrom,
-      imported: [],
-      skipped: [],
-      errors
-    } as EventImportRow);
-    return { ok: false, error: message };
+    const { data: inserted } = await supabase
+      .from('event_imports')
+      .insert({
+        import_from: importFrom,
+        imported: [],
+        skipped: [],
+        errors
+      } as EventImportInsert)
+      .select()
+      .single();
+
+    const row = inserted ?? (await getLatestImport(supabase));
+
+    if (!row) throw new Error('Failed to record import');
+
+    return { success: false, row };
   }
 
   if (rawEvents.length === 0) {
     const message = 'No events found';
     errors.push(message);
-    await supabase.from('event_imports').insert({
-      import_from: importFrom,
-      imported: [],
-      skipped: [],
-      errors
-    } as EventImportRow);
-    return { ok: false, error: message };
+    const { data: inserted } = await supabase
+      .from('event_imports')
+      .insert({
+        import_from: importFrom,
+        imported: [],
+        skipped: [],
+        errors
+      } as EventImportInsert)
+      .select()
+      .single();
+
+    const row = inserted ?? (await getLatestImport(supabase));
+
+    if (!row) throw new Error('Failed to record import');
+
+    return { success: false, row };
   }
 
   const baseYear = new Date().getFullYear();
@@ -167,15 +171,21 @@ export async function runScheduledImport(): Promise<{ ok: boolean; error?: strin
     }
   }
 
-  await supabase.from('event_imports').insert({
-    import_from: importFrom,
-    imported,
-    skipped,
-    errors
-  } as EventImportRow);
+  const { data: row, error } = await supabase
+    .from('event_imports')
+    .insert({
+      import_from: importFrom,
+      imported,
+      skipped,
+      errors
+    } as EventImportInsert)
+    .select()
+    .single();
 
   revalidatePath(AppRoute.HoustonEvents);
   revalidatePath(AppRoute.Events);
 
-  return { ok: true };
+  if (error || !row) throw new Error(error?.message ?? 'Failed to record import');
+
+  return { success: true, row };
 }

@@ -1,8 +1,7 @@
-export const emailFrom = 'PushPal <lean@pushpal.eu>';
-export const emailReplyTo = 'lean@pushpal.eu';
+export const emailFrom = 'Lean <me@leanvilas.com>';
+export const emailReplyTo = 'me@leanvilas.com';
+export const cronImportNotifyTo = process.env.CRON_IMPORT_NOTIFY_EMAIL ?? emailReplyTo;
 
 export const subjects = {
-  welcome: 'Your PushPal awaits 💪',
-  matchFound: 'wants to meet you 🔥',
-  didYouMeet: 'Did you meet your Match? 🤝'
+  import: '[ACT] - Result of the latest event import'
 };

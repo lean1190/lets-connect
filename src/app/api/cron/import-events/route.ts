@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
-import { runScheduledImport } from '@/lib/houston/events/found/actions/run-scheduled-import';
+import { sendImportResultEmail } from '@/lib/email/send-import-result';
+import { runScheduledImport } from '@/lib/houston/events/found/run-scheduled-import';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -11,9 +12,13 @@ export async function GET(request: NextRequest) {
     return new Response('Unauthorized', { status: 401 });
   }
 
-  const { ok, error } = await runScheduledImport();
-  if (!ok) {
-    return Response.json({ ok: false, error }, { status: 500 });
+  try {
+    const { success, row } = await runScheduledImport();
+    await sendImportResultEmail({ success, row });
+    return Response.json({ success, row }, { status: success ? 200 : 500 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown error';
+    await sendImportResultEmail({ success: false, errorMessage: message });
+    return Response.json({ success: false, row: null }, { status: 500 });
   }
-  return Response.json({ ok: true });
 }

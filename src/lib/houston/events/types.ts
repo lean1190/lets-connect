@@ -9,3 +9,11 @@ export type WebsiteEventInput = {
   description: string;
   url?: string;
 };
+
+export type ParsedEvent = {
+  name: string;
+  description: string;
+  url?: string;
+  starts_at: string;
+  ends_at: string;
+};
