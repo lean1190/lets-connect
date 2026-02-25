@@ -1,4 +1,4 @@
-import { ImportResultEmail } from '@/emails/import-result-email';
+import ImportResultEmail from '@/emails/import-result-email';
 import type { Tables } from '@/lib/database/types';
 import { createResendClient } from '@/lib/email/client';
 import { cronImportNotifyTo, emailFrom, subjects } from '@/lib/email/config';

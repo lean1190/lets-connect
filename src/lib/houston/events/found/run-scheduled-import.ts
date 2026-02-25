@@ -15,14 +15,22 @@ type EventImportInsert = TablesInsert<'event_imports'>;
 type EventImportRow = Tables<'event_imports'>;
 
 async function getLatestImport(supabase: SupabaseClient) {
-  return handleDatabaseResponse(
-    await supabase
-      .from('event_imports')
-      .select()
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single()
-  ) as EventImportRow;
+  try {
+    return handleDatabaseResponse(
+      await supabase
+        .from('event_imports')
+        .select()
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single()
+    ) as EventImportRow;
+  } catch (_) {
+    return null;
+  }
+}
+
+async function insertEventImport(supabase: SupabaseClient, insert: EventImportInsert) {
+  return supabase.from('event_imports').insert(insert).select().single();
 }
 
 export async function runScheduledImport(): Promise<{
@@ -43,23 +51,16 @@ export async function runScheduledImport(): Promise<{
     const message = error instanceof Error ? error.message : 'Unknown error';
     errors.push(`Failed to get latest URL: ${message}`);
 
-    const insert = {
+    const eventImport = {
       import_from: 'https://www.foundhamburg.com/',
       imported: [],
       skipped: [],
       errors
     } as EventImportInsert;
 
-    const { data: inserted } = await supabase
-      .from('event_imports')
-      .insert(insert)
-      .select()
-      .single();
-
+    const { data: inserted } = await insertEventImport(supabase, eventImport);
     const row = inserted ?? (await getLatestImport(supabase));
-
     if (!row) throw new Error('Failed to record import');
-
     return { success: false, row };
   }
 
@@ -78,42 +79,34 @@ export async function runScheduledImport(): Promise<{
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     errors.push(`Failed to fetch events: ${message}`);
-    const { data: inserted } = await supabase
-      .from('event_imports')
-      .insert({
-        import_from: importFrom,
-        imported: [],
-        skipped: [],
-        errors
-      } as EventImportInsert)
-      .select()
-      .single();
 
+    const eventImport = {
+      import_from: importFrom,
+      imported: [],
+      skipped: [],
+      errors
+    } as EventImportInsert;
+
+    const { data: inserted } = await insertEventImport(supabase, eventImport);
     const row = inserted ?? (await getLatestImport(supabase));
-
     if (!row) throw new Error('Failed to record import');
-
     return { success: false, row };
   }
 
   if (rawEvents.length === 0) {
     const message = 'No events found';
     errors.push(message);
-    const { data: inserted } = await supabase
-      .from('event_imports')
-      .insert({
-        import_from: importFrom,
-        imported: [],
-        skipped: [],
-        errors
-      } as EventImportInsert)
-      .select()
-      .single();
 
+    const eventImport = {
+      import_from: importFrom,
+      imported: [],
+      skipped: [],
+      errors
+    } as EventImportInsert;
+
+    const { data: inserted } = await insertEventImport(supabase, eventImport);
     const row = inserted ?? (await getLatestImport(supabase));
-
     if (!row) throw new Error('Failed to record import');
-
     return { success: false, row };
   }
 
@@ -171,16 +164,14 @@ export async function runScheduledImport(): Promise<{
     }
   }
 
-  const { data: row, error } = await supabase
-    .from('event_imports')
-    .insert({
-      import_from: importFrom,
-      imported,
-      skipped,
-      errors
-    } as EventImportInsert)
-    .select()
-    .single();
+  const eventImport = {
+    import_from: importFrom,
+    imported,
+    skipped,
+    errors
+  } as EventImportInsert;
+
+  const { data: row, error } = await insertEventImport(supabase, eventImport);
 
   revalidatePath(AppRoute.HoustonEvents);
   revalidatePath(AppRoute.Events);

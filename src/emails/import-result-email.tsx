@@ -46,7 +46,29 @@ function JsonBlock({ data }: { data: unknown }) {
   );
 }
 
-export function ImportResultEmail({ success, row, errorMessage }: ImportResultEmailProps) {
+export default function ImportResultEmail({
+  success = true,
+  row = {
+    id: '00000000-0000-0000-0000-000000000000',
+    created_at: new Date().toISOString(),
+    import_from: 'https://www.foundhamburg.com/p/example-newsletter',
+    imported: [
+      {
+        id: 'evt_1',
+        name: 'Sample imported event',
+        date: '2025-03-10'
+      }
+    ],
+    skipped: [
+      {
+        name: 'Existing event',
+        date: '2025-02-01'
+      }
+    ],
+    errors: []
+  },
+  errorMessage = null
+}: ImportResultEmailProps) {
   const isError = !success;
   const hasRow = row != null;
 
