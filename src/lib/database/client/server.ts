@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
+import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import type { Database } from '../types';
 
@@ -27,5 +28,15 @@ export async function createDatabaseServerClient(
   });
 }
 
-export const createPrivilegedClient = () =>
-  createDatabaseServerClient(process.env.SUPABASE_SECRET_KEY);
+export const createAdminClient = () =>
+  createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
+    process.env.SUPABASE_SECRET_KEY ?? '',
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false
+      }
+    }
+  );

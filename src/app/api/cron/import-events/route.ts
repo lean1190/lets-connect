@@ -5,12 +5,12 @@ import { runScheduledImport } from '@/lib/houston/events/found/run-scheduled-imp
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
-export async function GET(_request: NextRequest) {
-  // const authHeader = request.headers.get('authorization');
-  // const cronSecret = process.env.CRON_SECRET;
-  // if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
-  //   return new Response('Unauthorized', { status: 401 });
-  // }
+export async function GET(request: NextRequest) {
+  const authHeader = request.headers.get('authorization');
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+    return new Response('Unauthorized', { status: 401 });
+  }
 
   try {
     const { success, row } = await runScheduledImport();

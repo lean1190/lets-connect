@@ -1,7 +1,7 @@
-import { createPrivilegedClient } from '@/lib/database/client/server';
+import { createAdminClient } from '@/lib/database/client/server';
 
 export async function getAllUsers() {
-  const supabase = await createPrivilegedClient();
+  const supabase = await createAdminClient();
 
   const {
     data: { users }

@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
 import { AppRoute } from '@/lib/constants/navigation';
-import { createPrivilegedClient } from '@/lib/database/client/server';
+import { createAdminClient } from '@/lib/database/client/server';
 import { handleDatabaseResponse } from '@/lib/database/handler/response-handler';
 import type { Tables, TablesInsert } from '@/lib/database/types';
 import { fetchEventsFromUrlCore } from '@/lib/houston/events/found/actions/fetch';
@@ -38,7 +38,7 @@ export async function runScheduledImport(): Promise<{
   row: EventImportRow;
   alreadyImported?: true;
 }> {
-  const supabase = await createPrivilegedClient();
+  const supabase = await createAdminClient();
 
   let importFrom = '';
   const imported: { id: string; name: string; date: string }[] = [];
@@ -63,12 +63,15 @@ export async function runScheduledImport(): Promise<{
     if (!row) throw new Error('Failed to record import');
     return { success: false, row };
   }
+  console.log('---> got importFrom', importFrom);
 
   const latestImport = await getLatestImport(supabase);
 
   const sameUrl = latestImport?.import_from === importFrom;
   const hadErrors =
     Array.isArray(latestImport?.errors) && (latestImport?.errors as string[]).length > 0;
+
+  console.log('---> latestImport', latestImport);
   if (sameUrl && !hadErrors && latestImport) {
     return { success: true, alreadyImported: true, row: latestImport };
   }
@@ -93,6 +96,8 @@ export async function runScheduledImport(): Promise<{
     return { success: false, row };
   }
 
+  console.log('---> got rawEvents', rawEvents);
+
   if (rawEvents.length === 0) {
     const message = 'No events found';
     errors.push(message);
@@ -109,6 +114,8 @@ export async function runScheduledImport(): Promise<{
     if (!row) throw new Error('Failed to record import');
     return { success: false, row };
   }
+
+  console.log('---> there are events');
 
   const baseYear = new Date().getFullYear();
   const parsedEvents: ParsedEvent[] = [];
@@ -129,15 +136,19 @@ export async function runScheduledImport(): Promise<{
     }
   }
 
+  console.log('---> got parsed', parsedEvents);
+
   for (const event of parsedEvents) {
     const { status, reason } = await dryRunEvent(supabase, event);
     const date = event.starts_at;
 
     if (status === 'skip') {
+      console.log('---> skipped event');
       skipped.push({ name: event.name, date });
       continue;
     }
     if (status === 'invalid') {
+      console.log('---> invalid event');
       errors.push(`${event.name} (${date}): ${reason ?? 'Invalid'}`);
       continue;
     }
@@ -152,6 +163,7 @@ export async function runScheduledImport(): Promise<{
         starts_at: event.starts_at,
         ends_at: event.ends_at
       };
+      console.log('---> pushing event');
       const { error } = await supabase.from('events').insert(eventData);
       if (error) {
         errors.push(`${event.name}: ${error.message}`);
@@ -171,12 +183,12 @@ export async function runScheduledImport(): Promise<{
     errors
   } as EventImportInsert;
 
+  console.log('---> last chance');
   const { data: row, error } = await insertEventImport(supabase, eventImport);
+  if (error || !row) throw new Error(error?.message ?? 'Failed to record import');
 
   revalidatePath(AppRoute.HoustonEvents);
   revalidatePath(AppRoute.Events);
-
-  if (error || !row) throw new Error(error?.message ?? 'Failed to record import');
 
   return { success: true, row };
 }

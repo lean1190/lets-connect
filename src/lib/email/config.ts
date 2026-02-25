@@ -1,5 +1,5 @@
-export const emailFrom = 'Lean <leanvilas1190@gmail.com>';
-export const emailReplyTo = 'leanvilas1190@gmail.com';
+export const emailFrom = 'Lean <lean@pushpal.eu>';
+export const emailReplyTo = 'lean@pushpal.eu';
 export const cronImportNotifyTo = process.env.CRON_IMPORT_NOTIFY_EMAIL ?? emailReplyTo;
 
 export const subjects = {

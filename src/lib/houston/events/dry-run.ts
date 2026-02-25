@@ -1,11 +1,11 @@
 import z from 'zod';
-import type { createPrivilegedClient } from '@/lib/database/client/server';
+import type { createAdminClient } from '@/lib/database/client/server';
 import type { ParsedEvent } from './types';
 
 type DryRunStatus = 'import' | 'skip' | 'invalid';
 
 export async function dryRunEvent(
-  supabase: Awaited<ReturnType<typeof createPrivilegedClient>>,
+  supabase: Awaited<ReturnType<typeof createAdminClient>>,
   event: ParsedEvent
 ): Promise<{ status: DryRunStatus; reason?: string }> {
   const urlValidation = z.url().safeParse(event.url);

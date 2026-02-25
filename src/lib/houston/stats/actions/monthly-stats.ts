@@ -1,7 +1,7 @@
 'use server';
 
 import { getAllUsers } from '@/lib/auth/get/users';
-import { createPrivilegedClient } from '@/lib/database/client/server';
+import { createAdminClient } from '@/lib/database/client/server';
 
 type Period = 'this-month' | 'last-3-months' | 'last-6-months' | 'last-12-months';
 
@@ -46,7 +46,7 @@ function generateMonthKeys(startDate: Date, endDate: Date): string[] {
 export async function getMonthlyStats(
   period: Period = 'last-12-months'
 ): Promise<MonthlyDataPoint[]> {
-  const supabase = await createPrivilegedClient();
+  const supabase = await createAdminClient();
   const startDate = getStartDate(period);
   const now = new Date();
   const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999); // End of current month
