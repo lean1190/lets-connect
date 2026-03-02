@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, stagger } from 'motion/react';
+import { motion, stagger, useReducedMotion } from 'motion/react';
 import { CtaButton } from '@/components/ui/cta-button';
 
 const easeOutQuad = [0.25, 0.46, 0.45, 0.94] as const;
@@ -45,9 +45,10 @@ const fadeIn = {
 } as const;
 
 export function HeroSection({ ctaHref }: { ctaHref: string }) {
+  const shouldReduceMotion = useReducedMotion();
   return (
     <motion.section
-      initial="hidden"
+      initial={shouldReduceMotion ? 'visible' : 'hidden'}
       animate="visible"
       variants={heroSectionVariants}
       className="container mx-auto px-6 py-20 md:py-32 max-w-4xl mx-auto text-center"
