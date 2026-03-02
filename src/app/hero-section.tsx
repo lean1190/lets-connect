@@ -1,9 +1,18 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { motion, stagger } from 'motion/react';
 import { CtaButton } from '@/components/ui/cta-button';
 
 const easeOutQuad = [0.25, 0.46, 0.45, 0.94] as const;
+
+const heroSectionVariants = {
+  hidden: {},
+  visible: {
+    transition: {
+      delayChildren: stagger(0.3)
+    }
+  }
+} as const;
 
 const fadeInUp = {
   hidden: {
@@ -16,7 +25,20 @@ const fadeInUp = {
     filter: 'blur(0px)',
     y: 0,
     transition: {
-      duration: 0.7,
+      duration: 0.5,
+      ease: easeOutQuad
+    }
+  }
+} as const;
+
+const fadeIn = {
+  hidden: {
+    opacity: 0
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.4,
       ease: easeOutQuad
     }
   }
@@ -27,24 +49,27 @@ export function HeroSection({ ctaHref }: { ctaHref: string }) {
     <motion.section
       initial="hidden"
       animate="visible"
-      variants={fadeInUp}
-      className="container mx-auto px-6 py-20 md:py-32"
+      variants={heroSectionVariants}
+      className="container mx-auto px-6 py-20 md:py-32 max-w-4xl mx-auto text-center"
     >
-      <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-3xl md:text-7xl font-bold mb-6 leading-tight">
-          Stay in touch with your
-          <span className="bg-linear-to-r from-[#0A66C2] to-[#007AFF] bg-clip-text text-transparent">
-            {' '}
-            entrepreneurial circle
-          </span>
-        </h1>
-        <p className="text-xl md:text-2xl text-gray-400 mb-12 leading-relaxed max-w-2xl mx-auto">
-          A simple way to keep track of the connections that matter.
-        </p>
-        <div className="flex justify-center">
-          <CtaButton href={ctaHref} />
-        </div>
-      </div>
+      <motion.h1 variants={fadeInUp} className="text-3xl md:text-7xl font-bold mb-6 leading-tight">
+        Stay in touch with your
+        <span className="bg-linear-to-r from-[#0A66C2] to-[#007AFF] bg-clip-text text-transparent">
+          {' '}
+          entrepreneurial circle
+        </span>
+      </motion.h1>
+
+      <motion.p
+        variants={fadeInUp}
+        className="text-xl md:text-2xl text-gray-400 mb-12 leading-relaxed max-w-2xl mx-auto"
+      >
+        A simple way to keep track of the connections that matter.
+      </motion.p>
+
+      <motion.div variants={fadeIn} className="flex justify-center">
+        <CtaButton href={ctaHref} />
+      </motion.div>
     </motion.section>
   );
 }
