@@ -29,6 +29,7 @@ export default async function LandingPage() {
               width={36}
               height={36}
               className="w-9 h-9"
+              priority
             />
             <div className="text-lg md:text-2xl font-bold">Let&apos;s Connect</div>
           </div>
