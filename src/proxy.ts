@@ -21,7 +21,7 @@ export const config = {
      * - favicon.ico (favicon file)
      * - images (any image)
      */
-    '/((?!signin|auth|terms|privacy|manifest|sw.js|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
+    '/((?!signin|api/cron|auth|terms|privacy|manifest|sw.js|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)'
   ],
   missing: [
     { type: 'header', key: 'next-router-prefetch' },
