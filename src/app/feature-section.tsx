@@ -26,6 +26,20 @@ const fadeIn = {
   }
 } as const;
 
+const fadeInUp = {
+  hidden: {
+    opacity: 0,
+    filter: 'blur(5px)',
+    y: 30
+  },
+  visible: {
+    opacity: 1,
+    filter: 'blur(0px)',
+    y: 0,
+    transition: { duration: 0.5, ease: easeOutQuad }
+  }
+} as const;
+
 const featureListVariants = {
   hidden: {},
   visible: {
@@ -84,7 +98,7 @@ function FeatureItem({
 }) {
   return (
     <motion.div
-      variants={fadeIn}
+      variants={fadeInUp}
       className={`backdrop-blur-sm p-8 ${isLast ? '' : 'border-r border-white/10'}`}
     >
       <div className="w-14 h-14 bg-[#0A66C2]/20 rounded-lg flex items-center justify-center mb-6">
