@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, stagger, useReducedMotion } from 'motion/react';
+import { motion, useReducedMotion } from 'motion/react';
 import { CtaButton } from '@/components/ui/cta-button';
 
 const easeOutQuad = [0.25, 0.46, 0.45, 0.94] as const;
@@ -9,7 +9,8 @@ const heroSectionVariants = {
   hidden: {},
   visible: {
     transition: {
-      delayChildren: stagger(0.3)
+      delayChildren: 0.3,
+      staggerChildren: 0.4
     }
   }
 } as const;
@@ -18,27 +19,14 @@ const fadeInUp = {
   hidden: {
     opacity: 0,
     filter: 'blur(5px)',
-    y: 20
+    y: 30
   },
   visible: {
     opacity: 1,
     filter: 'blur(0px)',
     y: 0,
     transition: {
-      duration: 0.5,
-      ease: easeOutQuad
-    }
-  }
-} as const;
-
-const fadeIn = {
-  hidden: {
-    opacity: 0
-  },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: 0.4,
+      duration: 0.7,
       ease: easeOutQuad
     }
   }
@@ -68,7 +56,7 @@ export function HeroSection({ ctaHref }: { ctaHref: string }) {
         A simple way to keep track of the connections that matter.
       </motion.p>
 
-      <motion.div variants={fadeIn} className="flex justify-center">
+      <motion.div variants={fadeInUp} className="flex justify-center">
         <CtaButton href={ctaHref} />
       </motion.div>
     </motion.section>
