@@ -1,10 +1,10 @@
 'use client';
 
-import { IconQrcode } from '@tabler/icons-react';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 import { useRef } from 'react';
 import { CirclesIcon } from '@/components/ui/circles-icon';
 import { CloudIcon } from '@/components/ui/cloud-icon';
+import { QrIcon } from '@/components/ui/qr-icon';
 
 const easeOutQuad = [0.25, 0.46, 0.45, 0.94] as const;
 
@@ -114,19 +114,19 @@ function FeatureItem({
 
 const features = [
   {
-    icon: <IconQrcode className="w-7 h-7 text-blue-400" />,
+    icon: <QrIcon className="w-8 h-8 text-blue-400" />,
     title: 'Scan & Connect',
     description:
       'Instantly scan LinkedIn and WhatsApp QR codes to save contacts with context about why you connected.'
   },
   {
-    icon: <CirclesIcon className="w-7 h-7 text-blue-400" />,
+    icon: <CirclesIcon className="w-8 h-8 text-blue-400" />,
     title: 'Organize Your Network',
     description:
       'Organize your contacts in circles and add notes so you never forget the context of your connections.'
   },
   {
-    icon: <CloudIcon className="w-7 h-7 text-blue-400" />,
+    icon: <CloudIcon className="w-8 h-8 text-blue-400" />,
     title: 'Sync Everywhere',
     description:
       'Access your network from any device. Your data is securely synced across all your devices.'
