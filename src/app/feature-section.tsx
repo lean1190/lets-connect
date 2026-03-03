@@ -1,8 +1,9 @@
 'use client';
 
-import { IconCircles, IconCloud, IconQrcode } from '@tabler/icons-react';
+import { IconCircles, IconQrcode } from '@tabler/icons-react';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 import { useRef } from 'react';
+import { CloudIcon } from '@/components/ui/cloud-icon';
 
 const easeOutQuad = [0.25, 0.46, 0.45, 0.94] as const;
 
@@ -124,7 +125,7 @@ const features = [
       'Organize your contacts in circles and add notes so you never forget the context of your connections.'
   },
   {
-    icon: <IconCloud className="w-7 h-7 text-blue-400" />,
+    icon: <CloudIcon className="w-7 h-7 text-blue-400" />,
     title: 'Sync Everywhere',
     description:
       'Access your network from any device. Your data is securely synced across all your devices.'
