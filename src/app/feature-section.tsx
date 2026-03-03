@@ -1,8 +1,9 @@
 'use client';
 
-import { IconCircles, IconQrcode } from '@tabler/icons-react';
+import { IconQrcode } from '@tabler/icons-react';
 import { AnimatePresence, motion, useInView } from 'motion/react';
 import { useRef } from 'react';
+import { CirclesIcon } from '@/components/ui/circles-icon';
 import { CloudIcon } from '@/components/ui/cloud-icon';
 
 const easeOutQuad = [0.25, 0.46, 0.45, 0.94] as const;
@@ -119,7 +120,7 @@ const features = [
       'Instantly scan LinkedIn and WhatsApp QR codes to save contacts with context about why you connected.'
   },
   {
-    icon: <IconCircles className="w-7 h-7 text-blue-400" />,
+    icon: <CirclesIcon className="w-7 h-7 text-blue-400" />,
     title: 'Organize Your Network',
     description:
       'Organize your contacts in circles and add notes so you never forget the context of your connections.'
