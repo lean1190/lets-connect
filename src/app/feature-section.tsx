@@ -72,12 +72,8 @@ export function FeatureSection() {
               variants={featureListVariants}
               className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto"
             >
-              {features.map((feature, index) => (
-                <FeatureItem
-                  key={feature.title}
-                  {...feature}
-                  isLast={index === features.length - 1}
-                />
+              {features.map((feature) => (
+                <FeatureItem key={feature.title} {...feature} />
               ))}
             </motion.div>
           </motion.section>
@@ -90,18 +86,16 @@ export function FeatureSection() {
 function FeatureItem({
   icon,
   title,
-  description,
-  isLast
+  description
 }: {
   icon: React.ReactNode;
   title: string;
   description: string;
-  isLast?: boolean;
 }) {
   return (
     <motion.div
       variants={fadeInUp}
-      className={`backdrop-blur-sm p-8 ${isLast ? '' : 'border-r border-white/10'}`}
+      className="backdrop-blur-sm p-8 md:not-last:border-r border-white/20"
     >
       <div className="w-14 h-14 bg-[#0A66C2]/20 rounded-lg flex items-center justify-center mb-6">
         {icon}
