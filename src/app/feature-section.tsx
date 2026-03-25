@@ -95,7 +95,7 @@ function FeatureItem({
   return (
     <motion.div
       variants={fadeInUp}
-      className="backdrop-blur-sm p-8 md:not-last:border-r border-white/20"
+      className="rounded-3xl border border-white/10 border-b-0 bg-[#111111] p-8 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.65),inset_0_1px_0_0_rgba(255,255,255,0.06)] md:p-10"
     >
       <div className="w-14 h-14 bg-[#0A66C2]/20 rounded-lg flex items-center justify-center mb-6">
         {icon}
