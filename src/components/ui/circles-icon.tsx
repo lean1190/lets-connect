@@ -1,4 +1,7 @@
 import { motion } from 'motion/react';
+import type { ComponentProps } from 'react';
+
+type CircleMotionVariants = NonNullable<ComponentProps<typeof motion.circle>['variants']>;
 
 const circleSvgVariants = {
   hidden: {},
@@ -12,7 +15,7 @@ const circleSvgVariants = {
   }
 } as const;
 
-const circleVariants = {
+const circleVariants: CircleMotionVariants = {
   hidden: {
     opacity: 0,
     pathLength: 0
@@ -27,8 +30,8 @@ const circleVariants = {
       y: { duration: 3, ease: 'easeInOut', repeat: Infinity },
       x: { duration: 3, ease: 'easeInOut', repeat: Infinity }
     }
-  } as const
-} as any;
+  }
+};
 
 export function CirclesIcon({
   strokeWidth = 2,
