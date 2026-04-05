@@ -57,14 +57,12 @@ export function NewContactPageClient({ profileLink, initialCircles }: Props) {
     setShowAddCircle,
     hideAddCircleForm,
     saveNewCircle,
-    toggleCircle
+    toggleCircle,
+    selectedCircleIds
   } = useAddCircles({
-    initialCircles,
-    getSelectedCircleIds: () => form.watch('circleIds') ?? [],
-    setSelectedCircleIds: (ids) => form.setValue('circleIds', ids)
+    form,
+    initialCircles
   });
-
-  const selectedCircles = form.watch('circleIds') ?? [];
 
   return (
     <Card>
@@ -141,7 +139,7 @@ export function NewContactPageClient({ profileLink, initialCircles }: Props) {
                   <CircleButton
                     key={circle.id}
                     circle={circle}
-                    isSelected={selectedCircles.includes(circle.id)}
+                    isSelected={selectedCircleIds.includes(circle.id)}
                     onClick={() => toggleCircle(circle.id)}
                   />
                 ))}

@@ -64,14 +64,12 @@ export function EditContactPageClient({ contactId, initialContact, initialCircle
     setShowAddCircle,
     hideAddCircleForm,
     saveNewCircle,
-    toggleCircle
+    toggleCircle,
+    selectedCircleIds
   } = useAddCircles({
-    initialCircles,
-    getSelectedCircleIds: () => form.getValues('circleIds') ?? [],
-    setSelectedCircleIds: (ids) => form.setValue('circleIds', ids)
+    form,
+    initialCircles
   });
-
-  const selectedCircles = form.watch('circleIds') ?? [];
 
   if (!initialContact) {
     return (
@@ -155,7 +153,7 @@ export function EditContactPageClient({ contactId, initialContact, initialCircle
                   <CircleButton
                     key={circle.id}
                     circle={circle}
-                    isSelected={selectedCircles.includes(circle.id)}
+                    isSelected={selectedCircleIds.includes(circle.id)}
                     onClick={() => toggleCircle(circle.id)}
                   />
                 ))}
