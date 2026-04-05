@@ -1,7 +1,7 @@
 import { UTCDate } from '@date-fns/utc';
 import { addDays } from 'date-fns';
 import { parseDateRange } from '@/lib/dates/parse';
-import type { WebsiteEventInput } from './types';
+import type { ParseStrategy, WebsiteEventInput } from './types';
 
 function isValidDatePattern(dateRange: string): boolean {
   const trimmed = dateRange.trim();
@@ -79,12 +79,15 @@ export function parseEventDate(
 const DATE_MONTHS =
   'January|February|March|April|May|June|July|August|September|October|November|December';
 const DATE_DAYS = 'Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday';
+const NEW_FORMAT_DATE_TO_LINK_GAP =
+  '(?:\\s|</[^>]+>|<br\\s*/?>|<(?:span|strong|div|p|em|b)\\b[^>]*>)+';
+
 const NEW_FORMAT_EVENT_REGEX = new RegExp(
-  `((${DATE_MONTHS})\\s+\\d+(?:-\\d+)?:?|Every\\s+(?:${DATE_DAYS}):?)(?:\\s|</[^>]+>|<br\\s*/?>)*<a[^>]+href=["']([^"']+)["'][^>]*>([\\s\\S]*?)<\\/a>\\s*\\([^)]+\\)\\s*[—–-]\\s*([^<]+)`,
+  `((${DATE_MONTHS})\\s+\\d+(?:-\\d+)?:?|Every\\s+(?:${DATE_DAYS}):?)${NEW_FORMAT_DATE_TO_LINK_GAP}<a[^>]+href=["']([^"']+)["'][^>]*>([\\s\\S]*?)<\\/a>\\s*\\([^)]+\\)\\s*[—–-]\\s*([^<]+)`,
   'gi'
 );
 
-function parseLegacyFormat(html: string): WebsiteEventInput[] {
+const parseLegacyFormat: ParseStrategy = (html: string) => {
   const events: WebsiteEventInput[] = [];
   const eventDivPattern =
     /<div[^>]*style="[^"]*padding-bottom:\s*\d+px[^"]*padding-left:\s*\d+px[^"]*padding-right:\s*\d+px[^"]*padding-top:\s*\d+px[^"]*"[^>]*>([\s\S]*?)<\/div>/gi;
@@ -144,9 +147,9 @@ function parseLegacyFormat(html: string): WebsiteEventInput[] {
     }
   }
   return events;
-}
+};
 
-function parseNewFormat(html: string): WebsiteEventInput[] {
+const parseNewFormat: ParseStrategy = (html: string) => {
   const events: WebsiteEventInput[] = [];
   let match: RegExpExecArray | null;
   // biome-ignore lint/suspicious/noAssignInExpressions: Required for regex exec loop
@@ -163,26 +166,30 @@ function parseNewFormat(html: string): WebsiteEventInput[] {
     }
   }
   return events;
-}
+};
 
-function mergeEvents(
-  legacy: WebsiteEventInput[],
-  fromNew: WebsiteEventInput[]
+function mergeUniqueEvents(
+  accumulated: WebsiteEventInput[],
+  next: WebsiteEventInput[]
 ): WebsiteEventInput[] {
-  const key = (e: WebsiteEventInput) => `${e.dateRange}|${e.name}`;
-  const seen = new Set(legacy.map(key));
-  const merged = [...legacy];
-  for (const e of fromNew) {
-    if (!seen.has(key(e))) {
-      seen.add(key(e));
+  const eventKey = (e: WebsiteEventInput) => `${e.dateRange}|${e.name}`;
+  const seen = new Set(accumulated.map(eventKey));
+  const merged = [...accumulated];
+  for (const e of next) {
+    const k = eventKey(e);
+    if (!seen.has(k)) {
+      seen.add(k);
       merged.push(e);
     }
   }
   return merged;
 }
 
+const PARSE_STRATEGIES: readonly ParseStrategy[] = [parseLegacyFormat, parseNewFormat];
+
 export function parseHtmlToEvents(html: string): WebsiteEventInput[] {
-  const legacy = parseLegacyFormat(html);
-  const fromNew = parseNewFormat(html);
-  return mergeEvents(legacy, fromNew);
+  return PARSE_STRATEGIES.reduce(
+    (accumulated, strategy) => mergeUniqueEvents(accumulated, strategy(html)),
+    [] as WebsiteEventInput[]
+  );
 }

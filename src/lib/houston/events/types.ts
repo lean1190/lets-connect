@@ -17,3 +17,5 @@ export type ParsedEvent = {
   starts_at: string;
   ends_at: string;
 };
+
+export type ParseStrategy = (html: string) => WebsiteEventInput[];
