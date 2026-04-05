@@ -1,0 +1,8 @@
+{
+  "upgrade": true,
+  "verbose": true,
+  "peer": true,
+  "interactive": true,
+  "doctor": true,
+  "cooldown": "7d"
+}

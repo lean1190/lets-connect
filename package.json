@@ -23,7 +23,7 @@
     "generate:splash": "tsx scripts/generate-splash-images.ts",
     "generate:icons": "tsx scripts/generate-icons.ts",
     "dependencies:check": "ncu",
-    "dependencies:update": "ncu --interactive && npm install && npm run lint && npm test",
+    "dependencies:update": "ncu && npm install && npm run lint && npm test",
     "upgrade:next": "npx @next/codemod",
     "skills": "SKILLS_NO_TELEMETRY=1 && npx skills add vercel-labs/agent-skills",
     "analyze": "next experimental-analyze",
