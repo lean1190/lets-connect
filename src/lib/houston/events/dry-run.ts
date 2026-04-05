@@ -1,3 +1,4 @@
+import { UTCDate } from '@date-fns/utc';
 import z from 'zod';
 import type { createAdminClient } from '@/lib/database/client/server';
 import type { ParsedEvent } from './types';
@@ -20,6 +21,12 @@ export async function dryRunEvent(
   }
   if (endsAt < startsAt) {
     return Promise.resolve({ status: 'invalid', reason: 'End date is before start date' });
+  }
+
+  const now = new Date();
+  const todayStartUtc = new UTCDate(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+  if (endsAt.getTime() < todayStartUtc.getTime()) {
+    return Promise.resolve({ status: 'invalid', reason: 'Event date is in the past' });
   }
 
   const { data: existing } = await supabase
