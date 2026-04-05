@@ -12,6 +12,7 @@ If you don't know something, tell me.
 - You MUST fix things at the cause, not the symptom
 - You MUST NOT miss out things that are important
 - You MUST NOT write .md files unless asked
+- You MUST NOT write barrel files, like index.ts
 - You MUST start from a server component whenever possible
 - You MUST use Server Actions instead of APIs whenever possible
 - You MUST write components using shadcn and radix primitives

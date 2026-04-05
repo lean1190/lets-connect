@@ -6,7 +6,7 @@ import { handleDatabaseResponse } from '@/lib/database/handler/response-handler'
 import type { Tables, TablesInsert } from '@/lib/database/types';
 import { fetchEventsFromUrlCore } from '@/lib/houston/events/found/actions/fetch';
 import { getLatestArchiveUrl } from '@/lib/houston/events/found/get-latest-url';
-import { parseEventDate } from '@/lib/houston/events/parse';
+import { parseEventDate } from '@/lib/houston/events/parse/dates';
 import { dryRunEvent } from '../dry-run';
 import type { ParsedEvent } from '../types';
 

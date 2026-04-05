@@ -11,7 +11,7 @@ import {
   type ImportStatus,
   importEvents
 } from '@/lib/houston/events/found/actions/import';
-import { parseEventDate } from '@/lib/houston/events/parse';
+import { parseEventDate } from '@/lib/houston/events/parse/dates';
 
 type ParsedEvent = {
   dateRange: string;

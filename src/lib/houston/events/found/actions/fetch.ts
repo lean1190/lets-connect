@@ -1,8 +1,8 @@
 'use server';
 
 import { z } from 'zod';
+import { parseHtmlToEvents } from '@/lib/houston/events/parse/html-to-events';
 import { actionClient } from '@/lib/server-actions/client';
-import { parseHtmlToEvents } from '../../parse';
 import type { WebsiteEventInput } from '../../types';
 
 export async function fetchEventsFromUrlCore(url: string): Promise<WebsiteEventInput[]> {
