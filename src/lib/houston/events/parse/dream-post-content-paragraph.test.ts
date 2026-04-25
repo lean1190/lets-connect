@@ -17,6 +17,21 @@ describe('parseDreamPostContentParagraph', () => {
     });
   });
 
+  it('parses weekday-prefixed dates inside strong tag', () => {
+    const html = `<div class="j6zgbu0"><p class="dream-post-content-paragraph j6zgbu1"><span class="hxnnnr0"><strong>Wednesday, April 22</strong></span><br><span class="hxnnnr0"><a href="https://startupport.de/en/events/co-founder-meet-match/" target="_blank" rel="" class="_3k8pkd0">Co-Founder Meet&amp;Match</a></span><span class="hxnnnr0"> (German/English) — Find your co-founder at this matchmaking event designed for aspiring and current startup founders looking for the right team.</span></p></div>`;
+
+    const events = parseDreamPostContentParagraph(html);
+
+    expect(events).toHaveLength(1);
+    expect(events[0]).toEqual({
+      dateRange: 'April 22',
+      name: 'Co-Founder Meet&Match',
+      description:
+        'Find your co-founder at this matchmaking event designed for aspiring and current startup founders looking for the right team.',
+      url: 'https://startupport.de/en/events/co-founder-meet-match/'
+    });
+  });
+
   it('strips foundhamburg.com registration links from url', () => {
     const html = `<p class="dream-post-content-paragraph"><strong>March 1</strong><br><a href="https://www.foundhamburg.com/p/x">Title</a><span> (English) — Description here.</span></p>`;
 

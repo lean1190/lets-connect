@@ -5,7 +5,7 @@ const DREAM_POST_CONTENT_PARAGRAPH =
   /<p\b[^>]*\bdream-post-content-paragraph\b[^>]*>([\s\S]*?)<\/p>/gi;
 
 const STRONG_LEAD_DATE = new RegExp(
-  `<strong>\\s*((?:${DATE_MONTHS})\\s+\\d+(?:-\\d+)?|Every\\s+(?:${DATE_DAYS}))\\s*<\\/strong>`,
+  `<strong>\\s*(?:(?:${DATE_DAYS})\\s*,\\s*)?((?:${DATE_MONTHS})\\s+\\d+(?:-\\d+)?|Every\\s+(?:${DATE_DAYS}))\\s*<\\/strong>`,
   'i'
 );
 
