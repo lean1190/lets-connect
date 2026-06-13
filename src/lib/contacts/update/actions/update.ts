@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { AppRoute } from '@/lib/constants/navigation';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
+import type { TablesUpdate } from '@/lib/database/types';
 import { actionClient } from '@/lib/server-actions/client';
 import { updateContactSchema } from '../schema';
 
@@ -18,7 +19,7 @@ export const updateContact = actionClient
       throw new Error('Not authenticated');
     }
 
-    const updates: Record<string, string> = {};
+    const updates: TablesUpdate<'contacts'> = {};
     if (parsedInput.name !== undefined) updates.name = parsedInput.name;
     if (parsedInput.profileLink !== undefined) updates.url = parsedInput.profileLink;
     if (parsedInput.reason !== undefined) updates.reason = parsedInput.reason;

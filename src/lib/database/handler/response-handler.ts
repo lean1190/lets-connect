@@ -5,7 +5,7 @@ export const handleDatabaseResponse = <T>({
   error
 }: {
   data: T;
-  error: PostgrestError | null;
+  error: Partial<PostgrestError> | null;
 }) => {
   if (error) {
     console.error('---> ERROR:Database', error);

@@ -21,7 +21,7 @@ describe('Supabase response handler utilities', () => {
 
     test('should throw error and log when error exists', () => {
       const { mockConsoleError } = setup();
-      const testError: PostgrestError = {
+      const testError: Partial<PostgrestError> = {
         message: 'Database error',
         details: 'Some details',
         hint: 'Some hint',
