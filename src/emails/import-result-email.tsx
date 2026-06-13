@@ -1,5 +1,5 @@
-import { Hr, Html, Link, Section, Text } from '@react-email/components';
 import type { ReactNode } from 'react';
+import { Hr, Html, Link, Section, Text } from 'react-email';
 import { productionUrl } from '@/lib/constants/links';
 
 const HOUSTON_EVENTS_URL = `${productionUrl}/houston/events`;
