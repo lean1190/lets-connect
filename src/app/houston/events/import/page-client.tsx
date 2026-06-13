@@ -4,6 +4,7 @@ import { useAction } from 'next-safe-action/hooks';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { foundHamburgEventsUrl } from '@/lib/constants/links';
 import { fetchEventsFromUrl } from '@/lib/houston/events/found/actions/fetch';
 import {
   dryRunImportEvents,
@@ -23,7 +24,7 @@ type ParsedEvent = {
 };
 
 type Props = {
-  initialUrl: string | null;
+  initialUrl: string;
 };
 
 const statusConfig: Record<ImportStatus, { label: string; className: string }> = {
@@ -42,7 +43,7 @@ const statusConfig: Record<ImportStatus, { label: string; className: string }> =
 };
 
 export function ImportEventsPageClient({ initialUrl }: Props) {
-  const [url, setUrl] = useState(initialUrl || '');
+  const [url, setUrl] = useState(initialUrl);
   const [parsedEvents, setParsedEvents] = useState<ParsedEvent[]>([]);
   const [baseYear, setBaseYear] = useState(new Date().getFullYear());
   const [dryRunResults, setDryRunResults] = useState<Map<number, EventDryRunResult>>(new Map());
@@ -161,14 +162,14 @@ export function ImportEventsPageClient({ initialUrl }: Props) {
         <div className="space-y-4">
           <div>
             <label htmlFor="url" className="block text-sm font-medium text-foreground mb-2">
-              Newsletter URL
+              Luma Calendar URL
             </label>
             <Input
               id="url"
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://www.foundhamburg.com/p/..."
+              placeholder={foundHamburgEventsUrl}
             />
           </div>
           <div>

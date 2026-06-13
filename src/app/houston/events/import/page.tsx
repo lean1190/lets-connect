@@ -1,8 +1,6 @@
-import { getLatestArchiveUrl } from '@/lib/houston/events/found/get-latest-url';
+import { foundHamburgEventsUrl } from '@/lib/constants/links';
 import { ImportEventsPageClient } from './page-client';
 
-export default async function ImportEventsPage() {
-  const initialUrl: string | null = (await getLatestArchiveUrl()) ?? null;
-
-  return <ImportEventsPageClient initialUrl={initialUrl} />;
+export default function ImportEventsPage() {
+  return <ImportEventsPageClient initialUrl={foundHamburgEventsUrl} />;
 }

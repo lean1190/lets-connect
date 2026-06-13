@@ -1,11 +1,11 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { revalidatePath } from 'next/cache';
+import { foundHamburgEventsUrl } from '@/lib/constants/links';
 import { AppRoute } from '@/lib/constants/navigation';
 import { createAdminClient } from '@/lib/database/client/server';
 import { handleDatabaseResponse } from '@/lib/database/handler/response-handler';
 import type { Tables, TablesInsert } from '@/lib/database/types';
 import { fetchEventsFromUrlCore } from '@/lib/houston/events/found/actions/fetch';
-import { getLatestArchiveUrl } from '@/lib/houston/events/found/get-latest-url';
 import { parseEventDate } from '@/lib/houston/events/parse/dates';
 import { dryRunEvent } from '../dry-run';
 import type { ParsedEvent } from '../types';
@@ -36,43 +36,13 @@ async function insertEventImport(supabase: SupabaseClient, insert: EventImportIn
 export async function runScheduledImport(): Promise<{
   success: boolean;
   row: EventImportRow;
-  alreadyImported?: true;
 }> {
   const supabase = await createAdminClient();
 
-  let importFrom = '';
+  const importFrom = foundHamburgEventsUrl;
   const imported: { id: string; name: string; date: string }[] = [];
   const skipped: { name: string; date: string }[] = [];
   const errors: string[] = [];
-
-  try {
-    importFrom = await getLatestArchiveUrl();
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    errors.push(`Failed to get latest URL: ${message}`);
-
-    const eventImport = {
-      import_from: 'https://www.foundhamburg.com/',
-      imported: [],
-      skipped: [],
-      errors
-    } as EventImportInsert;
-
-    const { data: inserted } = await insertEventImport(supabase, eventImport);
-    const row = inserted ?? (await getLatestImport(supabase));
-    if (!row) throw new Error('Failed to record import');
-    return { success: false, row };
-  }
-
-  const latestImport = await getLatestImport(supabase);
-
-  const sameUrl = latestImport?.import_from === importFrom;
-  const hadErrors =
-    Array.isArray(latestImport?.errors) && (latestImport?.errors as string[]).length > 0;
-
-  if (sameUrl && !hadErrors && latestImport) {
-    return { success: true, alreadyImported: true, row: latestImport };
-  }
 
   let rawEvents: Awaited<ReturnType<typeof fetchEventsFromUrlCore>>;
   try {
@@ -148,7 +118,7 @@ export async function runScheduledImport(): Promise<{
       const eventData: EventInsert = {
         id,
         name: event.name,
-        url: event.url ?? 'https://www.foundhamburg.com/',
+        url: event.url ?? foundHamburgEventsUrl,
         description: event.description,
         starts_at: event.starts_at,
         ends_at: event.ends_at

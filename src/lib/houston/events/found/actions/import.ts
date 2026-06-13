@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
+import { foundHamburgEventsUrl } from '@/lib/constants/links';
 import { AppRoute } from '@/lib/constants/navigation';
 import { createDatabaseServerClient } from '@/lib/database/client/server';
 import type { TablesInsert } from '@/lib/database/types';
@@ -58,7 +59,7 @@ export const importEvents = actionClient
         const eventData: EventInsert = {
           id,
           name: event.name,
-          url: event.url || 'https://www.foundhamburg.com/',
+          url: event.url || foundHamburgEventsUrl,
           description: event.description,
           starts_at: event.starts_at,
           ends_at: event.ends_at

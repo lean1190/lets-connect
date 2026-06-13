@@ -1,10 +1,12 @@
 import type { ParseStrategy, WebsiteEventInput } from '../types';
 import { parseDreamPostContentParagraph } from './dream-post-content-paragraph';
 import { parseLegacyFormat } from './legacy-format';
+import { parseLumaTimeline } from './luma-timeline';
 import { mergeUniqueEvents } from './merge-unique-events';
 import { parseNewFormat } from './new-format';
 
 const PARSE_STRATEGIES: readonly ParseStrategy[] = [
+  parseLumaTimeline,
   parseLegacyFormat,
   parseNewFormat,
   parseDreamPostContentParagraph
